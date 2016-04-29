@@ -54,7 +54,7 @@ require "php/pulsa.php";
 								}
 							?>
 						<a href="./" class="center brand-logo"><img class="admin-logo mt-10" src="images/logo.png"></a>
-						<div style="width:100%" class="hide-on-med-and-down"><span class="font-open-sans blue-cermati-text right mr-30 font-30">Cermati Pulsa</span></div>
+						<div style="width:100%" class="hide-on-med-and-down"><span class="font-open-sans right mr-30 font-30"><a href="#modalLogin" class="modal-trigger blue-cermati-text">Cermati Pulsa</a></span></div>
 					</div>
 				</nav>
 			</div>
@@ -63,8 +63,8 @@ require "php/pulsa.php";
     	<div>
 		    <?php
 				switch ($menu) {
-					case 'login':
-						include 'login.php';
+					case 'perdates':
+						include 'perdates.php';
 						break;
 
 					default:
@@ -105,6 +105,6 @@ require "php/pulsa.php";
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     <script type="text/javascript" src="js/jquery-2.1.1.min.js"></script>
     <script type="text/javascript" src="js/materialize.min.js"></script>
-    <!-- <script type="text/javascript" src="js/inventory.js"></script> -->
+    <script type="text/javascript" src="js/pulsa.js"></script>
   </body>
 </html>

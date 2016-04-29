@@ -2570,7 +2570,7 @@ optgroup {
 /**
  * Remove most spacing between table cells.
  */
-table {
+/*table {
   border-collapse: collapse;
   border-spacing: 0;
 }
@@ -2578,7 +2578,7 @@ table {
 td,
 th {
   padding: 0;
-}
+}*/
 
 html {
   box-sizing: border-box;
@@ -2926,7 +2926,7 @@ footer.page-footer .footer-copyright {
   background-color: rgba(51, 51, 51, 0.08);
 }
 
-table, th, td {
+/*table, th, td {
   border: none;
 }
 
@@ -2979,7 +2979,7 @@ td, th {
     border-spacing: 0;
     display: block;
     position: relative;
-    /* sort out borders */
+    /* sort out borders
   }
   table.responsive-table th,
   table.responsive-table td {
@@ -3042,7 +3042,7 @@ td, th {
   table.responsive-table.bordered tbody tr {
     border-right: 1px solid #d0d0d0;
   }
-}
+}*/
 
 .collection {
   margin: 0.5rem 0 1rem 0;

@@ -5,17 +5,20 @@
 	<div class="col s12">
 		<h6>Last Update : <?php echo $lastUpdate;?></h6>
 	</div>
-	<div class="col s12 mt-30">
-		<table class="width-half striped">
+	<div id="home-table" class="col s12 mt-30 mb-20">
+		<table class="bordered">
 			<thead>
 				<tr>
-					<th width="10%" data-filed="no">
+					<th data-filed="no">
 						No.
 					</th>
-					<th width="45%" data-filed="provider">
+					<th data-filed="provider">
 						Provider
 					</th>
-					<th width="45%" data-filed="sisaPulsa">
+					<th data-filed="noHP">
+						Nomor
+					</th>
+					<th data-filed="sisaPulsa">
 						Sisa Pulsa
 					</th>
 				</tr>
@@ -42,6 +45,15 @@
 										<td>
 											<?php echo $namaProvider; ?>
 										</td>
+										<td>
+											<?php
+												if(isset($noProvider[$namaProvider])){
+													echo phone_number($noProvider[$namaProvider]);
+												}else{
+													echo "";
+												}
+											;?>
+										</td>
 										<td class="<?php echo $textColor;?>">
 											<?php echo number_format($sisaPulsa, 0, ',', '.'); ?>
 										</td>
@@ -54,5 +66,10 @@
 				?>
 			</tbody>
 		</table>
+	</div>
+	<div class="col s12">
+		<a href="./index.php?menu=perdates" class="btn waves-effect waves-light blue-cermati" name="action">More
+			<i class="material-icons right">send</i>
+		</a>
 	</div>
 </div>
