@@ -54,7 +54,7 @@ require "php/pulsa.php";
 								}
 							?>
 						<a href="./" class="center brand-logo"><img class="admin-logo mt-10" src="images/logo.png"></a>
-						<div style="width:100%" class="hide-on-med-and-down"><span class="font-open-sans right mr-30 font-30"><a href="#modalLogin" class="modal-trigger blue-cermati-text">Cermati Pulsa</a></span></div>
+						<div style="width:100%" class="hide-on-med-and-down"><span class="right mr-30 font-25"><a href="#modalLogin" class="modal-trigger blue-cermati-text">Cermati Pulsa</a></span></div>
 					</div>
 				</nav>
 			</div>
