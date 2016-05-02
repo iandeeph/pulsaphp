@@ -21,6 +21,9 @@
 					<th data-filed="sisaPulsa">
 						Sisa Pulsa
 					</th>
+					<th data-filed="sisaPaket">
+						Sisa Paket
+					</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -34,9 +37,11 @@
 					        	$idPulsa		= $rowPulsaToday['id'];
 					        	$namaProvider	= $rowPulsaToday['namaProvider'];
 					        	$sisaPulsa		= $rowPulsaToday['sisaPulsa'];
+					        	$sisaPaket		= $rowPulsaToday['sisaPaket'];
 					        	$tanggal		= $rowPulsaToday['tanggal'];
 
-					        	$textColor = ($sisaPulsa <= 20000)?"red-text":"";
+					        	$pulsaKurang = ($sisaPulsa <= 20000)?"red-text":"";
+					        	$paketKurang = ($sisaPulsa <= 60)?"red-text":"";
 					        	?>
 									<tr>
 										<td>
@@ -54,8 +59,11 @@
 												}
 											;?>
 										</td>
-										<td class="<?php echo $textColor;?>">
+										<td class="<?php echo $pulsaKurang;?>">
 											<?php echo number_format($sisaPulsa, 0, ',', '.'); ?>
+										</td>
+										<td class="<?php echo $paketKurang;?>">
+											<?php echo number_format($sisaPaket, 0, ',', '.'); ?>
 										</td>
 									</tr>
 								<?php

@@ -4,12 +4,12 @@
 	</div>
 	<div class="col s12">
 		<h5>Periode :</h5>
-		<form id="simulation-form">
+		<form id="simulation-form" action="#" method="post">
 			<div class="grouped-input fixed">
-				<select class="form-control" name="bulan" id="bulan">
+				<select class="form-control" name="bulanTahun" id="bulanTahun">
 					<?php
 						for ($i=0; $i < count($monthYear); $i++) {
-							$selected = ($allDate[$i] == $currentMonthYear)?"selected":"";
+							$selected = ($allDate[$i] == $postDate)?"selected":"";
 							echo '<option value="'.$allDate[$i].'" '.$selected.'>'.$monthYear[$i].'</option>';
 						}
 					?>
@@ -22,14 +22,18 @@
 			<table class="bordered">
 				<thead>
 					<tr class="border-bottom">
-						<th data-filed="tanggal" class="border-right" rowspan="2">
+						<th data-filed="tanggal" class="border-right" colspan="2">
 							Tanggal
 						</th>
-					</tr>
-					<tr>
 						<?php
 							for ($i=1; $i <= count($idProvider) ; $i++) {
-								echo '<th data-filed="trunks">'.$namaProvider[$i].'</th>';
+								?>
+									<th data-filed="trunks" colspan="2">
+										<?php echo $namaProvider[$i]; ?>
+										<br>
+										<span class="grey-text">Pulsa & Paket</span>
+									</th>
+								<?php
 							}
 						?>
 					</tr>
@@ -39,30 +43,41 @@
 						for ($i=1; $i <= $daycount ; $i++) {
 							?>
 								<tr>
-									<td>
+									<td style="text-align: center;" id="<?php echo 'tanggal'.$i;?>">
 										<?php echo $i;?>
 									</td>
 									<?php
 										for ($j=1 ;$j <= count($idProvider); $j++) {
 											?>
-												<td>
+												<td class="bold">
 													<?php
-														$qryTanggal = $currentMonthYear."-".sprintf("%02d", $i);
+														$qryTanggal = $postDate."-".sprintf("%02d", $i);
 														$currBalQry = "";
-														$currBalQry = "SELECT sisaPulsa FROM pulsa WHERE namaProvider = '".$namaProvider[$j]."' AND date_format(tanggal, '%Y-%m-%d')='".$qryTanggal."'";
+														$currBalQry = "SELECT sisaPulsa, sisaPaket FROM pulsa WHERE namaProvider = '".$namaProvider[$j]."' AND date_format(tanggal, '%Y-%m-%d')='".$qryTanggal."'";
 														if($resultCurBal = mysql_query($currBalQry)){
 															if (mysql_num_rows($resultCurBal) > 0) {
 																while($rowCurBall = mysql_fetch_array($resultCurBal)){
 																	$pulsa	= $rowCurBall['sisaPulsa'];
+																	$paket 	= $rowCurBall['sisaPaket'];
 
 																	if($pulsa != NULL && $pulsa != '' && $pulsa != "0"){
-																		$pulsaAkhir[] = number_format($pulsa, 0, ',', '.');
+																		$pulsaAkhir[] = ($pulsa < 20000)?"<span class='red-text'>".number_format($pulsa, 0, ',', '.')."</span>":number_format($pulsa, 0, ',', '.')		;
 																	}else{
 																		$pulsaAkhir[] = "-";
 																	}
+
+																	if($paket != NULL && $paket != '' && $paket != "0"){
+																		$paketAkhir[] = ($paket <= 60)?"<span class='red-text'>".number_format($paket, 0, ',', '.')."</span>":number_format($paket, 0, ',', '.')		;
+																	}else{
+																		$paketAkhir[] = "-";
+																	}
 																}
 																echo join(' / ', $pulsaAkhir);
+																echo "<br/>";
+																echo join(' / ', $paketAkhir);
 															}else{
+																echo "-";
+																echo "<br/>";
 																echo "-";
 															}
 														}
@@ -70,6 +85,7 @@
 												</td>
 								            <?php
 								            unset($pulsaAkhir);
+								            unset($paketAkhir);
 										}
 									?>
 								</tr>

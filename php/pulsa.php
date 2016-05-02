@@ -2,20 +2,21 @@
 $menu = (isset($_GET['menu']))?isset($_GET['menu']):"";
 
 foreach($_POST as $key => $val) {
-	if (!is_array($val)) {
-		$_POST[$key] = mysql_real_escape_string($val);
-	}
+    if (!is_array($val)) {
+        $_POST[$key] = mysql_real_escape_string($val);
+    }
 }
 
 $today=date("Y-m-d 00:00:00");
 
-$thisMonth          = date("m");
-$thisYear           = date("Y");
 $currentMonthYear   = date("Y-m");
 
+$postDate = (isset($_POST['bulanTahun']))?strval($_POST['bulanTahun']):$currentMonthYear;
 
+$postMonth  = date("m", strtotime($postDate));
+$postYear   = date("Y", strtotime($postDate));
 
-$daycount=cal_days_in_month(CAL_GREGORIAN,$thisMonth,$thisYear);
+$daycount=cal_days_in_month(CAL_GREGORIAN,$postMonth,$postYear);
 
 function phone_number($phone) {
     $firstDash = substr_replace($phone, "-", 4, 0);
