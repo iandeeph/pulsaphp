@@ -7,7 +7,7 @@ $(document).ready(function() {
     var $dayElement =  $(day);
     var $tBody = $('#simulation-table tbody');
     var $table = $('#simulation-table table');
-    $tBody.scrollLeft($dayElement.position().left - ($tBody.outerWidth(true) / 2) + ($dayElement.outerWidth(true) / 2));
+    $tBody.scrollLeft($dayElement.position() - ($tBody.outerWidth(true) / 2) + ($dayElement.outerWidth(true) / 2));
 
     $('#bulanTahun').on('change', function() {
         $('#simulation-form').submit();

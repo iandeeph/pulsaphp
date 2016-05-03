@@ -78,12 +78,12 @@ require "php/pulsa.php";
     	<div>
 		    <?php
 				switch ($menu) {
-					case 'logout':
-						include 'logout.php';
-						break;
-
 					case 'perdates':
 						include 'perdates.php';
+						break;
+
+					case 'logout':
+						include 'logout.php';
 						break;
 
 					default:
