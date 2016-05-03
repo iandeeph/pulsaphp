@@ -66,7 +66,7 @@
 																		$pulsaAkhir[] = "-";
 																	}
 
-																	if($paket != NULL && $paket != '' && $paket != "0"){
+																	if($paket != NULL && $paket != '' && $paket != "-"){
 																		$paketAkhir[] = ($paket <= 60)?"<span class='red-text'>".number_format($paket, 0, ',', '.')."</span>":number_format($paket, 0, ',', '.')		;
 																	}else{
 																		$paketAkhir[] = "-";

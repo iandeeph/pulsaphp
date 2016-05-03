@@ -25,7 +25,7 @@ function phone_number($phone) {
 }
 
 $lastUpdateQry = "";
-$lastUpdateQry = "SELECT DATE_FORMAT(max(tanggal), '%d %b %y - %h:%i') as lastUpdate, max(tanggal) as lastDate FROM pulsa LIMIT 1";
+$lastUpdateQry = "SELECT DATE_FORMAT(max(tanggal), '%d %b %y - %H:%i') as lastUpdate, DATE_FORMAT(max(tanggal), '%Y-%m-%d %H:%i:00') as lastDate FROM pulsa LIMIT 1";
 if($resultLastUpdate = mysql_query($lastUpdateQry)){
     if (mysql_num_rows($resultLastUpdate) > 0) {
         $rowLastUpdate 	= mysql_fetch_array($resultLastUpdate);

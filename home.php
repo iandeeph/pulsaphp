@@ -30,7 +30,7 @@
 				<?php
 					$no=1;
 					$pulsaTodayQry = "";
-					$pulsaTodayQry = "SELECT * FROM pulsa WHERE tanggal = '".$lastDate."'";
+					$pulsaTodayQry = "SELECT * FROM pulsa WHERE tanggal >= '".$lastDate."'";
 					if($resultPulsaToday = mysql_query($pulsaTodayQry)){
 					    if (mysql_num_rows($resultPulsaToday) > 0) {
 					        while($rowPulsaToday 	= mysql_fetch_array($resultPulsaToday)){
@@ -41,7 +41,14 @@
 					        	$tanggal		= $rowPulsaToday['tanggal'];
 
 					        	$pulsaKurang = ($sisaPulsa <= 20000)?"red-text":"";
-					        	$paketKurang = ($sisaPulsa <= 60)?"red-text":"";
+					        	// $paketKurang = ($sisaPaket <= 60 || $sisaPaket = "-")?"red-text":"";
+					        	if ($sisaPaket <= 60 || $sisaPaket == "-") {
+					        		$paketKurang = "red-text";
+					        	}else{
+					        		$paketKurang = "";
+					        	}
+
+					        	$sisaPaket = ($sisaPaket != "-")?number_format($sisaPaket, 0, ',', '.')." Menit":"gagal cek";
 					        	?>
 									<tr>
 										<td>
@@ -63,7 +70,7 @@
 											<?php echo number_format($sisaPulsa, 0, ',', '.'); ?>
 										</td>
 										<td class="<?php echo $paketKurang;?>">
-											<?php echo number_format($sisaPaket, 0, ',', '.'); ?>
+											<?php echo $sisaPaket; ?>
 										</td>
 									</tr>
 								<?php
