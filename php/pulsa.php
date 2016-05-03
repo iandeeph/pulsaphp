@@ -7,6 +7,10 @@ foreach($_POST as $key => $val) {
     }
 }
 
+function alertBox($msg) {
+    echo '<script type="text/javascript">alert("' . $msg . '")</script>';
+}
+
 $today=date("Y-m-d 00:00:00");
 
 $currentMonthYear   = date("Y-m");
@@ -58,6 +62,32 @@ if($resultProvider = mysql_query($providerQry)){
         	$caraAktivasi[$rowProvider['namaProvider']]	= $rowProvider['caraAktivasi'];
         	$caraCekKuota[$rowProvider['namaProvider']]	= $rowProvider['caraCekKuota'];
         	$expPaket[$rowProvider['namaProvider']]		= $rowProvider['expDatePaket'];
+        }
+    }
+}
+
+// ==============================================================================================================================
+// -------------------------------------------------- LOGIN ----------------------------------------------
+// ==============================================================================================================================
+
+if(isset($_POST['btnLogin'])){
+    $postUsername = $_POST['loginUsername'];
+    $postPassword = $_POST['loginPassword'];
+
+    $loginQry = "SELECT * FROM admin WHERE username = '".$postUsername."' AND password = '".$postPassword."' LIMIT 1";
+    if($resultLogin = mysql_query($loginQry)){
+        if (mysql_num_rows($resultLogin) != 0) {
+            $rowLogin = mysql_fetch_array($resultLogin);
+            $_SESSION['login']      = 'logged';
+            $_SESSION['name']       = $rowLogin['name'];
+            $_SESSION['privilege']  = $rowLogin['privilege'];
+            $_SESSION['idadmin']    = $rowLogin['idadmin'];
+            $_SESSION['username']   = $rowLogin['username'];
+
+            header('Location: ./');
+        }else{
+            $_SESSION['login']  = 'notlogged';
+            alertBox('Username atau Password Salah..');
         }
     }
 }

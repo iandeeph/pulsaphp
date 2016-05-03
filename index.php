@@ -46,15 +46,30 @@ require "php/pulsa.php";
 			<div class="navbar-fixed white darken-3">
 				<nav class="white darken-3">
 					<div class="nav-wrapper navbar-fixed white darken-3 valign-wrapper left-menu">
-							<?php
-								if(isset($_SESSION['login']) && $_SESSION['login'] == 'logged'){
-									?>
-										<a href="#" data-activates="side-menu" class="button-collapse left ml-30"><i class="menu-side-icon material-icons">menu</i></a>
-									<?php
-								}
-							?>
+						<?php
+							if(isset($_SESSION['login']) && $_SESSION['login'] == 'logged'){
+								?>
+									<a href="#" data-activates="side-menu" class="button-collapse left ml-30"><i class="menu-side-icon material-icons">menu</i></a>
+								<?php
+							}
+						?>
 						<a href="./" class="center brand-logo"><img class="admin-logo mt-10" src="images/logo.png"></a>
-						<div style="width:100%" class="hide-on-med-and-down"><span class="right mr-30 font-25"><a href="#modalLogin" class="modal-trigger blue-cermati-text">Cermati Pulsa</a></span></div>
+						<?php
+							if(isset($_SESSION['login']) && $_SESSION['login'] == 'logged'){
+								?>
+									<div style="width:100%" class="hide-on-med-and-down">
+										<a href="./index.php?menu=logout" class="blue-cermati-text">
+											<span class="right mr-30 font-20">[logout]</span>
+											<span class="right mr-10 font-25">Hi, <?php echo $_SESSION['name'];?></span>
+										</a>
+									</div>
+								<?php
+							}else{
+								?>
+									<div style="width:100%" class="hide-on-med-and-down"><span class="right mr-30 font-25"><a href="#modalLogin" class="modal-trigger blue-cermati-text">Cermati Pulsa</a></span></div>
+								<?php
+							}
+						?>
 					</div>
 				</nav>
 			</div>
@@ -63,6 +78,10 @@ require "php/pulsa.php";
     	<div>
 		    <?php
 				switch ($menu) {
+					case 'logout':
+						include 'logout.php';
+						break;
+
 					case 'perdates':
 						include 'perdates.php';
 						break;

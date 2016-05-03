@@ -48,7 +48,12 @@
 					        		$paketKurang = "";
 					        	}
 
-					        	$sisaPaket = ($sisaPaket != "-")?number_format($sisaPaket, 0, ',', '.')." Menit":"gagal cek";
+					        	if ($sisaPaket != "-" && $sisaPaket != "") {
+					        		$sisaPaket = number_format($sisaPaket, 0, ',', '.')." Menit";
+					        	}else{
+					        		$sisaPaket = "gagal cek";
+					        	}
+
 					        	?>
 									<tr>
 										<td>
