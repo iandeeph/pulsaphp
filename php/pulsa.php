@@ -38,6 +38,16 @@ if($resultLastUpdate = mysql_query($lastUpdateQry)){
     }
 }
 
+$lastUpdatePaketQry = "";
+$lastUpdatePaketQry = "SELECT DATE_FORMAT(max(tanggal), '%d %b %y - %H:%i') as lastUpdatePaket, DATE_FORMAT(max(tanggal), '%Y-%m-%d %H:%i:00') as lastDatePaket FROM paket LIMIT 1";
+if($resultLastUpdatePaket = mysql_query($lastUpdatePaketQry)){
+    if (mysql_num_rows($resultLastUpdatePaket) > 0) {
+        $rowLastUpdatePaket  = mysql_fetch_array($resultLastUpdatePaket);
+        $lastUpdatePaket = $rowLastUpdatePaket['lastUpdatePaket'];
+        $lastDatePaket   = $rowLastUpdatePaket['lastDatePaket'];
+    }
+}
+
 $monthQry = "";
 $monthQry = "SELECT DATE_FORMAT(tanggal, '%b %y') as monthYear, DATE_FORMAT(tanggal, '%Y-%m') as allDate FROM pulsa WHERE (tanggal IS NOT NULL OR tanggal != '') GROUP BY monthYear";
 if($resultMonth = mysql_query($monthQry)){

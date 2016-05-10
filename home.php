@@ -2,9 +2,6 @@
 	<div class="col s12">
 		<h4>Pulsa Cermati Hari Ini</h4>
 	</div>
-	<div class="col s12">
-		<h6>Last Update : <?php echo $lastUpdate;?></h6>
-	</div>
 	<div id="home-table" class="col s12 mt-30 mb-20">
 		<table class="bordered">
 			<thead>
@@ -19,10 +16,12 @@
 						Nomor
 					</th>
 					<th data-filed="sisaPulsa">
-						Sisa Pulsa
+						Sisa Pulsa <br>
+						<span class="font-15">(<?php echo $lastUpdate;?>)</span>
 					</th>
 					<th data-filed="sisaPaket">
-						Sisa Paket
+						Sisa Paket <br>
+						<span class="font-15">(<?php echo $lastUpdatePaket;?>)</span>
 					</th>
 				</tr>
 			</thead>
@@ -30,15 +29,25 @@
 				<?php
 					$no=1;
 					$pulsaTodayQry = "";
-					$pulsaTodayQry = "SELECT * FROM pulsa WHERE tanggal >= '".$lastDate."'";
+					$pulsaTodayQry = "SELECT * FROM pulsa WHERE tanggal >= '".$lastDate."' ORDER BY namaProvider";
 					if($resultPulsaToday = mysql_query($pulsaTodayQry)){
 					    if (mysql_num_rows($resultPulsaToday) > 0) {
 					        while($rowPulsaToday 	= mysql_fetch_array($resultPulsaToday)){
 					        	$idPulsa		= $rowPulsaToday['id'];
 					        	$namaProvider	= $rowPulsaToday['namaProvider'];
 					        	$sisaPulsa		= $rowPulsaToday['sisaPulsa'];
-					        	$sisaPaket		= $rowPulsaToday['sisaPaket'];
 					        	$tanggal		= $rowPulsaToday['tanggal'];
+
+					        	$LatestPaketQry = "";
+								$LatestPaketQry = "SELECT sisaPaket FROM paket WHERE namaProvider = '".$namaProvider."' AND tanggal >= '".$lastDatePaket."' LIMIT 1";
+								if($resultLatestPaket = mysql_query($LatestPaketQry)){
+								    if (mysql_num_rows($resultLatestPaket) > 0) {
+								        $rowPaket 	= mysql_fetch_array($resultLatestPaket);
+										$sisaPaket = $rowPaket['sisaPaket'];
+									}else{
+										$sisaPaket = "-";
+									}
+								}
 
 					        	$pulsaKurang = ($sisaPulsa <= 20000)?"red-text":"";
 					        	// $paketKurang = ($sisaPaket <= 60 || $sisaPaket = "-")?"red-text":"";
@@ -48,7 +57,7 @@
 					        		$paketKurang = "";
 					        	}
 
-					        	if ($sisaPaket != "-" && $sisaPaket != "") {
+					        	if ($sisaPaket != "-" && $sisaPaket != "" && $sisaPaket != NULL) {
 					        		$sisaPaket = number_format($sisaPaket, 0, ',', '.')." Menit";
 					        	}else{
 					        		$sisaPaket = "gagal cek";

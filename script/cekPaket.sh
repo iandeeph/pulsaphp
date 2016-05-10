@@ -266,6 +266,40 @@ do
 				fi
 			done
 		fi
+	else
+		attempt=1
+		attempt=$((attempt + 0))
+		cekBerhasil=""
+		echo "$currentTime - ${red}Telkomsel$numSimpati Cek Paket Gagal...${reset}"
+		echo "----------------------------------------------"
+		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+			echo "$currentTime - Telkomsel$numSimpati percobaan ke-$attempt"
+			telkomselPaketFx$numSimpati
+			cekString=${telkomselPaket:2:6}
+			cekString2=${telkomselPaket:49:4}
+			echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
+
+			if [ "$cekString" = "Recive"  ] && [ "$cekString2" != "Maaf" ]; then
+				echo "$currentTime - ${green}Telkomsel$numSimpati Cek Paket Berhasil...${reset}"
+				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+				cekBerhasil="berhasil"
+				attempt=$((attempt + 3))
+				telkomselPaket=${telkomselPaket:62:6}
+				telkomselPaket=${telkomselPaket//[i: Men]/}
+				telkomselPaket=$((telkomselPaket + 0))
+				echo "$currentTime - ${green}Sisa paket Telkomsel$numSimpati : $telkomselPaket${reset}"
+
+				sisaPaketTelkomsel[$numSimpati]=$telkomselPaket
+			else
+				cekBerhasil="gagal"
+				echo "$currentTime - ${red}Telkomsel$numSimpati Cek Gagal...${reset}"
+				echo "----------------------------------------------"
+				attempt=$((attempt + 1))
+				if [[ $attempt == $maxAttempt ]]; then
+					sisaPaketTelkomsel[$numSimpati]="-"
+				fi
+			fi
+		done
 	fi
 	echo "$currentTime - ${green}+++++++++++++++++++++++ CHECKING PAKET Telkomsel$numSimpati FINISHED+++++++++++++++++++++${reset}"
 
@@ -294,7 +328,7 @@ do
 		echo "$currentTime - ${green}XL$numXl Cek Paket Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		echo "$currentTime - ${green}Sisa Paket : $sisaPaket${reset}"
-		
+
 		sisaPaketXL[$numXl]=$sisaPaket
 	else
 		attempt=1
@@ -330,6 +364,12 @@ do
 		done
 	fi
 	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING PAKET XL$numXl FINISHED+++++++++++++++++++++${reset}"
+
+	if [[ "${sisaPaketXL[$numXl]}" -le 10 ]]; then
+		echo "$currentTime - Ngasih tau kalo sisa paket kurang dari 10 menit"
+		#insert ke database sms untuk ngirim sms notifikasi
+		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl paketnya mau abis', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+	fi
 
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
