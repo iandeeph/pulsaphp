@@ -30,8 +30,6 @@
 								?>
 									<th data-filed="trunks" colspan="2">
 										<?php echo $namaProvider[$i]; ?>
-										<br>
-										<span class="grey-text">Pulsa & Paket</span>
 									</th>
 								<?php
 							}
@@ -65,19 +63,9 @@
 																	}else{
 																		$pulsaAkhir[] = "-";
 																	}
-
-																	if($paket != NULL && $paket != '' && $paket != "-"){
-																		$paketAkhir[] = ($paket <= 60)?"<span class='red-text'>".number_format($paket, 0, ',', '.')."</span>":number_format($paket, 0, ',', '.')		;
-																	}else{
-																		$paketAkhir[] = "-";
-																	}
 																}
 																echo join(' / ', $pulsaAkhir);
-																echo "<br/>";
-																echo join(' / ', $paketAkhir);
 															}else{
-																echo "-";
-																echo "<br/>";
 																echo "-";
 															}
 														}
@@ -85,7 +73,6 @@
 												</td>
 								            <?php
 								            unset($pulsaAkhir);
-								            unset($paketAkhir);
 										}
 									?>
 								</tr>
