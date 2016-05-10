@@ -365,7 +365,7 @@ do
 	fi
 	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING PAKET XL$numXl FINISHED+++++++++++++++++++++${reset}"
 
-	if [[ "${sisaPaketXL[$numXl]}" -le 10 ]]; then
+	if [[ "${sisaPaketXL[$numXl]}" -le 30 ]]; then
 		echo "$currentTime - Ngasih tau kalo sisa paket kurang dari 10 menit"
 		#insert ke database sms untuk ngirim sms notifikasi
 		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl paketnya mau abis', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
