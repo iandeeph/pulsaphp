@@ -41,7 +41,7 @@
 						for ($i=1; $i <= $daycount ; $i++) {
 							?>
 								<tr>
-									<td style="text-align: center;" id="<?php echo 'tanggal'.$i;?>">
+									<td rowspan="3" style="text-align: center;" id="<?php echo 'tanggal'.$i;?>">
 										<?php echo $i;?>
 									</td>
 									<?php

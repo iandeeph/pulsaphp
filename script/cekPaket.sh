@@ -185,7 +185,7 @@ xlPaketFx6()
 	#sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
 	xlPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 3 *123*7*5*1#'")
-	sisaPaket=${xlPaket:105:4}
+	sisaPaket=${xlPaket:103:4}
 	sisaPaket=${sisaPaket//[lah Mnt,]/}
 	sisaPaket=$((sisaPaket + 0))
 }
@@ -194,7 +194,7 @@ xlPaketFx7()
 	#sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
 	xlPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *123*7*5*1#'")
-	sisaPaket=${xlPaket:105:4}
+	sisaPaket=${xlPaket:103:4}
 	sisaPaket=${sisaPaket//[lah Mnt,]/}
 	sisaPaket=$((sisaPaket + 0))
 }
@@ -366,7 +366,7 @@ do
 	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING PAKET XL$numXl FINISHED+++++++++++++++++++++${reset}"
 
 	if [[ "${sisaPaketXL[$numXl]}" -le 30 ]]; then
-		echo "$currentTime - Ngasih tau kalo sisa paket kurang dari 10 menit"
+		echo "$currentTime - Ngasih tau kalo sisa paket kurang dari 30 menit"
 		#insert ke database sms untuk ngirim sms notifikasi
 		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl paketnya mau abis.. sisa : ${sisaPaketXL[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 	fi
