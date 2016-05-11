@@ -78,14 +78,18 @@ require "php/pulsa.php";
     	<div>
 		    <?php
 				switch ($menu) {
-					case 'perdates':
-						include 'perdates.php';
+					case 'home':
+						include 'home.php';
 						break;
-
+					case 'pulsa':
+						include 'perdates-pulsa.php';
+						break;
+					case 'paket':
+						include 'perdates-paket.php';
+						break;
 					case 'logout':
 						include 'logout.php';
 						break;
-
 					default:
 						include 'home.php';
 						break;

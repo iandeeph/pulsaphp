@@ -97,7 +97,7 @@
 		</table>
 	</div>
 	<div class="col s12">
-		<a href="./index.php?menu=perdates" class="btn waves-effect waves-light blue-cermati" name="action">More
+		<a href="./index.php?menu=pulsa" class="btn waves-effect waves-light blue-cermati" name="action">More
 			<i class="material-icons right">send</i>
 		</a>
 	</div>

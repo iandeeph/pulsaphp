@@ -230,6 +230,11 @@ do
 			telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
 			echo "$currentTime - ${green}Sisa paket Telkomsel$numSimpati : ${telkomselPaket}${reset}"
 
+			if [[ $telkomselPaket -gt 150 ]]; then
+				telkomselPaket=0
+				telkomselPaket=$((telkomselPaket + 0))
+			fi
+
 			sisaPaketTelkomsel[$numSimpati]=${telkomselPaket}
 		else
 			attempt=1
@@ -253,6 +258,11 @@ do
 					telkomselPaket=${telkomselPaket//[i: Men]/}
 					telkomselPaket=$((telkomselPaket + 0))
 					echo "$currentTime - ${green}Sisa paket Telkomsel$numSimpati : $telkomselPaket${reset}"
+
+					if [[ $telkomselPaket -gt 150 ]]; then
+						telkomselPaket=0
+						telkomselPaket=$((telkomselPaket + 0))
+					fi
 
 					sisaPaketTelkomsel[$numSimpati]=$telkomselPaket
 				else

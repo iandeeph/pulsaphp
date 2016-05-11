@@ -1,5 +1,5 @@
 <?php
-$menu = (isset($_GET['menu']))?isset($_GET['menu']):"";
+$menu = (isset($_GET['menu']))?$_GET['menu']:"";
 
 foreach($_POST as $key => $val) {
     if (!is_array($val)) {
@@ -7,8 +7,38 @@ foreach($_POST as $key => $val) {
     }
 }
 
+$jamCekPaket = array(
+    "08:15",
+    "08:45",
+    "09:15",
+    "09:45",
+    "10:15",
+    "10:45",
+    "11:15",
+    "11:45",
+    "13:15",
+    "13:45",
+    "14:15",
+    "14:45",
+    "15:15",
+    "15:45",
+    "16:15",
+    "16:45",
+    "17:15"
+);
+
 function alertBox($msg) {
     echo '<script type="text/javascript">alert("' . $msg . '")</script>';
+}
+
+function parsePulsa($pulsa, $hargaPaket){
+    if($pulsa != NULL && $pulsa != '' && $pulsa != "0"){
+        $pulsaAkhir = ($pulsa < $hargaPaket)?"<span class='red-text'>".number_format($pulsa, 0, ',', '.')."</span>":number_format($pulsa, 0, ',', '.')       ;
+    }else{
+        $pulsaAkhir = "-";
+    }
+
+    return $pulsaAkhir;
 }
 
 $today=date("Y-m-d 00:00:00");
@@ -65,7 +95,7 @@ if($resultProvider = mysql_query($providerQry)){
     if (mysql_num_rows($resultProvider) > 0) {
         while($rowProvider 	= mysql_fetch_array($resultProvider)){
         	$idProvider[]	= $rowProvider['idProvider'];
-            $namaProvider[]   = $rowProvider['namaProvider'];
+            // $namaProvider[]   = $rowProvider['namaProvider'];
         	$namaProvider[$rowProvider['idProvider']]	= $rowProvider['namaProvider'];
         	$noProvider[$rowProvider['namaProvider']]	= $rowProvider['noProvider'];
             $namaPaket[$rowProvider['namaProvider']]    = $rowProvider['namaPaket'];
