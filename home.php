@@ -49,7 +49,7 @@
 									}
 								}
 
-					        	$pulsaKurang = ($sisaPulsa <= 20000)?"red-text":"";
+					        	$pulsaKurang = ($sisaPulsa <= $hargaPaket[$namaProvider])?"red-text":"";
 					        	// $paketKurang = ($sisaPaket <= 60 || $sisaPaket = "-")?"red-text":"";
 					        	if ($sisaPaket <= 60 || $sisaPaket == "-") {
 					        		$paketKurang = "red-text";
