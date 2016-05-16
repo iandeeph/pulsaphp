@@ -82,7 +82,6 @@
 											tgl,
 											jam + 0,
 											menit + 0";
-						echo $currBalQry;
 						$resultCurBal = mysql_query($currBalQry) or die(mysql_error());
 						if($resultCurBal){
 							$resultCount = mysql_num_rows($resultCurBal);
