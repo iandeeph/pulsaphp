@@ -17,7 +17,7 @@
 			</div>
 		</form>
     </div>
-	<div id="home-table" class="mt-30">
+	<div class="mt-30 home-table">
 		<div class="col s12">
 			<table class="bordered auto-scroll">
 				<thead>
@@ -33,7 +33,7 @@
 						<?php
 							for ($i=1; $i <= $daycount ; $i++) {
 								?>
-									<th class="border-right" colspan="3">
+									<th id="<?php echo 'tanggal'.$i;?>" class="border-right" colspan="<?php echo count(getJamPaket($postDate."-".$i)); ?>">
 										<?php echo $i;?>
 									</th>
 								<?php
@@ -43,61 +43,52 @@
 					<tr class="border-bottom">
 						<?php
 							for ($i=1; $i <= $daycount ; $i++) {
-								?>
-									<th class="border-right">
-										08:15
-									</th>
-									<th class="border-right">
-										12:15
-									</th>
-									<th class="border-right">
-										17.15
-									</th>
-								<?php
+								for ($j=0; $j < count(getJamPaket($postDate."-".$i)); $j++) {
+									echo '<th class="border-right">';
+									echo getJamPaket($postDate."-".$i)[$j];
+									echo '</th>';
+								}
 							}
 						?>
 					</tr>
 				</thead>
 				<tbody>
 					<?php
-						for ($k=1; $k <= count($idProvider); $k++) {
-							?>
-								<tr>
-									<td>
-										<?php echo $namaProvider[$k]; ?>
-									</td>
-										<?php
-											for ($j=1; $j <= $daycount ; $j++) {
-												$startDate[1] 	= $postDate."-".sprintf("%02d", $j)." 05:01:00";
-												$endDate[1] 	= $postDate."-".sprintf("%02d", $j)." 12:00:00";
-												$startDate[2] 	= $postDate."-".sprintf("%02d", $j)." 12:01:00";
-												$endDate[2] 	= $postDate."-".sprintf("%02d", $j)." 17:00:00";
-												$startDate[3]	= $postDate."-".sprintf("%02d", $j)." 17:01:00";
-												$endDate[3] 	= $postDate."-".sprintf("%02d", $j)." 23:59:00";
+						// Create empty value array
+						$listProvider = array();
+						foreach($namaProvider as $provider) {
+							$listProvider[$provider] = array();
+							for ($i=1; $i <= $daycount ; $i++) {
+								$listProvider[$provider][$i] = array();
+								for ($j=0; $j < count(getJamPaket($postDate."-".$i)); $j++) {
+									$listProvider[$provider][$i][getJamPaket($postDate."-".$i)[$j]] = "-";
+								}
+							}
+						}
+						$currBalQry = "";
+						$currBalQry = "SELECT DISTINCT(tanggal), namaProvider, sisaPulsa, DAYOFMONTH(tanggal) as tgl, DATE_FORMAT(tanggal, '%H:%i') as waktu, HOUR(tanggal) as jam, MINUTE(tanggal) as menit FROM pulsa WHERE namaProvider in("."'".implode("','", $namaProvider)."'".") AND YEAR(tanggal) = '".explode('-', $postDate)[0]."' AND MONTH(tanggal) = '".explode('-', $postDate)[1]."' ORDER BY namaProvider, tgl, jam + 0, menit + 0";
+						echo $currBalQry;
+						$resultCurBal = mysql_query($currBalQry) or die(mysql_error());
+						if($resultCurBal){
+							$resultCount = mysql_num_rows($resultCurBal);
+							if ($resultCount > 0) {
+								while($rowCurBall = mysql_fetch_array($resultCurBal)){
+									if (isset($listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]])) {
+										$listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]] = $rowCurBall["sisaPulsa"];
+									}
+								}
+							}
+						}
 
-												for ($i=1; $i <= 3; $i++) {
-													$currBalQry = "";
-													// $currBalQry = "SELECT namaProvider, sisaPulsa FROM pulsa WHERE namaProvider = '".$namaProvider[$k]."' AND date_format(tanggal, '%Y-%m-%d')='".$qryTanggal."' LIMIT 1";
-													$currBalQry = "SELECT namaProvider, sisaPulsa FROM pulsa WHERE namaProvider = '".$namaProvider[$k]."' AND tanggal between '".$startDate[$i]."' AND '".$endDate[$i]."' LIMIT 1";
-													if($resultCurBal = mysql_query($currBalQry)){
-														if (mysql_num_rows($resultCurBal) > 0) {
-															while($rowCurBall = mysql_fetch_array($resultCurBal)){
-																$provName		= $rowCurBall['namaProvider'];
-																$pulsa			= $rowCurBall['sisaPulsa'];
-
-																echo '<td class="fixed">';
-																echo parsePulsa($pulsa, $hargaPaket[$provName]);
-																echo '</td>';
-															}
-														}else{
-															echo '<td class="fixed">-</td>';
-														}
-													}
-												}
-											}
-										?>
-								</tr>
-							<?php
+						foreach ($listProvider as $provider => $days) {
+							echo "<tr>";
+							echo "<td>".$provider."</td>";
+							foreach ($days as $day => $times) {
+								foreach ($times as $time => $pulsa) {
+									echo "<td class='fixed'>".parsePulsa(intval($pulsa), $hargaPaket[$provider])."</td>";
+								}
+							}
+							echo "</tr>";
 						}
 					?>
 				</tbody>
@@ -105,8 +96,8 @@
 		</div>
 	</div>
 	<div class="col s12">
-		<a href="./index.php" class="btn waves-effect waves-light blue-cermati" name="action">Back
-			<i class="material-icons right">subdirectory_arrow_left</i>
+		<a href="./index.php" class="btn waves-effect waves-light blue-cermati" name="action">Home
+			<i class="material-icons right">home</i>
 		</a>
 		<a href="./index.php?menu=paket" class="btn waves-effect waves-light blue-cermati" name="action">Table Paket
 			<i class="material-icons right">send</i>

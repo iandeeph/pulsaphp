@@ -23,8 +23,7 @@ $jamCekPaket = array(
     "15:15",
     "15:45",
     "16:15",
-    "16:45",
-    "17:15"
+    "16:45"
 );
 
 function alertBox($msg) {
@@ -46,6 +45,25 @@ $today=date("Y-m-d 00:00:00");
 $currentMonthYear   = date("Y-m");
 
 $postDate = (isset($_POST['bulanTahun']))?strval($_POST['bulanTahun']):$currentMonthYear;
+
+function getJamPaket($date) {
+    $jamCekPulsa = array();
+    if (strtotime($date) >= strtotime("2016-05-11")) {
+        $jamCekPulsa = array(
+            "05:15",
+            "12:15",
+            "17:15"
+        );
+    } else {
+        $jamCekPulsa = array(
+            "05:10",
+            "12:10",
+            "17:10"
+        );
+    }
+
+    return $jamCekPulsa;
+}
 
 $postMonth  = date("m", strtotime($postDate));
 $postYear   = date("Y", strtotime($postDate));
@@ -85,6 +103,17 @@ if($resultMonth = mysql_query($monthQry)){
         while($rowMonth  = mysql_fetch_array($resultMonth)){
             $monthYear[] = $rowMonth['monthYear'];
             $allDate[] = $rowMonth['allDate'];
+        }
+    }
+}
+
+$monthPaketQry = "";
+$monthPaketQry = "SELECT DATE_FORMAT(tanggal, '%b %y') as monthYear, DATE_FORMAT(tanggal, '%Y-%m') as allDate FROM paket WHERE (tanggal IS NOT NULL OR tanggal != '') GROUP BY monthYear";
+if($resultMonthPaket = mysql_query($monthPaketQry)){
+    if (mysql_num_rows($resultMonthPaket) > 0) {
+        while($rowMonthPaket  = mysql_fetch_array($resultMonthPaket)){
+            $monthYearPaket[] = $rowMonthPaket['monthYear'];
+            $allDatePaket[] = $rowMonthPaket['allDate'];
         }
     }
 }

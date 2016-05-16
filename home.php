@@ -2,7 +2,7 @@
 	<div class="col s12">
 		<h4>Pulsa Cermati Hari Ini</h4>
 	</div>
-	<div id="home-table" class="col s12 mt-30 mb-20">
+	<div class="col s12 mt-30 mb-20 home-table">
 		<table class="bordered">
 			<thead>
 				<tr>

@@ -8,16 +8,16 @@
 			<div class="grouped-input fixed">
 				<select class="form-control" name="bulanTahun" id="bulanTahun">
 					<?php
-						for ($i=0; $i < count($monthYear); $i++) {
-							$selected = ($allDate[$i] == $postDate)?"selected":"";
-							echo '<option value="'.$allDate[$i].'" '.$selected.'>'.$monthYear[$i].'</option>';
+						for ($i=0; $i < count($monthYearPaket); $i++) {
+							$selected = ($allDatePaket[$i] == $postDate)?"selected":"";
+							echo '<option value="'.$allDatePaket[$i].'" '.$selected.'>'.$monthYearPaket[$i].'</option>';
 						}
 					?>
 				</select>
 			</div>
 		</form>
     </div>
-	<div id="home-table" class="mt-30">
+	<div class="mt-30 home-table">
 		<div class="col s12">
 			<table class="bordered auto-scroll">
 				<thead>
@@ -25,7 +25,7 @@
 						<th class="border-right" rowspan="3">
 							Provider
 						</th>
-						<th class="border-right" colspan="<?php echo ($daycount*(count($jamCekPaket)-1)); ?>">
+						<th class="border-right" colspan="<?php echo ($daycount* count($jamCekPaket)); ?>">
 							Paket / Tanggal & Jam
 						</th>
 					</tr>
@@ -33,7 +33,7 @@
 						<?php
 							for ($i=1; $i <= $daycount ; $i++) {
 								?>
-									<th class="border-right" colspan="<?php echo (count($jamCekPaket)-1); ?>">
+									<th id="<?php echo 'tanggal'.$i;?>" class="border-right" colspan="<?php echo count($jamCekPaket); ?>">
 										<?php echo $i;?>
 									</th>
 								<?php
@@ -43,7 +43,7 @@
 					<tr class="border-bottom">
 						<?php
 							for ($i=1; $i <= $daycount ; $i++) {
-								for ($j=0; $j < (count($jamCekPaket)-1); $j++) {
+								for ($j=0; $j < count($jamCekPaket); $j++) {
 									echo '<th class="border-right">';
 									echo $jamCekPaket[$j];
 									echo '</th>';
@@ -54,39 +54,40 @@
 				</thead>
 				<tbody>
 					<?php
-						for ($k=1; $k <= count($idProvider); $k++) {
-							?>
-								<tr>
-									<td>
-										<?php echo $namaProvider[$k]; ?>
-									</td>
-										<?php
-											for ($j=1; $j <= $daycount ; $j++) {
-												for ($check=0; $check < (count($jamCekPaket)-1); $check++) {
-													$startDate 	= $postDate."-".sprintf("%02d", $j)." ".$jamCekPaket[$check].":01";
-													$endDate 	= $postDate."-".sprintf("%02d", $j)." ".$jamCekPaket[($check+1)].":00";
+						// Create empty value array
+						$listProvider = array();
+						foreach($namaProvider as $provider) {
+							$listProvider[$provider] = array();
+							for ($i=1; $i <= $daycount ; $i++) {
+								$listProvider[$provider][$i] = array();
+								for ($j=0; $j < count($jamCekPaket); $j++) {
+									$listProvider[$provider][$i][$jamCekPaket[$j]] = "-";
+								}
+							}
+						}
+						$currBalQry = "";
+						$currBalQry = "SELECT DISTINCT(tanggal), namaProvider, sisaPaket, DAYOFMONTH(tanggal) as tgl, DATE_FORMAT(tanggal, '%H:%i') as waktu, HOUR(tanggal) as jam, MINUTE(tanggal) as menit FROM paket WHERE namaProvider in("."'".implode("','", $namaProvider)."'".") AND YEAR(tanggal) = '".explode('-', $postDate)[0]."' AND MONTH(tanggal) = '".explode('-', $postDate)[1]."' ORDER BY namaProvider, tgl, jam + 0, menit + 0";
+						$resultCurBal = mysql_query($currBalQry) or die(mysql_error());
+						if($resultCurBal){
+							$resultCount = mysql_num_rows($resultCurBal);
+							if ($resultCount > 0) {
+								while($rowCurBall = mysql_fetch_array($resultCurBal)){
+									if (isset($listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]])) {
+										$listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]] = $rowCurBall["sisaPaket"];
+									}
+								}
+							}
+						}
 
-													$currBalQry = "";
-													$currBalQry = "SELECT namaProvider, sisaPaket FROM paket WHERE namaProvider = '".$namaProvider[$k]."' AND tanggal between '".$startDate."' AND '".$endDate."' LIMIT 1";
-													if($resultCurBal = mysql_query($currBalQry)){
-														if (mysql_num_rows($resultCurBal) > 0) {
-															while($rowCurBall = mysql_fetch_array($resultCurBal)){
-																$provName		= $rowCurBall['namaProvider'];
-																$paket			= $rowCurBall['sisaPaket'];
-
-																echo '<td class="fixed">';
-																echo parsePulsa($paket, 30);
-																echo '</td>';
-															}
-														}else{
-															echo '<td class="fixed">-</td>';
-														}
-													}
-												}
-											}
-										?>
-								</tr>
-							<?php
+						foreach ($listProvider as $provider => $days) {
+							echo "<tr>";
+							echo "<td>".$provider."</td>";
+							foreach ($days as $day => $times) {
+								foreach ($times as $time => $paket) {
+									echo "<td class='fixed'>".parsePulsa(intval($paket), 30)."</td>";
+								}
+							}
+							echo "</tr>";
 						}
 					?>
 				</tbody>
@@ -94,8 +95,11 @@
 		</div>
 	</div>
 	<div class="col s12">
-		<a href="./index.php" class="btn waves-effect waves-light blue-cermati" name="action">Back
-			<i class="material-icons right">subdirectory_arrow_left</i>
+		<a href="./index.php" class="btn waves-effect waves-light blue-cermati" name="action">Home
+			<i class="material-icons right">home</i>
+		</a>
+		<a href="./index.php?menu=pulsa" class="btn waves-effect waves-light blue-cermati" name="action">Table Pulsa
+			<i class="material-icons right">send</i>
 		</a>
 	</div>
 </div>

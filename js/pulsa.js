@@ -1,13 +1,18 @@
 var today = new Date();
 var day = today.getDate();
-day='#tanggal' + day;
+day ='#tanggal' + day;
+
+var $tableParent;
+var $dayElement;
+var $dayPos;
 
 $(document).ready(function() {
     $('.modal-trigger').leanModal();
-    var $dayElement =  $(day);
-    var $tBody = $('#home-table tbody');
-    var $table = $('#home-table table');
-    $tBody.scrollLeft($dayElement.position() - ($tBody.outerWidth(true) / 2) + ($dayElement.outerWidth(true) / 2));
+    $dayElement = $(day);
+    $dayPos = $dayElement.position();
+
+    var $homeTable = $('.home-table table');
+    $tableParent = $homeTable.parent();
 
     $('#bulanTahun').on('change', function() {
         $('#simulation-form').submit();
@@ -33,4 +38,7 @@ $(document).ready(function() {
             });
         });
     }
+
+    $tableParent.scrollLeft($dayPos.left - (($tableParent.outerWidth(true) / 2) - ($dayElement.outerWidth(true) / 2)));
+
 });
