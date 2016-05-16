@@ -33,7 +33,7 @@
 						<?php
 							for ($i=1; $i <= $daycount ; $i++) {
 								?>
-									<th id="<?php echo 'tanggal'.$i;?>" class="border-right" colspan="<?php echo count(getJamPaket($postDate."-".$i)); ?>">
+									<th id="<?php echo 'tanggal'.$i;?>" class="border-right" colspan="<?php echo count(getJamPaket($postDate."-".sprintf("%02d", $i))); ?>">
 										<?php echo $i;?>
 									</th>
 								<?php
@@ -43,9 +43,9 @@
 					<tr class="border-bottom">
 						<?php
 							for ($i=1; $i <= $daycount ; $i++) {
-								for ($j=0; $j < count(getJamPaket($postDate."-".$i)); $j++) {
+								for ($j=0; $j < count(getJamPaket($postDate."-".sprintf("%02d", $i))); $j++) {
 									echo '<th class="border-right">';
-									echo getJamPaket($postDate."-".$i)[$j];
+									echo getJamPaket($postDate."-".sprintf("%02d", $i), $j);
 									echo '</th>';
 								}
 							}
@@ -60,8 +60,8 @@
 							$listProvider[$provider] = array();
 							for ($i=1; $i <= $daycount ; $i++) {
 								$listProvider[$provider][$i] = array();
-								for ($j=0; $j < count(getJamPaket($postDate."-".$i)); $j++) {
-									$listProvider[$provider][$i][getJamPaket($postDate."-".$i)[$j]] = "-";
+								for ($j=0; $j < count(getJamPaket($postDate."-".sprintf("%02d", $i))); $j++) {
+									$listProvider[$provider][$i][getJamPaket($postDate."-".sprintf("%02d", $i), $j)] = "-";
 								}
 							}
 						}

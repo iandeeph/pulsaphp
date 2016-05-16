@@ -46,7 +46,7 @@ $currentMonthYear   = date("Y-m");
 
 $postDate = (isset($_POST['bulanTahun']))?strval($_POST['bulanTahun']):$currentMonthYear;
 
-function getJamPaket($date) {
+function getJamPaket($date, $index = NULL) {
     $jamCekPulsa = array();
     if (strtotime($date) >= strtotime("2016-05-11")) {
         $jamCekPulsa = array(
@@ -62,7 +62,11 @@ function getJamPaket($date) {
         );
     }
 
-    return $jamCekPulsa;
+    if ($index === NULL) {
+        return $jamCekPulsa;
+    } else {
+        return $jamCekPulsa[$index];
+    }
 }
 
 $postMonth  = date("m", strtotime($postDate));

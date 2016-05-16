@@ -66,7 +66,22 @@
 							}
 						}
 						$currBalQry = "";
-						$currBalQry = "SELECT DISTINCT(tanggal), namaProvider, sisaPaket, DAYOFMONTH(tanggal) as tgl, DATE_FORMAT(tanggal, '%H:%i') as waktu, HOUR(tanggal) as jam, MINUTE(tanggal) as menit FROM paket WHERE namaProvider in("."'".implode("','", $namaProvider)."'".") AND YEAR(tanggal) = '".explode('-', $postDate)[0]."' AND MONTH(tanggal) = '".explode('-', $postDate)[1]."' ORDER BY namaProvider, tgl, jam + 0, menit + 0";
+						$currBalQry = "SELECT DISTINCT(tanggal),
+										namaProvider,
+										sisaPaket,
+										DAYOFMONTH(tanggal) as tgl,
+										DATE_FORMAT(tanggal, '%H:%i') as waktu,
+										HOUR(tanggal) as jam,
+										MINUTE(tanggal) as menit
+										FROM paket 
+										WHERE namaProvider in("."'".implode("','", $namaProvider)."'".") 
+											AND YEAR(tanggal) = '".$postYear."' 
+											AND MONTH(tanggal) = '".$postMonth."'
+										ORDER BY 
+											namaProvider,
+											tgl,
+											jam + 0,
+											menit + 0";
 						echo $currBalQry;
 						$resultCurBal = mysql_query($currBalQry) or die(mysql_error());
 						if($resultCurBal){

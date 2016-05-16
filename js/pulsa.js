@@ -24,7 +24,7 @@ $(document).ready(function() {
             var $self = $(this);
             var $parent = $self.parent();
             var width = $parent.outerWidth(true);
-            var scrollSpeed = 200;
+            var scrollSpeed = 50;
             $parent.css({
                 overflow: 'auto'
             });
