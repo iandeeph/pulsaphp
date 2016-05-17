@@ -466,7 +466,7 @@ do
 		echo "$currentTime - STOP PAKET"
 		echo "$currentTime - --------------------------------------------------------------"
 		echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
-		if [ "$cekString" = "Recive" ] && [ "$cekString2" = "diproses" ]; then #bila respon open = Recive
+		if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
 			echo "$currentTime - ${green}XL$numXl Stop Paket Berhasil...${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 			stopPaketStatus[$numXl]="berhasil"
@@ -476,7 +476,7 @@ do
 			cekBerhasil=""
 			echo "$currentTime - ${red}XL$numXl Stop Paket Gagal...${reset}"
 			echo "$currentTime - ----------------------------------------------"
-			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+			while [[ $attempt -le $maxAttempt ]] && [[ "$cekBerhasil" != "berhasil" ]]; do
 				echo "$currentTime - XL$numXl percobaan stop ke-$attempt"
 				stopXL$numXl #function untuk stop paket
 				cekString=${xlStop:2:6} # mengecek respon dari openvox
@@ -485,7 +485,7 @@ do
 				echo "$currentTime - STOP PAKET"
 				echo "$currentTime - --------------------------------------------------------------"
 				echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
-				if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "diproses" ]]; then #bila respon open = Recive
+				if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
 					echo "$currentTime - ${green}XL$numXl Stop Paket Berhasil...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					cekBerhasil="berhasil"
