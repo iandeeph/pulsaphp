@@ -199,6 +199,90 @@ xlPaketFx7()
 	sisaPaket=$((sisaPaket + 0))
 }
 
+stopXL5()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#stop paket
+	xlStop=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 2 *123*7*6*1*1#'")
+}
+renewalValidationXL5()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#validasi apakah paket yang akan dipasang sudah sesuai atau belum
+	validasiPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 2 *123*4*2*5*1*3*4#'")
+	#validasiString2=${telkomselPaket:49:6}
+}
+renewalExecXL5()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#perpanjang paket
+	xlRenewal=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 2 *1#'")
+	#renewalString2=${telkomselPaket:73:8}
+}
+renewalXL5()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#perpanjang paket
+	xlRenewalFull=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 2 *123*4*2*5*1*3*4*1#'")
+	#renewalString2=${telkomselPaket:73:8}
+}
+
+stopXL6()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#stop paket
+	xlStop=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 3 *123*7*6*1*1#'")
+}
+renewalValidationXL6()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#validasi apakah paket yang akan dipasang sudah sesuai atau belum
+	validasiPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 3 *123*4*2*5*1*3*4#'")
+	#validasiString2=${telkomselPaket:49:6}
+}
+renewalExecXL6()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#perpanjang paket
+	xlRenewal=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 3 *1#'")
+	#renewalString2=${telkomselPaket:73:8}
+}
+renewalXL6()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#perpanjang paket
+	xlRenewalFull=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 3 *123*4*2*5*1*3*4*1#'")
+	#renewalString2=${telkomselPaket:73:8}
+}
+
+stopXL7()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#stop paket
+	xlStop=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *123*7*6*1*1#'")
+}
+renewalValidationXL7()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#validasi apakah paket yang akan dipasang sudah sesuai atau belum
+	validasiPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *123*4*2*5*1*3*4#'")
+	#validasiString2=${validasiPaket:49:6}
+}
+renewalExecXL7()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#perpanjang paket
+	xlRenewal=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *1#'")
+	#renewalString2=${xlRenewal:73:8}
+}
+renewalXL7()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	#perpanjang paket
+	xlRenewalFull=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *123*4*2*5*1*3*4*1#'")
+	#renewalString2=${telkomselPaket:73:8}
+}
+
 numSimpati=1
 numXl=1
 numIndosat=1
@@ -373,13 +457,126 @@ do
 			fi
 		done
 	fi
+
+	if [[ "${$numXl}" -ge 5 ]] && [[ "${sisaPaketXL[$numXl]}" -le 30 ]]; then #untuk XL5, XL6 dan XL7 && jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
+		stopXL$numXl #function untuk stop paket
+		cekString=${xlStop:2:6} # mengecek respon dari openvox
+		cekString2=${xlStop:73:8} # mengecek respon dari openvox
+		echo "$currentTime - --------------------------------------------------------------"
+		echo "$currentTime - STOP PAKET"
+		echo "$currentTime - --------------------------------------------------------------"
+		echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
+		if [ "$cekString" = "Recive" ] && [ "$cekString2" = "diproses" ]; then #bila respon open = Recive
+			echo "$currentTime - ${green}XL$numXl Stop Paket Berhasil...${reset}"
+			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+			stopPaketStatus[$numXl]="berhasil"
+		else
+			attempt=1
+			attempt=$((attempt + 0))
+			cekBerhasil=""
+			echo "$currentTime - ${red}XL$numXl Stop Paket Gagal...${reset}"
+			echo "$currentTime - ----------------------------------------------"
+			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+				echo "$currentTime - XL$numXl percobaan stop ke-$attempt"
+				stopXL$numXl #function untuk stop paket
+				cekString=${xlStop:2:6} # mengecek respon dari openvox
+				cekString2=${xlStop:73:8} # mengecek respon dari openvox
+				echo "$currentTime - --------------------------------------------------------------"
+				echo "$currentTime - STOP PAKET"
+				echo "$currentTime - --------------------------------------------------------------"
+				echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
+				if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "diproses" ]]; then #bila respon open = Recive
+					echo "$currentTime - ${green}XL$numXl Stop Paket Berhasil...${reset}"
+					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+					cekBerhasil="berhasil"
+					stopPaketStatus[$numXl]="berhasil"
+					attempt=$((attempt + 3))
+				else
+					cekBerhasil="gagal"
+					echo "$currentTime - ${red}XL$numXl Stop Paket Gagal...${reset}"
+					echo "$currentTime - ----------------------------------------------"
+					
+					attempt=$((attempt + 1))
+					if [[ $attempt == $maxAttempt ]]; then
+						stopPaketStatus[$numXl]="gagal"
+					fi
+				fi
+			done
+		fi
+
+		if [[ ${stopPaketStatus[$numXl]} == "berhasil" ]]; then
+			renewalValidationXL$numXl
+			validasiString=${validasiPaket:2:6}
+			validasiString2=${validasiPaket:65:6}
+			echo "$currentTime - --------------------------------------------------------------"
+			echo "$currentTime - VALIDASI PAKET"
+			echo "$currentTime - --------------------------------------------------------------"
+			echo "$currentTime - USSD REPLY : ${yellow}$validasiPaket${reset}"
+			if [[ "$validasiString" = "Recive" ]] && [[ "$validasiString2" = "AnyNet" ]]; then
+				echo "$currentTime - ${green}XL$numXl Validasi Paket Oke...${reset}"
+				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+				echo "$currentTime - ${green}Paket yang akan dipasang  : $validasiString2${reset}"
+
+				renewalExecXL$numXl
+				renewalString=${xlRenewal:2:6}
+				renewalString2=${xlRenewal:73:8}
+				echo "$currentTime - --------------------------------------------------------------"
+				echo "$currentTime - EKSEKUSI PERPANJANG PAKET"
+				echo "$currentTime - --------------------------------------------------------------"
+				echo "$currentTime - USSD REPLY : ${yellow}$xlRenewal${reset}"
+				if [[ "$renewalString" = "Recive" ]] && [[ "$renewalString2" = "diproses" ]]; then
+					echo "$currentTime - ${green}XL$numXl Perpanjang Paket Berhasil...${reset}"
+					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+					#insert ke database sms untuk ngirim sms notifikasi
+					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl Perpanjang Paket Berhasil, coba cek..!!', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				else
+					attempt=1
+					attempt=$((attempt + 0))
+					cekBerhasil=""
+					echo "$currentTime - ${red}XL$numXl Perpanjang Paket Gagal...${reset}"
+					echo "$currentTime - ----------------------------------------------"
+					while [[ $attempt -le $maxAttempt]] && [["$cekBerhasil" != "berhasil"  ]]; do
+						echo "$currentTime - XL$numXl percobaan perpanjang paket ke-$attempt"
+						renewalXL$numXl
+						cekString=${xlRenewalFull:2:6} # mengecek respon dari openvox
+						cekString2=${xlRenewalFull:73:8} # mengecek respon dari openvox
+						echo "$currentTime - USSD REPLY : ${yellow}$xlPaket${reset}"
+
+						if [ "$cekString" = "Recive" ] && [ "$cekString2" = "diproses" ]; then
+							echo "$currentTime - ${green}XL$numXl Perpanjang Paket Berhasil...${reset}"
+							echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+							cekBerhasil="berhasil"
+							attempt=$((attempt + 3))
+							#insert ke database sms untuk ngirim sms notifikasi
+							echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl Perpanjang Paket Berhasil, coba cek..!!', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						else
+							cekBerhasil="gagal"
+							echo "$currentTime - ${red}XL$numXl Perpanjang Paket Gagal...${reset}"
+							echo "$currentTime - ----------------------------------------------"
+							
+							attempt=$((attempt + 1))
+							if [[ $attempt == $maxAttempt ]]; then
+								#insert ke database sms untuk ngirim sms notifikasi
+								echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl Perpanjang Paket Gagal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+							fi
+						fi
+					done
+				fi
+			else
+				echo "$currentTime - ${green}XL$numXl Validasi Paket Gagal, Paket yang akan dibeli salah...${reset}"
+				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+				#insert ke database sms untuk ngirim sms notifikasi
+				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			fi
+		else
+			#insert ke database sms untuk ngirim sms notifikasi
+			#echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl paketnya mau abis.. sisa : ${sisaPaketXL[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl gagal stop paket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+		fi
+	fi
 	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING PAKET XL$numXl FINISHED+++++++++++++++++++++${reset}"
 
-	if [[ "${sisaPaketXL[$numXl]}" -le 30 ]]; then
-		echo "$currentTime - Ngasih tau kalo sisa paket kurang dari 30 menit"
-		#insert ke database sms untuk ngirim sms notifikasi
-		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'XL$numXl paketnya mau abis.. sisa : ${sisaPaketXL[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-	fi
+
 
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
