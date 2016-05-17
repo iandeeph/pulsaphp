@@ -458,7 +458,7 @@ do
 		done
 	fi
 
-	if [[ "${$numXl}" -ge 5 ]] && [[ "${sisaPaketXL[$numXl]}" -le 30 ]]; then #untuk XL5, XL6 dan XL7 && jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
+	if [[ "$numXl" -ge 5 ]] && [[ "${sisaPaketXL[$numXl]}" -le 30 ]]; then #untuk XL5, XL6 dan XL7 && jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
 		stopXL$numXl #function untuk stop paket
 		cekString=${xlStop:2:6} # mengecek respon dari openvox
 		cekString2=${xlStop:73:8} # mengecek respon dari openvox
