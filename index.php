@@ -6,10 +6,7 @@ session_start();
 
 require "sql/connect.php";
 require "php/pulsa.php";
-
-spl_autoload_register(function ($class_name) {
-    include $class_name . '.php';
-});
+include 'trunks.php';
 ?>
 <!DOCTYPE html>
 <html>
