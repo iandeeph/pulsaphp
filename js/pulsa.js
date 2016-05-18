@@ -8,6 +8,12 @@ var $dayPos;
 
 $(document).ready(function() {
     $('.modal-trigger').leanModal();
+    $(".button-collapse").sideNav();
+    Materialize.updateTextFields();
+    $('.collapsible-span').collapsible({
+      accordion : true // A setting that changes the collapsible behavior to expandable instead of the default accordion style
+    });
+
     $dayElement = $(day);
     $dayPos = $dayElement.position();
 
@@ -39,6 +45,10 @@ $(document).ready(function() {
         });
     }
 
-    $tableParent.scrollLeft($dayPos.left - (($tableParent.outerWidth(true) / 2) - ($dayElement.outerWidth(true) / 2)));
+    if ($homeTable.length > 0) {
+        $.each($table, function () {
+            $tableParent.scrollLeft($dayPos.left - (($tableParent.outerWidth(true) / 2) - ($dayElement.outerWidth(true) / 2)));
+        });
+    }
 
 });

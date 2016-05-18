@@ -1,5 +1,5 @@
 <?php
-$servername = "1.1.1.200";
+$servername = "localhost";
 $username = "root";
 $password = "c3rmat";
 $dbname = "dbpulsa";

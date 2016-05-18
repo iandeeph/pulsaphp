@@ -2,6 +2,12 @@
 	<div class="col s12">
 		<h4>Pulsa Cermati Hari Ini</h4>
 	</div>
+	<div class="col s12 hide-on-large-only">
+		<span class="font-15">Pulsa Last Update : <?php echo $lastUpdate;?></span> 
+	</div>
+	<div class="col s12 hide-on-large-only">
+		<span class="font-15">Paket Last Update : <?php echo $lastUpdatePaket;?></span> 
+	</div>
 	<div class="col s12 mt-30 mb-20 home-table">
 		<table class="bordered">
 			<thead>
@@ -17,11 +23,11 @@
 					</th>
 					<th data-filed="sisaPulsa">
 						Sisa Pulsa <br>
-						<span class="font-15">(<?php echo $lastUpdate;?>)</span>
+						<span class="font-15"></span><span class="hide-on-med-and-down">(<?php echo $lastUpdate;?>)</span>
 					</th>
 					<th data-filed="sisaPaket">
 						Sisa Paket <br>
-						<span class="font-15">(<?php echo $lastUpdatePaket;?>)</span>
+						<span class="font-15"></span><span class="hide-on-med-and-down">(<?php echo $lastUpdatePaket;?>)</span>
 					</th>
 				</tr>
 			</thead>

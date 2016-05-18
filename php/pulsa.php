@@ -1,5 +1,6 @@
 <?php
 $menu = (isset($_GET['menu']))?$_GET['menu']:"";
+$name = (isset($_SESSION['name']))?$_SESSION['name']:"";
 
 foreach($_POST as $key => $val) {
     if (!is_array($val)) {
@@ -40,11 +41,20 @@ function parsePulsa($pulsa, $hargaPaket){
     return $pulsaAkhir;
 }
 
-$today=date("Y-m-d 00:00:00");
+function logging($date, $user, $action, $value, $iditem){
+    require "sql/connect.php";
+    $insertLogQry = "";
+    $insertLogQry = "INSERT INTO log (date, user, action, value, iditem) VALUES ('".$date."', '".$user."', '".$action."', '".$value."', '".$iditem."')";
+    if(!mysql_query($insertLogQry)){
+        alertBox("ERROR: Could not able to execute " . mysql_error($conn));
+    }
+}
 
-$currentMonthYear   = date("Y-m");
-
-$postDate = (isset($_POST['bulanTahun']))?strval($_POST['bulanTahun']):$currentMonthYear;
+function phone_number($phone) {
+    $firstDash = substr_replace($phone, "-", 4, 0);
+    $secondDash = substr_replace($firstDash, "-", 9, 0);
+    return $secondDash;
+}
 
 function getJamPaket($date, $index = NULL) {
     $jamCekPulsa = array();
@@ -68,17 +78,18 @@ function getJamPaket($date, $index = NULL) {
         return $jamCekPulsa[$index];
     }
 }
+$today=date("Y-m-d 00:00:00");
+
+$currentMonthYear   = date("Y-m");
+
+$postDate = (isset($_POST['bulanTahun']))?strval($_POST['bulanTahun']):$currentMonthYear;
+
 
 $postMonth  = date("m", strtotime($postDate));
 $postYear   = date("Y", strtotime($postDate));
 
 $daycount=cal_days_in_month(CAL_GREGORIAN,$postMonth,$postYear);
 
-function phone_number($phone) {
-    $firstDash = substr_replace($phone, "-", 4, 0);
-    $secondDash = substr_replace($firstDash, "-", 9, 0);
-    return $secondDash;
-}
 
 $lastUpdateQry = "";
 $lastUpdateQry = "SELECT DATE_FORMAT(max(tanggal), '%d %b %y - %H:%i') as lastUpdate, DATE_FORMAT(max(tanggal), '%Y-%m-%d %H:%i:00') as lastDate FROM pulsa LIMIT 1";
