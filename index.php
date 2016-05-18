@@ -95,6 +95,7 @@ include 'trunks.php';
     <main>
     	<div>
 		    <?php
+		    if(isset($_SESSION['login']) && $_SESSION['login'] == 'logged'){
 				switch ($menu) {
 					case 'home':
 						include 'home.php';
@@ -118,6 +119,25 @@ include 'trunks.php';
 						include 'home.php';
 						break;
 		        }
+		    }else{
+		    	switch ($menu) {
+					case 'home':
+						include 'home.php';
+						break;
+					case 'pulsa':
+						include 'perdates-pulsa.php';
+						break;
+					case 'paket':
+						include 'perdates-paket.php';
+						break;
+					case 'logout':
+						include 'logout.php';
+						break;
+					default:
+						include 'home.php';
+						break;
+		        }
+		    }
 		    ?>
     	</div>
     	<!-- ============== modal login -->
