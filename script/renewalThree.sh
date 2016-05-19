@@ -3,6 +3,13 @@
 #===============================================================================
 currentTime=$(date +"[ %Y-%m-%d %H:%M:%S ]")
 
+#===============================================================================
+#Konfigurasi Database
+#===============================================================================
+HOST='1.1.1.200'
+USER='root'
+PASSWORD='c3rmat'
+
 THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))
 # THREE=(089629783240 089629779562 089629789574)
 sleep 3m

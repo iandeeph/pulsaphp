@@ -21,16 +21,52 @@ HARGA_PAKET_THREE=5000
 #paket Indosat tidak ada karena Indosat diperpanjang setiap hari selama pulsa mencukupi
 #===============================================================================
 #===============================================================================
-#mengambil tanggal kadaluarsa paket, query dari database (hanya telkomsel)
+#mengambil semua element dalam database, query dari database
 #===============================================================================
-expDateSimpati=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select expDatePaket from provider where namaProvider like 'Telkomsel%';"))
-expDateXL=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select expDatePaket from provider where namaProvider like 'XL%';"))
+#===============================================================================
+#TELKOMSEL
+#===============================================================================
+while read telkomselNama telkomselNo telkomselHost telkomselSpan telkomselHargaPaket telkomselExpDatePaket telkomselCaraCekPulsa
+do
+	telkomselNama+=("$telkomselNama")
+	telkomselNo+=("$telkomselNo")
+	telkomselHost+=("$telkomselHost")
+	telkomselSpan+=("$telkomselSpan")
+	telkomselHargaPaket+=("$telkomselHargaPaket")
+	telkomselExpDatePaket+=("$telkomselExpDatePaket")
+	telkomselCaraCekPulsa+=("$telkomselCaraCekPulsa")
+done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'Telkomsel%' order by namaProvider;")
+#===============================================================================
+#XL
+#===============================================================================
+while read XLNama XLNo XLHost XLSpan XLHargaPaket XLExpDatePaket XLCaraCekPulsa
+do
+	XLNama+=("$XLNama")
+	XLNo+=("$XLNo")
+	XLHost+=("$XLHost")
+	XLSpan+=("$XLSpan")
+	XLHargaPaket+=("$XLHargaPaket")
+	XLExpDatePaket+=("$XLExpDatePaket")
+	XLCaraCekPulsa+=("$XLCaraCekPulsa")
+done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'XL%' order by namaProvider;")
+#===============================================================================
+#THREE
+#===============================================================================
+while read threeNama threeNo threeHost threeSpan threeHargaPaket threeExpDatePaket threeCaraCekPulsa
+do
+	threeNama+=("$threeNama")
+	threeNo+=("$threeNo")
+	threeHost+=("$threeHost")
+	threeSpan+=("$threeSpan")
+	threeHargaPaket+=("$threeHargaPaket")
+	threeExpDatePaket+=("$threeExpDatePaket")
+	threeCaraCekPulsa+=("$threeCaraCekPulsa")
+done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'Three%' order by namaProvider;")
 
-cnt=${#expDateSimpati[@]} #menghitung total row
+cnt=${#telkomselExpDatePaket[@]} #menghitung total row
 for (( i=1 ; i<=${cnt} ; i++ )) #loooping sebanyak total row
 do
-    expDateTelkomsel[$i]=${expDateSimpati[(($i-1))]} #inisialisasi variable untuk masing2 baris
-    expDateTelkomsel[$i]=${expDateTelkomsel[$i]//[-]/} #merubah dateformat menjadi yyyymmdd yang sebelumnya yyy-dd-mm dengan menghilangkan "-"
+    telkomselExpDatePaket[$i]=${telkomselExpDatePaket[$i]//[-]/} #merubah dateformat menjadi yyyymmdd yang sebelumnya yyy-dd-mm dengan menghilangkan "-"
 done
 
 #===============================================================================
@@ -49,10 +85,10 @@ TUKANGKETIK=08992112203
 #===============================================================================
 #inisialisasi array untuk nomor telp masing-masing provider.. urutan nomor tergantung kepada posisi pada slot openvox..
 #===============================================================================
-TELKOMSEL=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Telkomsel%';"))
-XL=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'XL%';"))
+# TELKOMSEL=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Telkomsel%';"))
+# XL=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'XL%';"))
 # INDOSAT=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Indosat%';"))
-THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))
+# THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))
 # TELKOMSEL=(081212232674 081212232835 081212232617 081319468847 082112592932 081213374483 081295882084 081295741478 081212232638)
 # XL=(081807184805 087886347632 087780867200 087883072681)
 # INDOSAT=(085710250739 085710250748 081513779454)
@@ -78,11 +114,11 @@ fi
 #metode restart adalah mengirim SMS dengan isi pesan 'reboot system <password> ke masing-masing modul openvox (3.3.3.2, 3.3.3.3, 3.3.3.4 & 3.3.3.5)'
 #===============================================================================
 echo "$currentTime - Restarting openvox..."
-echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${TELKOMSEL[0]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${TELKOMSEL[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XL[0]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XL[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${THREE[0]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${telkomselNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${telkomselNo[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XLNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XLNo[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${threeNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 
 #===============================================================================
 #memberikan waktu untuk openvox kembali UP setelah di restart.. 
@@ -100,47 +136,47 @@ echo $(rm -rf ~/.ssh/known_hosts)
 telkomselFx1()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 1 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[1]} ${telkomselCaraCekPulsa[1]}")
 }
 telkomselFx2()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 2 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[2]} ${telkomselCaraCekPulsa[2]}")
 }
 telkomselFx3()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 3 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[3]} ${telkomselCaraCekPulsa[3]}")
 }
 telkomselFx4()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 4 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[4]} ${telkomselCaraCekPulsa[4]}")
 }
 telkomselFx5()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 1 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[5]} ${telkomselCaraCekPulsa[5]}")
 }
 telkomselFx6()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 2 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[6]} ${telkomselCaraCekPulsa[6]}")
 }
 telkomselFx7()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 3 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[7]} ${telkomselCaraCekPulsa[7]}")
 }
 telkomselFx8()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 4 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[8]} ${telkomselCaraCekPulsa[8]}")
 }
 telkomselFx9()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 1 *888#'")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraCekPulsa[9]}")
 }
 
 xlFx1()

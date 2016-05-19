@@ -507,7 +507,7 @@ do
 		if [[ ${stopPaketStatus[$numXl]} == "berhasil" ]]; then
 			renewalValidationXL$numXl
 			validasiString=${validasiPaket:2:6}
-			validasiString2=${validasiPaket:65:6}
+			validasiString2=${validasiPaket:64:6}
 			echo "$currentTime - --------------------------------------------------------------"
 			echo "$currentTime - VALIDASI PAKET"
 			echo "$currentTime - --------------------------------------------------------------"
