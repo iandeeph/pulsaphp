@@ -26,7 +26,7 @@ HARGA_PAKET_THREE=5000
 #===============================================================================
 #TELKOMSEL
 #===============================================================================
-while read telkomselNama telkomselNo telkomselHost telkomselSpan telkomselHargaPaket telkomselExpDatePaket telkomselCaraCekPulsa
+while read telkomselNama telkomselNo telkomselHost telkomselSpan telkomselHargaPaket telkomselExpDatePaket telkomselCaraCekPulsa telkomselCaraAktivasi
 do
 	telkomselNama+=("$telkomselNama")
 	telkomselNo+=("$telkomselNo")
@@ -35,7 +35,8 @@ do
 	telkomselHargaPaket+=("$telkomselHargaPaket")
 	telkomselExpDatePaket+=("$telkomselExpDatePaket")
 	telkomselCaraCekPulsa+=("$telkomselCaraCekPulsa")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'Telkomsel%' order by namaProvider;")
+	telkomselCaraAktivasi+=("$telkomselCaraAktivasi")
+done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa, caraAktivasi from provider where namaProvider like 'Telkomsel%' order by namaProvider;")
 #===============================================================================
 #XL
 #===============================================================================
@@ -48,7 +49,7 @@ do
 	XLHargaPaket+=("$XLHargaPaket")
 	XLExpDatePaket+=("$XLExpDatePaket")
 	XLCaraCekPulsa+=("$XLCaraCekPulsa")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'XL%' order by namaProvider;")
+done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'XL%' order by namaProvider;")
 #===============================================================================
 #THREE
 #===============================================================================
@@ -61,7 +62,7 @@ do
 	threeHargaPaket+=("$threeHargaPaket")
 	threeExpDatePaket+=("$threeExpDatePaket")
 	threeCaraCekPulsa+=("$threeCaraCekPulsa")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'Three%' order by namaProvider;")
+done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'Three%' order by namaProvider;")
 
 cnt=${#telkomselExpDatePaket[@]} #menghitung total row
 for (( i=1 ; i<=${cnt} ; i++ )) #loooping sebanyak total row
@@ -85,10 +86,6 @@ TUKANGKETIK=08992112203
 #===============================================================================
 #inisialisasi array untuk nomor telp masing-masing provider.. urutan nomor tergantung kepada posisi pada slot openvox..
 #===============================================================================
-# TELKOMSEL=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Telkomsel%';"))
-# XL=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'XL%';"))
-# INDOSAT=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Indosat%';"))
-# THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))
 # TELKOMSEL=(081212232674 081212232835 081212232617 081319468847 082112592932 081213374483 081295882084 081295741478 081212232638)
 # XL=(081807184805 087886347632 087780867200 087883072681)
 # INDOSAT=(085710250739 085710250748 081513779454)
@@ -136,90 +133,90 @@ echo $(rm -rf ~/.ssh/known_hosts)
 telkomselFx1()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[1]} ${telkomselCaraCekPulsa[1]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[1]} ${telkomselCaraCekPulsa[1]}'")
 }
 telkomselFx2()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[2]} ${telkomselCaraCekPulsa[2]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[2]} ${telkomselCaraCekPulsa[2]}'")
 }
 telkomselFx3()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[3]} ${telkomselCaraCekPulsa[3]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[3]} ${telkomselCaraCekPulsa[3]}'")
 }
 telkomselFx4()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[4]} ${telkomselCaraCekPulsa[4]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[4]} ${telkomselCaraCekPulsa[4]}'")
 }
 telkomselFx5()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[5]} ${telkomselCaraCekPulsa[5]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[5]} ${telkomselCaraCekPulsa[5]}'")
 }
 telkomselFx6()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[6]} ${telkomselCaraCekPulsa[6]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[6]} ${telkomselCaraCekPulsa[6]}'")
 }
 telkomselFx7()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[7]} ${telkomselCaraCekPulsa[7]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[7]} ${telkomselCaraCekPulsa[7]}'")
 }
 telkomselFx8()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[8]} ${telkomselCaraCekPulsa[8]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[8]} ${telkomselCaraCekPulsa[8]}'")
 }
 telkomselFx9()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraCekPulsa[9]}")
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraCekPulsa[9]}'")
 }
 
 xlFx1()
 {
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
-	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 1 *123#'")
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[1]} ${XLCaraCekPulsa[1]}'")
 }
 xlFx2()
 {
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
-	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 2 *123#'")
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[2]} ${XLCaraCekPulsa[2]}'")
 }
 xlFx3()
 {
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
-	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 3 *123#'")
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[3]} ${XLCaraCekPulsa[3]}'")
 }
 xlFx4()
 {
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
-	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 4 *123#'")
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[4]} ${XLCaraCekPulsa[4]}'")
 }
 xlFx5()
 {
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
-	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 2 *123#'")
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[5]} ${XLCaraCekPulsa[5]}'")
 }
 xlFx6()
 {
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
-	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 3 *123#'")
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[6]} ${XLCaraCekPulsa[6]}'")
 }
 xlFx7()
 {
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
-	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *123#'")
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[7]} ${XLCaraCekPulsa[7]}'")
 }
 
 # indosatFx1()
@@ -241,120 +238,80 @@ xlFx7()
 threeFx1()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 1 *111*1#'")
+	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[1]} ${threeCaraCekPulsa[1]}'")
 }
 threeFx2()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 2 *111*1#'")
+	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[2]} ${threeCaraCekPulsa[2]}'")
 }
 threeFx3()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 3 *111*1#'")
+	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[3]} ${threeCaraCekPulsa[3]}'")
 }
 threeFx4()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 4 *111*1#'")
+	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[4]} ${threeCaraCekPulsa[4]}'")
 }
 
 
 renewalTelkomselFx1()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 1 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[1]} ${telkomselCaraAktivasi[1]}'")
 }
 renewalTelkomselFx2()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 2 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[2]} ${telkomselCaraAktivasi[2]}'")
 }
 renewalTelkomselFx3()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 3 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[3]} ${telkomselCaraAktivasi[3]}'")
 }
 renewalTelkomselFx4()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 4 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[4]} ${telkomselCaraAktivasi[4]}'")
 }
 renewalTelkomselFx5()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 1 *999*4*3*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[5]} ${telkomselCaraAktivasi[5]}'")
 }
 renewalTelkomselFx6()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 2 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[6]} ${telkomselCaraAktivasi[6]}'")
 }
 renewalTelkomselFx7()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 3 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[7]} ${telkomselCaraAktivasi[7]}'")
 }
 renewalTelkomselFx8()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 4 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[8]} ${telkomselCaraAktivasi[8]}'")
 }
 renewalTelkomselFx9()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 1 *999*4*2*1*1#'")
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraAktivasi[9]}'")
 }
 
-renewalThreeFx()
-{
-	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangThree=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 1 *123*5*1*1*1#'")
-}
-renewalThreeFx()
-{
-	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangThree=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 2 *123*5*1*1*1#'")
-}
-renewalThreeFx()
-{
-	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangThree=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 4 *123*5*1*1*1#'")
-}
+for (( i = 1; i <= 9; i++ )); do
+	telkomsel[$i]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[$i]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[$i]} ${telkomselCaraCekPulsa[$i]}'")
+	sleep 5s
+done
 
-telkomsel[1]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 1 *888#'")
-sleep 5s
-telkomsel[2]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 2 *888#'")
-sleep 5s
-telkomsel[3]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 3 *888#'")
-sleep 5s
-telkomsel[4]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.2 -p12345 "asterisk -rx 'gsm send ussd 4 *888#'")
-sleep 5s
-telkomsel[5]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 1 *888#'")
-sleep 5s
-telkomsel[6]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 2 *888#'")
-sleep 5s
-telkomsel[7]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 3 *888#'")
-sleep 5s
-telkomsel[8]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.3 -p12345 "asterisk -rx 'gsm send ussd 4 *888#'")
-sleep 5s
-telkomsel[9]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 1 *888#'")
-sleep 5s
-
-xl[1]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 1 *123#'")
-sleep 5s
-xl[2]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 2 *123#'")
-sleep 5s
-xl[3]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 3 *123#'")
-sleep 5s
-xl[4]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.5 -p12345 "asterisk -rx 'gsm send ussd 4 *123#'")
-sleep 5s
-xl[5]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 2 *123#'")
-sleep 5s
-xl[6]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 3 *123#'")
-sleep 5s
-xl[7]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *123#'")
-sleep 5s
+for (( i = 1; i <= 7; i++ )); do
+	XL[$i]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[$i]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[$i]} ${XLCaraCekPulsa[$i]}'")
+	sleep 5s
+done
 
 # indosat[1]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 2 *555#'")
 # sleep 5s
@@ -363,14 +320,10 @@ sleep 5s
 # indosat[3]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *555#'")
 # sleep 5s
 
-three[1]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 1 *111*1#'")
-sleep 5s
-three[2]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 2 *111*1#'")
-sleep 5s
-three[3]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 3 *111*1#'")
-sleep 5s
-three[4]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.6 -p12345 "asterisk -rx 'gsm send ussd 4 *111*1#'")
-sleep 5s
+for (( i = 1; i <= 4; i++ )); do
+	three[$i]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[$i]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[$i]} ${threeCaraCekPulsa[$i]}'")
+	sleep 5s
+done
 
 numSimpati=1
 numXl=1
@@ -383,15 +336,14 @@ maxAttempt=$((maxAttempt+0))
 # Simpati
 # ==================================================================================================
 
-for i in "${telkomsel[@]}" #looping sebanyak jumlah variable array
+for i in "${telkomselNo[@]}" #looping sebanyak jumlah variable array
 do
-	textMintaPulsaSimpati[$numSimpati]="Simpati ${TELKOMSEL[$((numSimpati-1))]}"
 	#===============================================================================
 	#melakukan cek pulsa untuk masing-masing nomor pada slot openvox
 	#metodenya adalah SSH pada openvox dan menjalankan USSD pada asterisk di openvox
 	#===============================================================================
 	echo "$currentTime - ===================================================================================================="
-	echo "$currentTime - Checking Pulsa Telkomsel$numSimpati..."
+	echo "$currentTime - Checking Pulsa ${telkomselNama[$numSimpati]}..."
 	echo "$currentTime - ===================================================================================================="
 	cekString=${telkomsel[$numSimpati]:2:6} # mengecek respon dari openvox
 	cekString2=${telkomsel[$numSimpati]:49:4} # mengecek respon dari openvox
@@ -399,90 +351,79 @@ do
 	echo "$currentTime - USSD REPLY : ${yellow}${telkomsel[$numSimpati]}${reset}"
 
 	if [ "$cekString" = "Recive"  ] && [ "$cekString2" != "Maaf"  ]; then #bila respon open = Recive
-		echo "$currentTime - ${green}Telkomsel$numSimpati Cek Berhasil...${reset}"
+		echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		telkomsel[$numSimpati]=${telkomsel[$numSimpati]:62:6} #mengambil character yang bernilai jumlah pulsa
 		telkomsel[$numSimpati]=${telkomsel[$numSimpati]//[.Aktif]/} #mengabaikan character lain selain angka
 		telkomsel[$numSimpati]=$((telkomsel[$numSimpati] + 0)) #merubah variable yang semula string menjadi integer
-		echo "$currentTime - ${green}Sisa pulsa Telkomsel$numSimpati : ${telkomsel[$numSimpati]}${reset}"
+		echo "$currentTime - ${green}Sisa pulsa ${telkomselNama[$numSimpati]} : ${telkomsel[$numSimpati]}${reset}"
 		#===============================================================================
 		#memasukan nilai cek pulsa (pulsa) kedalam database
 		#===============================================================================
-		# jsonTelkomsel$numSimpati="{namaProvider:\"Telkomsel$numSimpati\", sisaPulsa:\"${telkomsel[$numSimpati]}\", tanggal: \"$mysqlDateNow\"}"
-		# echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('Telkomsel$numSimpati', '${telkomsel[$numSimpati]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 		sisaPulsaTelkomsel[$numSimpati]=${telkomsel[$numSimpati]}
 
-		if [[ ${telkomsel[$numSimpati]} -lt $HARGA_PAKET_SIMPATI ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
-			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${TELKOMSEL[$((numSimpati-1))]}"
+		if [[ ${telkomsel[$numSimpati]} -lt ${telkomselHargaPaket[$numSimpati]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
+			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${textMintaPulsaSimpati[$numSimpati]}, sisa pulsa: (${telkomsel[$numSimpati]}), harga paket: $HARGA_PAKET_SIMPATI, Exp Date Paket: ${expDateSimpati[((numSimpati-1))]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: (${telkomsel[$numSimpati]}), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 		fi
 	else
 		attempt=1
 		attempt=$((attempt + 0))
 		cekBerhasil=""
-		echo "$currentTime - ${red}Telkomsel$numSimpati Cek Gagal...${reset}"
+		echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
 		echo "----------------------------------------------"
 		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-			echo "$currentTime - Telkomsel$numSimpati percobaan ke-$attempt"
+			echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
 			telkomselFx$numSimpati
 			cekString=${telkomsel:2:6}
 			cekString2=${telkomsel:49:4}
 			echo "$currentTime - USSD REPLY : ${yellow}$telkomsel${reset}"
 
 			if [ "$cekString" = "Recive"  ] && [ "$cekString2" != "Maaf"  ]; then
-				echo "$currentTime - ${green}Telkomsel$numSimpati Cek Berhasil...${reset}"
+				echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				cekBerhasil="berhasil"
 				attempt=$((attempt + 3))
 				telkomsel=${telkomsel:62:6}
 				telkomsel=${telkomsel//[.Aktif]/}
 				telkomsel=$((telkomsel + 0))
-				echo "$currentTime - ${green}Sisa pulsa Telkomsel$numSimpati : $telkomsel${reset}"
+				echo "$currentTime - ${green}Sisa pulsa }${telkomselNama[$numSimpati]} : $telkomsel${reset}"
 
 				#===============================================================================
 				#memasukan nilai cek pulsa (pulsa) kedalam database
 				#===============================================================================
-				# jsonTelkomsel$numSimpati="{namaProvider:\"Telkomsel$numSimpati\", sisaPulsa:\"$telkomsel\", tanggal: \"$mysqlDateNow\"}"
-				# echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('Telkomsel$numSimpati', '$telkomsel', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 				sisaPulsaTelkomsel[$numSimpati]=$telkomsel
 
-				if [[ ${telkomsel} -lt $HARGA_PAKET_SIMPATI ]]; then
-					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${TELKOMSEL[$((numSimpati-1))]}"
+				if [[ $telkomsel -lt ${telkomselHargaPaket[$numSimpati]} ]]; then
+					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${textMintaPulsa[$numSimpati]}, sisa pulsa: $telkomsel, harga paket: $HARGA_PAKET_SIMPATI, Exp Date Paket: ${expDateSimpati[((numSimpati-1))]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 				fi
 			else
 				cekBerhasil="gagal"
-				echo "$currentTime - ${red}Telkomsel$numSimpati Cek Gagal...${reset}"
+				echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
 				echo "----------------------------------------------"
 				attempt=$((attempt + 1))
 				if [[ $attempt == $maxAttempt ]]; then
 					#===============================================================================
-					#jika cek gagal,, tetap diinsert dengan nilai "-"
+					#jika cek gagal,, tetap diinsert dengan nilai 0
 					#===============================================================================
-					# jsonTelkomsel$numSimpati="{namaProvider:\"Telkomsel$numSimpati\", sisaPulsa:"-", tanggal: \"$mysqlDateNow\"}"
-					# echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('Telkomsel$numSimpati', '-', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
-					sisaPulsaTelkomsel[$numSimpati]="-"
+					sisaPulsaTelkomsel[$numSimpati]=0
 				fi
 			fi
 		done
 	fi
-	echo "$currentTime - ${green}+++++++++++++++++++++++ CHECKING Telkomsel$numSimpati FINISHED+++++++++++++++++++++${reset}"
+	echo "$currentTime - ${green}+++++++++++++++++++++++ CHECKING ${telkomselNama[$numSimpati]} FINISHED+++++++++++++++++++++${reset}"
 
-	if [[ $NOW -ge ${expDateTelkomsel[$numSimpati]} ]]; then
+	if [[ $NOW -ge ${telkomselExpDatePaket[$numSimpati]} ]]; then
 		echo "$currentTime - ===================================================================================================="
-		echo "$currentTime - Perpanjang Paket Telkomsel$numSimpati..."
+		echo "$currentTime - Perpanjang Paket ${telkomselNama[$numSimpati]}..."
 		echo "$currentTime - ===================================================================================================="
 		# ===============================================================================
 		# menentukan tanggal baru untuk tanggal habis paket selanjutnya
 		# ===============================================================================
 		newDate=$(date -d "6 days" +%Y-%m-%d)
-		# ===============================================================================
-		# mengirim sms ke admin, kalo baru saja paket diperpanjang.. tujuannya agar admin make sure perpanjangan berjalan sesuai dengan seharusnya
-		# ===============================================================================
-		echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo Telkomsel$numSimpati baru aja perpanjang paket.. ${reset}"
-		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', 'Telkomsel$numSimpati perpanjang paket... coba cek..!!!', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 		# ===============================================================================
 		# Memanggil funtion
 		# ===============================================================================
@@ -491,48 +432,65 @@ do
 		echo "$currentTime - USSD REPLY${yellow}$perpanjangTelkomsel${reset}"
 
 		if [ "$cekString" = "Recive" ]; then #bila respon openvox = Recive
-			echo "$currentTime - ${green}Simpati$numSimpati Berhasil Perpanjang...${reset}"
+			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Berhasil Perpanjang...${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+			# ===============================================================================
+			# mengirim sms ke admin, kalo baru saja paket diperpanjang.. tujuannya agar admin memastikan perpanjangan berjalan sesuai dengan seharusnya
+			# ===============================================================================
+			echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
+			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 			# ===============================================================================
 			# jika berhasil maka tanggal exp date akan diupdate
 			# ===============================================================================
-			mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = 'Telkomsel$numSimpati';"
+			mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
 		else
-			echo "$currentTime - ${red}Simpati$numSimpati Gagal Perpanjang...${reset}"
+			echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Gagal Perpanjang...${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 			attempt=1
 			attempt=$((attempt + 0))
 			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-				echo "$currentTime - Telkomsel$numSimpati percobaan ke-$attempt"
+				echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
 				renewalTelkomselFx$numSimpati
 				cekString=${perpanjangTelkomsel:2:6}
 				echo "$currentTime - USSD REPLY : ${yellow}$perpanjangTelkomsel${reset}"
 
 				if [ "$cekString" = "Recive" ]; then
-					echo "$currentTime - ${green}Simpati$numSimpati Berhasil Perpanjang...${reset}"
+					echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Berhasil Perpanjang...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+					# ===============================================================================
+					# mengirim sms ke admin
+					# ===============================================================================
+					echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
+					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 					# ===============================================================================
 					# jika berhasil maka tanggal exp date akan diupdate
 					# ===============================================================================
-					mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = 'Telkomsel$numSimpati';"
+					mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
 					cekBerhasil="berhasil"
 					attempt=$((attempt + 3))
 				else
 					cekBerhasil="gagal"
-					echo "$currentTime - ${red}Simpati$numSimpati Gagal Perpanjang...${reset}"
+					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Gagal Perpanjang...${reset}"
 					echo "$currentTime - ----------------------------------------------"
 					attempt=$((attempt + 1))
 					sleep 5s
+					if [[ $attempt == $maxAttempt ]]; then
+						# ===============================================================================
+						# mengirim sms ke admin
+						# ===============================================================================
+						echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
+						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket gagal.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					fi
 				fi
 			done
 		fi
-		echo "$currentTime - ${green}+++++++++++++++++++++++ RENEWAL Telkomsel$numSimpati FINISHED+++++++++++++++++++++${reset}"
+		echo "$currentTime - ${green}+++++++++++++++++++++++ RENEWAL ${telkomselNama[$numSimpati]} FINISHED+++++++++++++++++++++${reset}"
 	fi
 
 	#===============================================================================
 	#memasukan nilai cek pulsa kedalam database
 	#===============================================================================
-	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('Telkomsel$numSimpati', '${sisaPulsaTelkomsel[$numSimpati]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${telkomselNama[$numSimpati]}', '${sisaPulsaTelkomsel[$numSimpati]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numSimpati=$((numSimpati + 1))
 done
@@ -606,7 +564,7 @@ done
 # 			attempt=1
 # 			attempt=$((attempt + 0))
 # 			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-# 				echo "$currentTime - Telkomsel$numSimpati percobaan ke-$attempt"
+# 				echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
 # 				renewalTelkomsel$numRenewalFx
 # 				cekString=${perpanjangTelkomsel:2:6}
 # 				echo "$currentTime - USSD REPLY : ${yellow}$perpanjangTelkomsel${reset}"
@@ -632,53 +590,50 @@ done
 # ==================================================================================================
 # XL
 # ==================================================================================================
-for i in "${xl[@]}" #looping sebanyak jumlah variable array
+for i in "${XLNo[@]}" #looping sebanyak jumlah variable array
 do
-	textMintaPulsa[$numXl]="XL : ${XL[$((numXl-1))]}"
 	#===============================================================================
 	#melakukan cek pulsa untuk masing-masing nomor pada slot openvox
 	#metodenya adalah SSH pada openvox dan menjalankan USSD pada asterisk di openvox
 	#===============================================================================
 	echo "$currentTime - ===================================================================================================="
-	echo "$currentTime - Checking Pulsa XL$numXl..."
+	echo "$currentTime - Checking Pulsa ${XLNama[$numXl]}..."
 	echo "$currentTime - ===================================================================================================="
-	cekString=${xl[$numXl]:2:6} # mengecek respon dari openvox
-	echo "$currentTime - USSD REPLY : ${yellow}${xl[$numXl]}${reset}"
+	cekString=${XL[$numXl]:2:6} # mengecek respon dari openvox
+	echo "$currentTime - USSD REPLY : ${yellow}${XL[$numXl]}${reset}"
 
 	if [ "$cekString" = "Recive" ]; then #bila respon open = Recive
-		echo "$currentTime - ${green}XL$numXl Cek Berhasil...${reset}"
+		echo "$currentTime - ${green}${XLNama[$numXl]} Cek Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-		xl[$numXl]=${xl[$numXl]:55:6} #mengambil character yang bernilai jumlah pulsa
-		xl[$numXl]=${xl[$numXl]//[ . sd\/ ]/} #mengabaikan character lain selain angka
-		xl[$numXl]=$((xl[$numXl] + 0)) #merubah variable yang semula string menjadi integer
-		echo "$currentTime - ${green}Sisa Pulsa : ${xl[$numXl]}${reset}"
+		XL[$numXl]=${XL[$numXl]:55:6} #mengambil character yang bernilai jumlah pulsa
+		XL[$numXl]=${XL[$numXl]//[ . sd\/ ]/} #mengabaikan character lain selain angka
+		XL[$numXl]=$((XL[$numXl] + 0)) #merubah variable yang semula string menjadi integer
+		echo "$currentTime - ${green}Sisa Pulsa : ${XL[$numXl]}${reset}"
 
 		#===============================================================================
 		#memasukan nilai cek pulsa (pulsa) kedalam database
 		#===============================================================================
-		# jsonXL$numXl="{namaProvider:\"XL$numXl\", sisaPulsa:\"${xl[$numXl]}\", tanggal: \"$mysqlDateNow\"}"
-		# echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('XL$numXl', '${xl[$numXl]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
-		sisaPulsaXL[$numXl]=${xl[$numXl]}
+		sisaPulsaXL[$numXl]=${XL[$numXl]}
 
-		if [[ ${xl[$numXl]} -lt $HARGA_PAKET_XL ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
-			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XL[$((numXl-1))]}"
+		if [[ ${XL[$numXl]} -lt ${XLHargaPaket[$numXl]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
+			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXl]}"
 			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${textMintaPulsa[$numXl]}, sisa pulsa: (${xl[$numXl]}), harga paket: $HARGA_PAKET_XL, Exp Date Paket: ${expDateXL[((numXl-1))]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: (${XL[$numXl]}), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 		fi
 	else
 		attempt=1
 		attempt=$((attempt + 0))
 		cekBerhasil=""
-		echo "$currentTime - ${red}XL$numXl Cek Gagal...${reset}"
+		echo "$currentTime - ${red}${XLNama[$numXl]} Cek Gagal...${reset}"
 		echo "$currentTime - ----------------------------------------------"
 		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-			echo "$currentTime - XL$numXl percobaan ke-$attempt"
+			echo "$currentTime - ${XLNama[$numXl]} percobaan ke-$attempt"
 			xlFx$numXl
 			cekString=${xl:2:6}
 			echo "$currentTime - USSD REPLY : ${yellow}$xl${reset}"
 
 			if [ "$cekString" = "Recive" ]; then
-				echo "$currentTime - ${green}XL$numXl Cek Berhasil...${reset}"
+				echo "$currentTime - ${green}${XLNama[$numXl]} Cek Berhasil...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				cekBerhasil="berhasil"
 				attempt=$((attempt + 3))
@@ -690,18 +645,16 @@ do
 				#===============================================================================
 				#memasukan nilai cek pulsa (pulsa) kedalam database
 				#===============================================================================
-				# jsonXL$numXl="{namaProvider:\"XL$numXl\", sisaPulsa:\"$xl\", tanggal: \"$mysqlDateNow\"}"
-				# echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('XL$numXl', '$xl', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 				sisaPulsaXL[$numXl]=$xl
 
-				if [[ ${xl} -lt $HARGA_PAKET_XL ]]; then
-					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XL[$((numXl-1))]}"
+				if [[ $xl -lt ${XLHargaPaket[$numXl]} ]]; then
+					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXl]}"
 					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${textMintaPulsa[$numXl]}, sisa pulsa: $xl), harga paket: $HARGA_PAKET_XL, Exp Date Paket: ${expDateXL[((numXl-1))]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: ($xl), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 				fi
 			else
 				cekBerhasil="gagal"
-				echo "$currentTime - ${red}XL$numXl Cek Gagal...${reset}"
+				echo "$currentTime - ${red}${XLNama[$numXl]} Cek Gagal...${reset}"
 				echo "$currentTime - ----------------------------------------------"
 				
 				attempt=$((attempt + 1))
@@ -709,19 +662,17 @@ do
 					#===============================================================================
 					#jika cek gagal,, tetap diinsert dengan nilai "-"
 					#===============================================================================
-					# jsonXL$numXl="{namaProvider:\"XL$numXl\", sisaPulsa:"-", tanggal: \"$mysqlDateNow\"}"
-					# echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('XL$numXl', '-', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
-					sisaPulsaXL[$numXl]="-"
+					sisaPulsaXL[$numXl]=0
 				fi
 			fi
 		done
 	fi
-	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING XL$numXl FINISHED+++++++++++++++++++++${reset}"
+	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING ${XLNama[$numXl]} FINISHED+++++++++++++++++++++${reset}"
 
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
 	#===============================================================================
-	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('XL$numXl', '${sisaPulsaXL[$numXl]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${XLNama[$numXl]}', '${sisaPulsaXL[$numXl]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numXl=$((numXl + 1))
 done
@@ -808,78 +759,80 @@ done
 # ==================================================================================================
 # THREE
 # ==================================================================================================
-for i in "${three[@]}" #looping sebanyak jumlah variable array
+for i in "${threeNo[@]}" #looping sebanyak jumlah variable array
 do
-	textMintaPulsa[$numThree]="Three 50.000 : ${THREE[$((numThree-1))]}"
 	#===============================================================================
 	#melakukan cek pulsa untuk masing-masing nomor pada slot openvox
 	#metodenya adalah SSH pada openvox dan menjalankan USSD pada asterisk di openvox
 	#===============================================================================
 	echo "$currentTime - ===================================================================================================="
-	echo "$currentTime - Checking Pulsa THREE$numThree..."
+	echo "$currentTime - Checking Pulsa ${threeNama[$numThree]}..."
 	echo "$currentTime - ===================================================================================================="
 	cekString=${three[$numThree]:2:6} # mengecek respon dari openvox
 	cekString2=${three[$numThree]:74:3}
 	echo "$currentTime - USSD REPLY : ${yellow}${three[$numThree]}${reset}"
 
 	if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Pul" ]; then #bila respon open = Recive
-		echo "$currentTime - ${green}THREE$numThree Cek Berhasil...${reset}"
+		echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		three[$numThree]=${three[$numThree]:82:6} #mengambil character yang bernilai jumlah pulsa
 		three[$numThree]=${three[$numThree]//[,Bonus]/} #mengabaikan character lain selain angka
 		three[$numThree]=$((three[$numThree] + 0)) #merubah variable yang semula string menjadi integer
-		echo "$currentTime - ${green}Sisa Pulsa THREE$numThree : ${three[$numThree]}${reset}"
+		echo "$currentTime - ${green}Sisa Pulsa ${threeNama[$numThree]} : ${three[$numThree]}${reset}"
 
-		# jsonThree$numThree="{namaProvider:\"Three$numThree\", sisaPulsa:\"${three[$numThree]}\", tanggal: \"$mysqlDateNow\"}"
-		echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('Three$numThree', '${three[$numThree]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+		sisaPulsaThree=${threeNama[$numThree]}
 
-		if [[ ${three[$numThree]} -lt $HARGA_PAKET_THREE ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
-			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - ${THREE[$((numThree-1))]}"
+		if [[ ${three[$numThree]} -lt ${threeHargaPaket[$numThree]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
+			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
 			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${textMintaPulsa[$numThree]}, sisa pulsa: (${three[$numThree]}), harga paket: $HARGA_PAKET_THREE, Exp Date Paket: Besok Jam 5 Pagi', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: (${three[$numThree]}), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 		fi
 	else
 		attempt=1
 		attempt=$((attempt + 0))
 		cekBerhasil=""
-		echo "$currentTime - ${red}THREE$numThree Cek Gagal...${reset}"
+		echo "$currentTime - ${red}${threeNama[$numThree]} Cek Gagal...${reset}"
 		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-			echo "$currentTime - THREE$numThree percobaan ke-$attempt"
+			echo "$currentTime - ${threeNama[$numThree]} percobaan ke-$attempt"
 			threeFx$numThree
 			cekString=${three:2:6}
 			cekString2=${three:74:3}
 			echo "$currentTime - USSD REPLY : ${yellow}$three${reset}"
 
 			if [ "$cekString" = "Recive"  ] && [ "$cekString2" = "Pul"  ]; then
-				echo "$currentTime - ${green}THREE$numThree Cek Berhasil...${reset}"
+				echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				cekBerhasil="berhasil"
 				attempt=$((attempt + 3))
 				three=${three:82:6}
 				three=${three//[,Bonus]/}
 				three=$((three + 0))
-				echo "$currentTime - ${green}Sisa Pulsa THREE$numThree : $three${reset}"
+				echo "$currentTime - ${green}Sisa Pulsa ${threeNama[$numThree]} : $three${reset}"
 
-				# jsonThree$numThree="{namaProvider:\"Three$numThree\", sisaPulsa:\"$three\", tanggal: \"$mysqlDateNow\"}"
-				echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('Three$numThree', '$three', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+				sisaPulsaThree=$three
 
-				if [[ ${three} -lt $HARGA_PAKET_SIMPATI ]]; then
-					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - ${THREE[$((numThree-1))]}"
+				if [[ $three -lt ${threeHargaPaket[$numThree]} ]]; then
+					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
 					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${textMintaPulsa[$numThree]}, sisa pulsa: $three, harga paket: $HARGA_PAKET_THREE, Exp Date Paket: Besok Jam 5 Pagi', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: ($three), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 				fi
 			else
 				cekBerhasil="gagal"
-				echo "$currentTime - ${red}THREE$numThree Cek Gagal...${reset}"
+				echo "$currentTime - ${red}${threeNama[$numThree]} Cek Gagal...${reset}"
 				echo "$currentTime - ----------------------------------------------"
 				attempt=$((attempt + 1))
 				if [[ $attempt == $maxAttempt ]]; then
-					# jsonThree$numThree="{namaProvider:\"Three$numThree\", sisaPulsa:"-", tanggal: \"$mysqlDateNow\"}"
-					echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('Three$numThree', '-', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+					sisaPulsaThree=0
 				fi
 			fi
 		done
 	fi
-	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING THREE$numThree FINISHED+++++++++++++++++++++${reset}"
+	echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING ${threeNama[$numThree]} FINISHED+++++++++++++++++++++${reset}"
+
+	#===============================================================================
+	#memasukan nilai cek pulsa dan paket kedalam database
+	#===============================================================================
+	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${XLNama[$numXl]}', '${sisaPulsaThree[$numThree]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+
 	numThree=$((numThree + 1))
 done
