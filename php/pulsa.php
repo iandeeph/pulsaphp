@@ -39,9 +39,9 @@ function parsePulsa($pulsa, $hargaPaket){
             $pulsaAkhir = ($pulsa < $hargaPaket)?"<span class='red-text'>".number_format($pulsa, 0, ',', '.')."</span>":number_format($pulsa, 0, ',', '.')       ;
         }
     }else{
-        $pulsaAkhir = "fail";
+        $pulsaAkhir = "-";
     }
-    
+
     return $pulsaAkhir;
 }
 
