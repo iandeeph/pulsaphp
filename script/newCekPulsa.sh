@@ -928,7 +928,7 @@ do
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
 	#===============================================================================
-	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${XLNama[$numXl]}', '${sisaPulsaThree[$numThree]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${threeNama[$numThree]}', '${sisaPulsaThree[$numThree]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numThree=$((numThree + 1))
 done
