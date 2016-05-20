@@ -34,7 +34,7 @@ do
 	threeNo[$i]=${threeResult[$((x + 1))]};
 	threeHost[$i]=${threeResult[$((x + 2))]};
 	threeSpan[$i]=${threeResult[$((x + 3))]};
-	threeCaraAktivasi[$i]=${threeResult[$((x + 6))]};
+	threeCaraAktivasi[$i]=${threeResult[$((x + 4))]};
 done
 
 # THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))

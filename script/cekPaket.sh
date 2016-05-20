@@ -39,7 +39,7 @@ done
 #===============================================================================
 
 XLResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekKuota, caraStopPaket, caraAktivasi from provider where namaProvider like 'XL%' order by namaProvider;"))
-cntXLElm=8
+cntXLElm=9
 cntXL=${#XLResult[@]}
 XLSet=$(((cntXL+1)/cntXLElm))
 
@@ -54,7 +54,7 @@ do
 	XLExpDatePaket[$i]=${XLResult[$((x + 5))]};
 	XLCaraCekPaket[$i]=${XLResult[$((x + 6))]};
 	XLCaraStopPaket[$i]=${XLResult[$((x + 7))]};
-	XLCaraAktivasi[$i]=${XLResult[$((x + 7))]};
+	XLCaraAktivasi[$i]=${XLResult[$((x + 8))]};
 done
 #===============================================================================
 #mencari tanggal hari ini dalam format yyyymmdd
@@ -413,7 +413,7 @@ renewalXL7()
 }
 
 numSimpati=1
-numXl=1
+numXL=1
 numIndosat=1
 numThree=1
 maxAttempt=5
@@ -485,7 +485,7 @@ do
 						echo "----------------------------------------------"
 						attempt=$((attempt + 1))
 						if [[ $attempt == $maxAttempt ]]; then
-							sisaPaketTelkomsel[$numSimpati]=0
+							sisaPaketTelkomsel[$numSimpati]=999999
 						fi
 					fi
 				else
@@ -494,7 +494,7 @@ do
 					echo "----------------------------------------------"
 					attempt=$((attempt + 1))
 					if [[ $attempt == $maxAttempt ]]; then
-						sisaPaketTelkomsel[$numSimpati]=0
+						sisaPaketTelkomsel[$numSimpati]=999999
 					fi
 				fi
 			done
@@ -535,7 +535,7 @@ do
 					echo "----------------------------------------------"
 					attempt=$((attempt + 1))
 					if [[ $attempt == $maxAttempt ]]; then
-						sisaPaketTelkomsel[$numSimpati]=0
+						sisaPaketTelkomsel[$numSimpati]=999999
 					fi
 				fi
 			else
@@ -544,7 +544,7 @@ do
 				echo "----------------------------------------------"
 				attempt=$((attempt + 1))
 				if [[ $attempt == $maxAttempt ]]; then
-					sisaPaketTelkomsel[$numSimpati]=0
+					sisaPaketTelkomsel[$numSimpati]=999999
 				fi
 			fi
 		done
@@ -567,7 +567,7 @@ do
 	echo "$currentTime - ===================================================================================================="
 	echo "$currentTime - Checking Paket ${XLNama[$numXL]}..."
 	echo "$currentTime - ===================================================================================================="
-	xlPaketFx$numXl
+	xlPaketFx$numXL
 	cekString=${xlPaket:2:6} # mengecek respon dari openvox
 	cekString2=${xlPaket:49:4} # mengecek respon dari openvox
 	echo "$currentTime - USSD REPLY : ${yellow}$xlPaket${reset}"
@@ -577,7 +577,7 @@ do
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		echo "$currentTime - ${green}Sisa Paket : $sisaPaket${reset}"
 
-		sisaPaketXL[$numXl]=$sisaPaket
+		sisaPaketXL[$numXL]=$sisaPaket
 	else
 		attempt=1
 		attempt=$((attempt + 0))
@@ -586,7 +586,7 @@ do
 		echo "$currentTime - ----------------------------------------------"
 		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
 			echo "$currentTime - ${XLNama[$numXL]} percobaan ke-$attempt"
-			xlPaketFx$numXl
+			xlPaketFx$numXL
 			cekString=${xlPaket:2:6} # mengecek respon dari openvox
 			cekString2=${xlPaket:49:4} # mengecek respon dari openvox
 			echo "$currentTime - USSD REPLY : ${yellow}$xlPaket${reset}"
@@ -598,7 +598,7 @@ do
 				attempt=$((attempt + 3))
 				echo "$currentTime - ${green}Sisa Paket : $sisaPaket${reset}"
 				
-				sisaPaketXL[$numXl]=$sisaPaket
+				sisaPaketXL[$numXL]=$sisaPaket
 			else
 				cekBerhasil="gagal"
 				echo "$currentTime - ${red}${XLNama[$numXL]} Cek Paket Gagal...${reset}"
@@ -606,13 +606,13 @@ do
 				
 				attempt=$((attempt + 1))
 				if [[ $attempt == $maxAttempt ]]; then
-					sisaPaketXL[$numXl]=0
+					sisaPaketXL[$numXL]=999999
 				fi
 			fi
 		done
 	fi
 
-	if [[ "${sisaPaketXL[$numXl]}" -le 30 ]]; then #jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
+	if [[ "${sisaPaketXL[$numXL]}" -le 30 ]]; then #jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
 		stop${XLNama[$numXL]} #function untuk stop paket
 		cekString=${xlStop:2:6} # mengecek respon dari openvox
 		cekString2=${xlStop:73:8} # mengecek respon dari openvox
@@ -623,7 +623,7 @@ do
 		if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
 			echo "$currentTime - ${green}${XLNama[$numXL]} Stop Paket Berhasil...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-			stopPaketStatus[$numXl]="berhasil"
+			stopPaketStatus[$numXL]="berhasil"
 		else
 			attempt=1
 			attempt=$((attempt + 0))
@@ -643,7 +643,7 @@ do
 					echo "$currentTime - ${green}${XLNama[$numXL]} Stop Paket Berhasil...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					cekBerhasil="berhasil"
-					stopPaketStatus[$numXl]="berhasil"
+					stopPaketStatus[$numXL]="berhasil"
 					attempt=$((attempt + 3))
 				else
 					cekBerhasil="gagal"
@@ -652,15 +652,15 @@ do
 					
 					attempt=$((attempt + 1))
 					if [[ $attempt == $maxAttempt ]]; then
-						stopPaketStatus[$numXl]="gagal"
+						stopPaketStatus[$numXL]="gagal"
 						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 					fi
 				fi
 			done
 		fi
 
-		if [[ ${stopPaketStatus[$numXl]} == "berhasil" ]]; then
-			if [[ $numXl -lt 5 ]]; then
+		if [[ ${stopPaketStatus[$numXL]} == "berhasil" ]]; then
+			if [[ $numXL -lt 5 ]]; then
 				renewalValidation${XLNama[$numXL]}
 				validasiString=${validasiPaket:2:6}
 				validasiString2=${validasiPaket:75:31}
@@ -798,7 +798,7 @@ do
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
 	#===============================================================================
-	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal) VALUES ('${XLNama[$numXL]}', '${sisaPaketXL[$numXl]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal) VALUES ('${XLNama[$numXL]}', '${sisaPaketXL[$numXL]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
-	numXl=$((numXl + 1))
+	numXL=$((numXL + 1))
 done
