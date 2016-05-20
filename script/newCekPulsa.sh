@@ -26,43 +26,62 @@ HARGA_PAKET_THREE=5000
 #===============================================================================
 #TELKOMSEL
 #===============================================================================
-while read telkomselNama telkomselNo telkomselHost telkomselSpan telkomselHargaPaket telkomselExpDatePaket telkomselCaraCekPulsa telkomselCaraAktivasi
+telkomselResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa, caraAktivasi from provider where namaProvider like 'Telkomsel%' order by namaProvider;"))
+cntTelkomselElm=8
+cntTelkomsel=${#telkomselResult[@]}
+telkomselSet=$(((cntTelkomsel+1)/cntTelkomselElm))
+
+for (( i=1 ; i<=telkomselSet ; i++ ))
 do
-	telkomselNama+=("$telkomselNama")
-	telkomselNo+=("$telkomselNo")
-	telkomselHost+=("$telkomselHost")
-	telkomselSpan+=("$telkomselSpan")
-	telkomselHargaPaket+=("$telkomselHargaPaket")
-	telkomselExpDatePaket+=("$telkomselExpDatePaket")
-	telkomselCaraCekPulsa+=("$telkomselCaraCekPulsa")
-	telkomselCaraAktivasi+=("$telkomselCaraAktivasi")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa, caraAktivasi from provider where namaProvider like 'Telkomsel%' order by namaProvider;")
+	X=$((cntTelkomselElm * (i-1)))
+	telkomselNama[$i]=${telkomselResult[$((x + 0 ))]};
+	telkomselNo[$i]=${telkomselResult[$((x + 1))]};
+	telkomselHost[$i]=${telkomselResult[$((x + 2))]};
+	telkomselSpan[$i]=${telkomselResult[$((x + 3))]};
+	telkomselHargaPaket[$i]=${telkomselResult[$((x + 4))]};
+	telkomselExpDatePaket[$i]=${telkomselResult[$((x + 5))]};
+	telkomselCaraCekPulsa[$i]=${telkomselResult[$((x + 6))]};
+	telkomselCaraAktivasi[$i]=${telkomselResult[$((x + 7))]};
+done
 #===============================================================================
 #XL
 #===============================================================================
-while read XLNama XLNo XLHost XLSpan XLHargaPaket XLExpDatePaket XLCaraCekPulsa
+XLResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa, caraAktivasi from provider where namaProvider like 'Telkomsel%' order by namaProvider;"))
+cntXLElm=8
+cntXL=${#XLResult[@]}
+XLSet=$(((cntXL+1)/cntXLElm))
+
+for (( i=1 ; i<=XLSet ; i++ ))
 do
-	XLNama+=("$XLNama")
-	XLNo+=("$XLNo")
-	XLHost+=("$XLHost")
-	XLSpan+=("$XLSpan")
-	XLHargaPaket+=("$XLHargaPaket")
-	XLExpDatePaket+=("$XLExpDatePaket")
-	XLCaraCekPulsa+=("$XLCaraCekPulsa")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'XL%' order by namaProvider;")
+	X=$((cntXLElm * (i-1)))
+	XLNama[$i]=${XLResult[$((x + 0 ))]};
+	XLNo[$i]=${XLResult[$((x + 1))]};
+	XLHost[$i]=${XLResult[$((x + 2))]};
+	XLSpan[$i]=${XLResult[$((x + 3))]};
+	XLHargaPaket[$i]=${XLResult[$((x + 4))]};
+	XLExpDatePaket[$i]=${XLResult[$((x + 5))]};
+	XLCaraCekPulsa[$i]=${XLResult[$((x + 6))]};
+	XLCaraAktivasi[$i]=${XLResult[$((x + 7))]};
+done
 #===============================================================================
 #THREE
 #===============================================================================
-while read threeNama threeNo threeHost threeSpan threeHargaPaket threeExpDatePaket threeCaraCekPulsa
+threeResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'Three%' order by namaProvider;"))
+cntThreeElm=7
+cntThree=${#threeResult[@]}
+threeSet=$(((cntThree+1)/cntThreeElm))
+
+for (( i=1 ; i<=threeSet ; i++ ))
 do
-	threeNama+=("$threeNama")
-	threeNo+=("$threeNo")
-	threeHost+=("$threeHost")
-	threeSpan+=("$threeSpan")
-	threeHargaPaket+=("$threeHargaPaket")
-	threeExpDatePaket+=("$threeExpDatePaket")
-	threeCaraCekPulsa+=("$threeCaraCekPulsa")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa from provider where namaProvider like 'Three%' order by namaProvider;")
+	X=$((cntThreeElm * (i-1)))
+	threeNama[$i]=${threeResult[$((x + 0 ))]};
+	threeNo[$i]=${threeResult[$((x + 1))]};
+	threeHost[$i]=${threeResult[$((x + 2))]};
+	threeSpan[$i]=${threeResult[$((x + 3))]};
+	threeHargaPaket[$i]=${threeResult[$((x + 4))]};
+	threeExpDatePaket[$i]=${threeResult[$((x + 5))]};
+	threeCaraCekPulsa[$i]=${threeResult[$((x + 6))]};
+done
 
 cnt=${#telkomselExpDatePaket[@]} #menghitung total row
 for (( i=1 ; i<=${cnt} ; i++ )) #loooping sebanyak total row
