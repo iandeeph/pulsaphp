@@ -4,6 +4,12 @@
 currentTime=$(date +"[ %Y-%m-%d %H:%M:%S ]")
 
 #===============================================================================
+#inisialisasi nomor tukang pulsa a.k.a Karin dan tukang ketik a.k.a ian
+#===============================================================================
+TUKANGPULSA=081381171337
+TUKANGKETIK=08992112203
+
+#===============================================================================
 #Konfigurasi Database
 #===============================================================================
 HOST='1.1.1.200'
@@ -93,7 +99,7 @@ do
 	if [ "$cekString" = "Terima" ]; then #bila respon openvox = Terima
 		echo "$currentTime - ${green}${threeNama[$numThree]} Berhasil Perpanjang...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 		echo "$currentTime - ${red}${threeNama[$numThree]} Gagal Perpanjang...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		attempt=1
@@ -107,7 +113,7 @@ do
 			if [ "$cekString" = "Terima" ]; then
 				echo "$currentTime - ${green}${threeNama[$numThree]} Berhasil Perpanjang...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil setelah percobaan ke-$attempt.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 				attempt=$((attempt + 3))
 			else
 				cekBerhasil="gagal"
@@ -115,7 +121,9 @@ do
 				echo "$currentTime - ----------------------------------------------"
 				attempt=$((attempt + 1))
 				sleep 5s
-				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				if [[ $attempt == $maxAttempt ]]; then
+					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket gagal.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				fi
 			fi
 		done
 	fi

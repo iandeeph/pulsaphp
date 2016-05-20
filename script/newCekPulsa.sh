@@ -46,7 +46,7 @@ done
 #===============================================================================
 #XL
 #===============================================================================
-XLResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa, caraAktivasi from provider where namaProvider like 'Telkomsel%' order by namaProvider;"))
+XLResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekPulsa, caraAktivasi from provider where namaProvider like 'XL%' order by namaProvider;"))
 cntXLElm=8
 cntXL=${#XLResult[@]}
 XLSet=$(((cntXL+1)/cntXLElm))
