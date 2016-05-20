@@ -34,7 +34,7 @@ function alertBox($msg) {
 function parsePulsa($pulsa, $hargaPaket){
     if($pulsa != NULL && $pulsa != '' && $pulsa != "0"){
         if ($pulsa >= 99999) {
-            $pulsaAkhir = "fail";
+            $pulsaAkhir = "<span class='red-text'>fail</span>";
         } else {
             $pulsaAkhir = ($pulsa < $hargaPaket)?"<span class='red-text'>".number_format($pulsa, 0, ',', '.')."</span>":number_format($pulsa, 0, ',', '.')       ;
         }
