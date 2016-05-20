@@ -19,31 +19,43 @@ PASSWORD='c3rmat'
 #===============================================================================
 #TELKOMSEL
 #===============================================================================
-while read telkomselNama telkomselNo telkomselHost telkomselSpan telkomselHargaPaket telkomselCaraCekPaket
+telkomselResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, caraCekKuota from provider where namaProvider like 'Telkomsel%' order by namaProvider;"))
+cntTelkomselElm=6
+cntTelkomsel=${#telkomselResult[@]}
+telkomselSet=$(((cntTelkomsel+1)/cntTelkomselElm))
+
+for (( i=1 ; i<=telkomselSet ; i++ ))
 do
-	telkomselNama+=("$telkomselNama")
-	telkomselNo+=("$telkomselNo")
-	telkomselHost+=("$telkomselHost")
-	telkomselSpan+=("$telkomselSpan")
-	telkomselHargaPaket+=("$telkomselHargaPaket")
-	telkomselCaraCekPaket+=("$telkomselCaraCekPaket")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, caraCekKuota from provider where namaProvider like 'Telkomsel%' order by namaProvider;")
+	X=$((cntTelkomselElm * (i-1)))
+	telkomselNama[$i]=${telkomselResult[$((x + 0 ))]};
+	telkomselNo[$i]=${telkomselResult[$((x + 1))]};
+	telkomselHost[$i]=${telkomselResult[$((x + 2))]};
+	telkomselSpan[$i]=${telkomselResult[$((x + 3))]};
+	telkomselHargaPaket[$i]=${telkomselResult[$((x + 4))]};
+	telkomselCaraCekPaket[$i]=${telkomselResult[$((x + 5))]};
+done
 #===============================================================================
 #XL
 #===============================================================================
-while read XLNama XLNo XLHost XLSpan XLHargaPaket XLExpDatePaket XLCaraCekPaket XLCaraStopPaket XLCaraAktivasi
-do
-	XLNama+=("$XLNama")
-	XLNo+=("$XLNo")
-	XLHost+=("$XLHost")
-	XLSpan+=("$XLSpan")
-	XLHargaPaket+=("$XLHargaPaket")
-	XLExpDatePaket+=("$XLExpDatePaket")
-	XLCaraCekPaket+=("$XLCaraCekPaket")
-	XLCaraStopPaket+=("$XLCaraStopPaket")
-	XLCaraAktivasi+=("$XLCaraAktivasi")
-done < <(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekKuota, caraStopPaket, caraAktivasi from provider where namaProvider like 'XL%' order by namaProvider;")
 
+XLResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekKuota, caraStopPaket, caraAktivasi from provider where namaProvider like 'XL%' order by namaProvider;"))
+cntXLElm=8
+cntXL=${#XLResult[@]}
+XLSet=$(((cntXL+1)/cntXLElm))
+
+for (( i=1 ; i<=XLSet ; i++ ))
+do
+	X=$((cntXLElm * (i-1)))
+	XLNama[$i]=${XLResult[$((x + 0 ))]};
+	XLNo[$i]=${XLResult[$((x + 1))]};
+	XLHost[$i]=${XLResult[$((x + 2))]};
+	XLSpan[$i]=${XLResult[$((x + 3))]};
+	XLHargaPaket[$i]=${XLResult[$((x + 4))]};
+	XLExpDatePaket[$i]=${XLResult[$((x + 5))]};
+	XLCaraCekPaket[$i]=${XLResult[$((x + 6))]};
+	XLCaraStopPaket[$i]=${XLResult[$((x + 7))]};
+	XLCaraAktivasi[$i]=${XLResult[$((x + 7))]};
+done
 #===============================================================================
 #mencari tanggal hari ini dalam format yyyymmdd
 #===============================================================================

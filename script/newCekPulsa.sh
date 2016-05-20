@@ -366,25 +366,88 @@ do
 	echo "$currentTime - ===================================================================================================="
 	cekString=${telkomsel[$numSimpati]:2:6} # mengecek respon dari openvox
 	cekString2=${telkomsel[$numSimpati]:49:4} # mengecek respon dari openvox
+	cekString3=${telkomsel[$numSimpati]:48:4} # mengecek respon dari openvox
 
 	echo "$currentTime - USSD REPLY : ${yellow}${telkomsel[$numSimpati]}${reset}"
 
-	if [ "$cekString" = "Recive"  ] && [ "$cekString2" != "Maaf"  ]; then #bila respon open = Recive
-		echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
-		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-		telkomsel[$numSimpati]=${telkomsel[$numSimpati]:62:6} #mengambil character yang bernilai jumlah pulsa
-		telkomsel[$numSimpati]=${telkomsel[$numSimpati]//[.Aktif]/} #mengabaikan character lain selain angka
-		telkomsel[$numSimpati]=$((telkomsel[$numSimpati] + 0)) #merubah variable yang semula string menjadi integer
-		echo "$currentTime - ${green}Sisa pulsa ${telkomselNama[$numSimpati]} : ${telkomsel[$numSimpati]}${reset}"
-		#===============================================================================
-		#memasukan nilai cek pulsa (pulsa) kedalam database
-		#===============================================================================
-		sisaPulsaTelkomsel[$numSimpati]=${telkomsel[$numSimpati]}
+	if [ "$cekString" = "Recive"  ] ; then #bila respon open = Recive
+		if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
+			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
+			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+			telkomsel[$numSimpati]=${telkomsel[$numSimpati]:62:6} #mengambil character yang bernilai jumlah pulsa
+			telkomsel[$numSimpati]=${telkomsel[$numSimpati]//[.Aktif]/} #mengabaikan character lain selain angka
+			telkomsel[$numSimpati]=$((telkomsel[$numSimpati] + 0)) #merubah variable yang semula string menjadi integer
+			echo "$currentTime - ${green}Sisa pulsa ${telkomselNama[$numSimpati]} : ${telkomsel[$numSimpati]}${reset}"
+			#===============================================================================
+			#memasukan nilai cek pulsa (pulsa) kedalam database
+			#===============================================================================
+			sisaPulsaTelkomsel[$numSimpati]=${telkomsel[$numSimpati]}
 
-		if [[ ${telkomsel[$numSimpati]} -lt ${telkomselHargaPaket[$numSimpati]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
-			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
-			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: (${telkomsel[$numSimpati]}), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			if [[ ${telkomsel[$numSimpati]} -lt ${telkomselHargaPaket[$numSimpati]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
+				echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
+				#insert ke database sms untuk mengirim pulsa ke tukang pulsa
+				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: (${telkomsel[$numSimpati]}), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			fi
+		else
+			attempt=1
+			attempt=$((attempt + 0))
+			cekBerhasil=""
+			echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+			echo "----------------------------------------------"
+			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+				echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
+				telkomselFx$numSimpati
+				cekString=${telkomsel:2:6}
+				cekString2=${telkomsel:49:4}
+				cekString3=${telkomsel:49:4}
+				echo "$currentTime - USSD REPLY : ${yellow}$telkomsel${reset}"
+
+				if [ "$cekString" = "Recive"  ]; then
+					if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
+						echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
+						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+						cekBerhasil="berhasil"
+						attempt=$((attempt + 3))
+						telkomsel=${telkomsel:62:6}
+						telkomsel=${telkomsel//[.Aktif]/}
+						telkomsel=$((telkomsel + 0))
+						echo "$currentTime - ${green}Sisa pulsa }${telkomselNama[$numSimpati]} : $telkomsel${reset}"
+
+						#===============================================================================
+						#memasukan nilai cek pulsa (pulsa) kedalam database
+						#===============================================================================
+						sisaPulsaTelkomsel[$numSimpati]=$telkomsel
+
+						if [[ $telkomsel -lt ${telkomselHargaPaket[$numSimpati]} ]]; then
+							echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
+							#insert ke database sms untuk mengirim pulsa ke tukang pulsa
+						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						fi
+					else
+						cekBerhasil="gagal"
+						echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+						echo "----------------------------------------------"
+						attempt=$((attempt + 1))
+						if [[ $attempt == $maxAttempt ]]; then
+							#===============================================================================
+							#jika cek gagal,, tetap diinsert dengan nilai 0
+							#===============================================================================
+							sisaPulsaTelkomsel[$numSimpati]=0
+						fi
+					fi
+				else
+					cekBerhasil="gagal"
+					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+					echo "----------------------------------------------"
+					attempt=$((attempt + 1))
+					if [[ $attempt == $maxAttempt ]]; then
+						#===============================================================================
+						#jika cek gagal,, tetap diinsert dengan nilai 0
+						#===============================================================================
+						sisaPulsaTelkomsel[$numSimpati]=0
+					fi
+				fi
+			done
 		fi
 	else
 		attempt=1
@@ -397,27 +460,41 @@ do
 			telkomselFx$numSimpati
 			cekString=${telkomsel:2:6}
 			cekString2=${telkomsel:49:4}
+			cekString3=${telkomsel:49:4}
 			echo "$currentTime - USSD REPLY : ${yellow}$telkomsel${reset}"
 
-			if [ "$cekString" = "Recive"  ] && [ "$cekString2" != "Maaf"  ]; then
-				echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
-				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-				cekBerhasil="berhasil"
-				attempt=$((attempt + 3))
-				telkomsel=${telkomsel:62:6}
-				telkomsel=${telkomsel//[.Aktif]/}
-				telkomsel=$((telkomsel + 0))
-				echo "$currentTime - ${green}Sisa pulsa }${telkomselNama[$numSimpati]} : $telkomsel${reset}"
+			if [ "$cekString" = "Recive"  ]; then
+				if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
+					echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
+					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+					cekBerhasil="berhasil"
+					attempt=$((attempt + 3))
+					telkomsel=${telkomsel:62:6}
+					telkomsel=${telkomsel//[.Aktif]/}
+					telkomsel=$((telkomsel + 0))
+					echo "$currentTime - ${green}Sisa pulsa }${telkomselNama[$numSimpati]} : $telkomsel${reset}"
 
-				#===============================================================================
-				#memasukan nilai cek pulsa (pulsa) kedalam database
-				#===============================================================================
-				sisaPulsaTelkomsel[$numSimpati]=$telkomsel
+					#===============================================================================
+					#memasukan nilai cek pulsa (pulsa) kedalam database
+					#===============================================================================
+					sisaPulsaTelkomsel[$numSimpati]=$telkomsel
 
-				if [[ $telkomsel -lt ${telkomselHargaPaket[$numSimpati]} ]]; then
-					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
-					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					if [[ $telkomsel -lt ${telkomselHargaPaket[$numSimpati]} ]]; then
+						echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
+						#insert ke database sms untuk mengirim pulsa ke tukang pulsa
+					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					fi
+				else
+					cekBerhasil="gagal"
+					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+					echo "----------------------------------------------"
+					attempt=$((attempt + 1))
+					if [[ $attempt == $maxAttempt ]]; then
+						#===============================================================================
+						#jika cek gagal,, tetap diinsert dengan nilai 0
+						#===============================================================================
+						sisaPulsaTelkomsel[$numSimpati]=0
+					fi
 				fi
 			else
 				cekBerhasil="gagal"
