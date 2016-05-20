@@ -33,7 +33,7 @@ telkomselSet=$(((cntTelkomsel+1)/cntTelkomselElm))
 
 for (( i=1 ; i<=telkomselSet ; i++ ))
 do
-	X=$((cntTelkomselElm * (i-1)))
+	x=$((cntTelkomselElm * (i-1)))
 	telkomselNama[$i]=${telkomselResult[$((x + 0 ))]};
 	telkomselNo[$i]=${telkomselResult[$((x + 1))]};
 	telkomselHost[$i]=${telkomselResult[$((x + 2))]};
@@ -53,7 +53,7 @@ XLSet=$(((cntXL+1)/cntXLElm))
 
 for (( i=1 ; i<=XLSet ; i++ ))
 do
-	X=$((cntXLElm * (i-1)))
+	x=$((cntXLElm * (i-1)))
 	XLNama[$i]=${XLResult[$((x + 0 ))]};
 	XLNo[$i]=${XLResult[$((x + 1))]};
 	XLHost[$i]=${XLResult[$((x + 2))]};
@@ -73,7 +73,7 @@ threeSet=$(((cntThree+1)/cntThreeElm))
 
 for (( i=1 ; i<=threeSet ; i++ ))
 do
-	X=$((cntThreeElm * (i-1)))
+	x=$((cntThreeElm * (i-1)))
 	threeNama[$i]=${threeResult[$((x + 0 ))]};
 	threeNo[$i]=${threeResult[$((x + 1))]};
 	threeHost[$i]=${threeResult[$((x + 2))]};
