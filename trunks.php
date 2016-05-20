@@ -21,8 +21,10 @@
 					$this->no 				= $rowTrunks['noProvider'];
 					$this->namaPaket 		= $rowTrunks['namaPaket'];
 					$this->hargaPaket 		= $rowTrunks['hargaPaket'];
+					$this->caraCekPulsa 	= $rowTrunks['caraCekPulsa'];
 					$this->caraAktivasi 	= $rowTrunks['caraAktivasi'];
 					$this->caraCekKuota 	= $rowTrunks['caraCekKuota'];
+					$this->caraStopPaket 	= $rowTrunks['caraStopPaket'];
 					$this->expPaket 		= $rowTrunks['expDatePaket'];
 					$this->host 			= $rowTrunks['host'];
 					$this->span 			= $rowTrunks['span'];

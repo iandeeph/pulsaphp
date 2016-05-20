@@ -53,12 +53,20 @@
 																					<label for="<?php echo "hargaPaket-".$idProvider;?>">Harga Paket</label>
 																				</div>
 																				<div class="input-field col s12 m6 l6">
+																					<input value="<?php echo $trunks->caraCekPulsa;?>" id="<?php echo "caraCekPulsa-".$idProvider;?>" name="<?php echo "caraCekPulsa-".$idProvider;?>" type="text" class="validate">
+																					<label for="<?php echo "caraCekPulsa-".$idProvider;?>">Cara Cek Pulsa</label>
+																				</div>
+																				<div class="input-field col s12 m6 l6">
 																					<input value="<?php echo $trunks->caraAktivasi;?>" id="<?php echo "caraAktivasi-".$idProvider;?>" name="<?php echo "caraAktivasi-".$idProvider;?>" type="text" class="validate">
 																					<label for="<?php echo "caraAktivasi-".$idProvider;?>">Cara Aktivasi</label>
 																				</div>
 																				<div class="input-field col s12 m6 l6">
 																					<input value="<?php echo $trunks->caraCekKuota;?>" id="<?php echo "caraCekKuota-".$idProvider;?>" name="<?php echo "caraCekKuota-".$idProvider;?>" type="text" class="validate">
 																					<label for="<?php echo "caraCekKuota-".$idProvider;?>">Cara Cek Kuota</label>
+																				</div>
+																				<div class="input-field col s12 m6 l6">
+																					<input value="<?php echo $trunks->caraStopPaket;?>" id="<?php echo "caraStopPaket-".$idProvider;?>" name="<?php echo "caraStopPaket-".$idProvider;?>" type="text" class="validate">
+																					<label for="<?php echo "caraStopPaket-".$idProvider;?>">Cara Stop Paket</label>
 																				</div>
 																				<div class="input-field col s12 m6 l6">
 																					<input value="<?php echo $trunks->expPaket;?>" id="<?php echo "expDatePaket-".$idProvider;?>" name="<?php echo "expDatePaket-".$idProvider;?>" type="text" class="validate">

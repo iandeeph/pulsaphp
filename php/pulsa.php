@@ -33,11 +33,15 @@ function alertBox($msg) {
 
 function parsePulsa($pulsa, $hargaPaket){
     if($pulsa != NULL && $pulsa != '' && $pulsa != "0"){
-        $pulsaAkhir = ($pulsa < $hargaPaket)?"<span class='red-text'>".number_format($pulsa, 0, ',', '.')."</span>":number_format($pulsa, 0, ',', '.')       ;
+        if ($pulsa >= 99999) {
+            $pulsaAkhir = "fail";
+        } else {
+            $pulsaAkhir = ($pulsa < $hargaPaket)?"<span class='red-text'>".number_format($pulsa, 0, ',', '.')."</span>":number_format($pulsa, 0, ',', '.')       ;
+        }
     }else{
-        $pulsaAkhir = "-";
+        $pulsaAkhir = "fail";
     }
-
+    
     return $pulsaAkhir;
 }
 
