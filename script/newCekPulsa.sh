@@ -876,7 +876,7 @@ do
 		three[$numThree]=$((three[$numThree] + 0)) #merubah variable yang semula string menjadi integer
 		echo "$currentTime - ${green}Sisa Pulsa ${threeNama[$numThree]} : ${three[$numThree]}${reset}"
 
-		sisaPulsaThree=${threeNama[$numThree]}
+		sisaPulsaThree[$numThree]=${threeNama[$numThree]}
 
 		if [[ ${three[$numThree]} -lt ${threeHargaPaket[$numThree]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
 			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
@@ -905,7 +905,7 @@ do
 				three=$((three + 0))
 				echo "$currentTime - ${green}Sisa Pulsa ${threeNama[$numThree]} : $three${reset}"
 
-				sisaPulsaThree=$three
+				sisaPulsaThree[$numThree]=$three
 
 				if [[ $three -lt ${threeHargaPaket[$numThree]} ]]; then
 					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
@@ -918,7 +918,7 @@ do
 				echo "$currentTime - ----------------------------------------------"
 				attempt=$((attempt + 1))
 				if [[ $attempt == $maxAttempt ]]; then
-					sisaPulsaThree=0
+					sisaPulsaThree[$numThree]=0
 				fi
 			fi
 		done

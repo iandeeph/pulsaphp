@@ -572,7 +572,7 @@ do
 	cekString2=${xlPaket:49:4} # mengecek respon dari openvox
 	echo "$currentTime - USSD REPLY : ${yellow}$xlPaket${reset}"
 
-	if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Sisa" ]; then #bila respon open = Recive
+	if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Sisa" ]]; then #bila respon open = Recive
 		echo "$currentTime - ${green}${XLNama[$numXL]} Cek Paket Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		echo "$currentTime - ${green}Sisa Paket : $sisaPaket${reset}"
@@ -700,7 +700,7 @@ do
 						cekBerhasil=""
 						echo "$currentTime - ${red}${XLNama[$numXL]} Perpanjang Paket Gagal...${reset}"
 						echo "$currentTime - ----------------------------------------------"
-						while [[ $attempt -le $maxAttempt]] && [["$cekBerhasil" != "berhasil"  ]]; do
+						while [[ $attempt -le $maxAttempt ]] && [[ "$cekBerhasil" != "berhasil"  ]]; do
 							echo "$currentTime - ${XLNama[$numXL]} percobaan perpanjang paket ke-$attempt"
 							renewal${XLNama[$numXL]}
 							cekString=${xlRenewalFull:2:6} # mengecek respon dari openvox
@@ -752,7 +752,7 @@ do
 
 					renewalExec${XLNama[$numXL]}
 					renewalString=${xlRenewal:2:6}
-					renewalString2=${xlRenewal:73:8}
+					renewalString2=${xlRenewal:72:8}
 					echo "$currentTime - --------------------------------------------------------------"
 					echo "$currentTime - EKSEKUSI PERPANJANG PAKET ${XLNama[$numXL]}"
 					echo "$currentTime - --------------------------------------------------------------"
@@ -768,14 +768,14 @@ do
 						cekBerhasil=""
 						echo "$currentTime - ${red}${XLNama[$numXL]} Perpanjang Paket Gagal...${reset}"
 						echo "$currentTime - ----------------------------------------------"
-						while [[ $attempt -le $maxAttempt]] && [["$cekBerhasil" != "berhasil"  ]]; do
+						while [[ $attempt -le $maxAttempt ]] && [[ "$cekBerhasil" != "berhasil" ]]; do
 							echo "$currentTime - ${XLNama[$numXL]} percobaan perpanjang paket ke-$attempt"
 							renewal${XLNama[$numXL]}
 							cekString=${xlRenewalFull:2:6} # mengecek respon dari openvox
-							cekString2=${xlRenewalFull:73:8} # mengecek respon dari openvox
+							cekString2=${xlRenewalFull:72:8} # mengecek respon dari openvox
 							echo "$currentTime - USSD REPLY : ${yellow}$xlPaket${reset}"
 
-							if [ "$cekString" = "Recive" ] && [ "$cekString2" = "diproses" ]; then
+							if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "diproses" ]]; then
 								echo "$currentTime - ${green}${XLNama[$numXL]} Perpanjang Paket Berhasil...${reset}"
 								echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 								cekBerhasil="berhasil"

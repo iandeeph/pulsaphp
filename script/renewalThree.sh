@@ -12,9 +12,9 @@ TUKANGKETIK=08992112203
 #===============================================================================
 #Konfigurasi Database
 #===============================================================================
-HOST='1.1.1.200'
-USER='root'
-PASSWORD='c3rmat'
+HOST="1.1.1.200"
+USER="root"
+PASSWORD="c3rmat"
 
 #===============================================================================
 #mengambil semua element dalam database, query dari database
@@ -55,9 +55,9 @@ else
 	yellow=''
 fi
 
-echo "$currentTime - Restarting openvox..."
-echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${threeNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-sleep 3m
+# echo "$currentTime - Restarting openvox..."
+# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${threeNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+# sleep 3m
 echo $(rm -rf ~/.ssh/known_hosts)
 renewalThreeFx1()
 {
@@ -96,7 +96,7 @@ do
 	cekString=${perpanjangThree:49:6} # mengecek respon dari openvox
 	echo "$currentTime - USSD REPLY${yellow}$perpanjangThree${reset}"
 
-	if [ "$cekString" = "Terima" ]; then #bila respon openvox = Terima
+	if [[ "$cekString" == "Terima" ]]; then #bila respon openvox = Terima
 		echo "$currentTime - ${green}${threeNama[$numThree]} Berhasil Perpanjang...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
@@ -104,13 +104,13 @@ do
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		attempt=1
 		attempt=$((attempt + 0))
-		while [ $attempt -le $maxAttempt ] && [ "$cekBerhasil" != "berhasil"  ]; do
+		while [[ $attempt -le $maxAttempt ]] && [[ "$cekBerhasil" != "berhasil"  ]]; do
 			echo "$currentTime - ${threeNama[$numThree]} percobaan ke-$attempt"
 			renewalThreeFx$numThree
 			cekString=${perpanjangThree:49:6}
 			echo "$currentTime - USSD REPLY : ${yellow}$perpanjangThree${reset}"
 
-			if [ "$cekString" = "Terima" ]; then
+			if [[ "$cekString" == "Terima" ]]; then
 				echo "$currentTime - ${green}${threeNama[$numThree]} Berhasil Perpanjang...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil setelah percobaan ke-$attempt.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
