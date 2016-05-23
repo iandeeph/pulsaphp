@@ -660,6 +660,12 @@ do
 		fi
 
 		if [[ ${stopPaketStatus[$numXL]} == "berhasil" ]]; then
+			
+			# ===============================================================================
+			# menentukan tanggal baru untuk tanggal habis paket selanjutnya
+			# ===============================================================================
+			newDate=$(date -d "28 days" +%Y-%m-%d)
+			
 			if [[ $numXL -lt 5 ]]; then
 				renewalValidation${XLNama[$numXL]}
 				validasiString=${validasiPaket:2:6}
@@ -680,11 +686,6 @@ do
 					echo "$currentTime - EKSEKUSI PERPANJANG PAKET ${XLNama[$numXL]}"
 					echo "$currentTime - --------------------------------------------------------------"
 					echo "$currentTime - USSD REPLY : ${yellow}$xlRenewal${reset}"
-					
-					# ===============================================================================
-					# menentukan tanggal baru untuk tanggal habis paket selanjutnya
-					# ===============================================================================
-					newDate=$(date -d "6 days" +%Y-%m-%d)
 					if [[ "$renewalString" = "Recive" ]] && [[ "$renewalString2" = "diproses" ]]; then
 						echo "$currentTime - ${green}${XLNama[$numXL]} Perpanjang Paket Berhasil...${reset}"
 						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
@@ -762,6 +763,10 @@ do
 						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 						#insert ke database sms untuk ngirim sms notifikasi
 						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						# ===============================================================================
+						# jika berhasil maka tanggal exp date akan diupdate
+						# ===============================================================================
+						mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${XLNama[$numXL]}';"
 					else
 						attempt=1
 						attempt=$((attempt + 0))
@@ -782,6 +787,10 @@ do
 								attempt=$((attempt + 3))
 								#insert ke database sms untuk ngirim sms notifikasi
 								echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+								# ===============================================================================
+								# jika berhasil maka tanggal exp date akan diupdate
+								# ===============================================================================
+								mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${XLNama[$numXL]}';"
 							else
 								cekBerhasil="gagal"
 								echo "$currentTime - ${red}${XLNama[$numXL]} Perpanjang Paket Gagal...${reset}"
