@@ -6,11 +6,15 @@
 	class trunks
 	{
 		
-		function __construct($host, $span, $today, $user)
+		function __construct()
 		{
 			$today=date("Y-m-d 00:00:00");
 			$name = (isset($_SESSION['name']))?$_SESSION['name']:"";
 			require "sql/connect.php";
+		}
+
+		function getTrunksBySpanAndHost($host, $span)
+		{
 			$trunksQry = "";
 			$trunksQry = "SELECT * FROM provider WHERE host = '".$host."' AND span = '".$span."' LIMIT 1";
 			if($resultTrunks = mysql_query($trunksQry)){
@@ -30,9 +34,6 @@
 					$this->expPaket 		= $rowTrunks['expDatePaket'];
 					$this->host 			= $rowTrunks['host'];
 					$this->span 			= $rowTrunks['span'];
-					$this->conn 			= $conn;
-					$this->today 			= $today;
-					$this->user 			= $user;
 			    }
 			}
 		}
