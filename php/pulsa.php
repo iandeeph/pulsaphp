@@ -32,7 +32,7 @@ function alertBox($msg) {
 }
 
 function parsePulsa($pulsa, $hargaPaket){
-    $pulsa = floatval($pulsa);
+    // $pulsa = floatval($pulsa);
     if($pulsa != NULL && $pulsa != '' && $pulsa != "0"){
         if ($pulsa >= 999999) {
             $pulsaAkhir = "<span class='red-text'>fail</span>";
@@ -151,7 +151,25 @@ if($resultProvider = mysql_query($providerQry)){
         	$hargaPaket[$rowProvider['namaProvider']]	= $rowProvider['hargaPaket'];
         	$caraAktivasi[$rowProvider['namaProvider']]	= $rowProvider['caraAktivasi'];
         	$caraCekKuota[$rowProvider['namaProvider']]	= $rowProvider['caraCekKuota'];
-        	$expPaket[$rowProvider['namaProvider']]		= $rowProvider['expDatePaket'];
+            $expPaket[$rowProvider['namaProvider']]     = $rowProvider['expDatePaket'];
+            $host[]                                     = $rowProvider['host'];
+        	$span[$rowProvider['host']]                 = $rowProvider['span'];
+        }
+    }
+}
+
+
+$spans = array();
+$hostQry = "";
+$hostQry = "SELECT * FROM provider ORDER BY host, span";
+if($resultHost = mysql_query($hostQry)){
+    if (mysql_num_rows($resultHost) > 0) {
+        while($rowHost  = mysql_fetch_array($resultHost)){
+            if (!isset($spans[$rowHost['host']])) {
+                $spans[$rowHost['host']] = array();
+            }
+
+            $spans[$rowHost['host']][] = $rowHost;
         }
     }
 }

@@ -439,7 +439,7 @@ do
 			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 			telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
-			telkomselPaket=${telkomselPaket//[i: Men]/} #mengabaikan character lain selain angka
+			telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
 			telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
 			echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
 
@@ -469,7 +469,7 @@ do
 						echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
 						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 						telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
-						telkomselPaket=${telkomselPaket//[i: Men]/} #mengabaikan character lain selain angka
+						telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
 						telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
 						echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
 
@@ -519,7 +519,7 @@ do
 					echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
-					telkomselPaket=${telkomselPaket//[i: Men]/} #mengabaikan character lain selain angka
+					telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
 					telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
 					echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
 
@@ -665,7 +665,7 @@ do
 			# menentukan tanggal baru untuk tanggal habis paket selanjutnya
 			# ===============================================================================
 			newDate=$(date -d "28 days" +%Y-%m-%d)
-			
+
 			if [[ $numXL -lt 5 ]]; then
 				renewalValidation${XLNama[$numXL]}
 				validasiString=${validasiPaket:2:6}
