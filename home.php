@@ -45,7 +45,7 @@
 					        	$tanggal		= $rowPulsaToday['tanggal'];
 
 					        	$trunk = new trunks;
-					        	$trunk = $trunk->getTrunksByName($namaProvider);
+					        	$hargaPaket =  $trunk->getTrunksByName($namaProvider)['hargaPaket'];
 
 					        	$LatestPaketQry = "";
 								$LatestPaketQry = "SELECT sisaPaket FROM paket WHERE namaProvider = '".$namaProvider."' AND tanggal >= '".$lastDatePaket."' LIMIT 1";
@@ -76,7 +76,7 @@
 											;?>
 										</td>
 										<td>
-											<?php echo parsePulsa($sisaPulsa, $trunk->hargaPaket); ?>
+											<?php echo parsePulsa($sisaPulsa, $hargaPaket); ?>
 										</td>
 										<td>
 											<?php echo parsePulsa($sisaPaket, 30); ?>

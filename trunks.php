@@ -3,7 +3,7 @@
 	* @author ian <christ.lupher@gmail.com>
 	* 
 	*/
-	class trunks
+	Class trunks
 	{
 		
 		function __construct()
@@ -13,27 +13,13 @@
 			require "sql/connect.php";
 		}
 
-		function getTrunksBySpanAndHost($host, $span)
+		function getTrunkByHostAndSpan($host, $span)
 		{
 			$trunksQry = "";
-			$trunksQry = "SELECT * FROM provider WHERE host = '".$host."' AND span = '".$span."' LIMIT 1";
+			$trunksQry = "SELECT * FROM provider WHERE host like '".$host."' AND span = '".$span."' LIMIT 1";
 			if($resultTrunks = mysql_query($trunksQry)){
 				if (mysql_num_rows($resultTrunks) > 0) {
-					$rowTrunks = mysql_fetch_array($resultTrunks);
-					$idProvider = $rowTrunks['idProvider'];
-					// $namaProvider[]   = $rowProvider['namaProvider'];
-					$this->id 				= $rowTrunks['idProvider'];
-					$this->name 			= $rowTrunks['namaProvider'];
-					$this->no 				= $rowTrunks['noProvider'];
-					$this->namaPaket 		= $rowTrunks['namaPaket'];
-					$this->hargaPaket 		= $rowTrunks['hargaPaket'];
-					$this->caraCekPulsa 	= $rowTrunks['caraCekPulsa'];
-					$this->caraAktivasi 	= $rowTrunks['caraAktivasi'];
-					$this->caraCekKuota 	= $rowTrunks['caraCekKuota'];
-					$this->caraStopPaket 	= $rowTrunks['caraStopPaket'];
-					$this->expPaket 		= $rowTrunks['expDatePaket'];
-					$this->host 			= $rowTrunks['host'];
-					$this->span 			= $rowTrunks['span'];
+					return mysql_fetch_array($resultTrunks);
 			    }
 			}
 		}
@@ -44,21 +30,8 @@
 			$trunksQry = "SELECT * FROM provider WHERE namaProvider = '".$trunksName."' LIMIT 1";
 			if($resultTrunks = mysql_query($trunksQry)){
 				if (mysql_num_rows($resultTrunks) > 0) {
-					$rowTrunks = mysql_fetch_array($resultTrunks);
-					$idProvider = $rowTrunks['idProvider'];
-					// $namaProvider[]   = $rowProvider['namaProvider'];
-					$this->id 				= $rowTrunks['idProvider'];
-					$this->name 			= $rowTrunks['namaProvider'];
-					$this->no 				= $rowTrunks['noProvider'];
-					$this->namaPaket 		= $rowTrunks['namaPaket'];
-					$this->hargaPaket 		= $rowTrunks['hargaPaket'];
-					$this->caraCekPulsa 	= $rowTrunks['caraCekPulsa'];
-					$this->caraAktivasi 	= $rowTrunks['caraAktivasi'];
-					$this->caraCekKuota 	= $rowTrunks['caraCekKuota'];
-					$this->caraStopPaket 	= $rowTrunks['caraStopPaket'];
-					$this->expPaket 		= $rowTrunks['expDatePaket'];
-					$this->host 			= $rowTrunks['host'];
-					$this->span 			= $rowTrunks['span'];
+					return mysql_fetch_array($resultTrunks);
+					
 			    }
 			}
 		}

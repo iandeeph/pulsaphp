@@ -32,6 +32,7 @@ function alertBox($msg) {
 }
 
 function parsePulsa($pulsa, $hargaPaket){
+    $pulsa = floatval($pulsa);
     if($pulsa != NULL && $pulsa != '' && $pulsa != "0"){
         if ($pulsa >= 999999) {
             $pulsaAkhir = "<span class='red-text'>fail</span>";
