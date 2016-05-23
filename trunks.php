@@ -8,6 +8,8 @@
 		
 		function __construct($host, $span, $today, $user)
 		{
+			$today=date("Y-m-d 00:00:00");
+			$name = (isset($_SESSION['name']))?$_SESSION['name']:"";
 			require "sql/connect.php";
 			$trunksQry = "";
 			$trunksQry = "SELECT * FROM provider WHERE host = '".$host."' AND span = '".$span."' LIMIT 1";
@@ -31,6 +33,31 @@
 					$this->conn 			= $conn;
 					$this->today 			= $today;
 					$this->user 			= $user;
+			    }
+			}
+		}
+
+		function getTrunksByName($trunksName)
+		{
+			$trunksQry = "";
+			$trunksQry = "SELECT * FROM provider WHERE namaProvider = '".$trunksName."' LIMIT 1";
+			if($resultTrunks = mysql_query($trunksQry)){
+				if (mysql_num_rows($resultTrunks) > 0) {
+					$rowTrunks = mysql_fetch_array($resultTrunks);
+					$idProvider = $rowTrunks['idProvider'];
+					// $namaProvider[]   = $rowProvider['namaProvider'];
+					$this->id 				= $rowTrunks['idProvider'];
+					$this->name 			= $rowTrunks['namaProvider'];
+					$this->no 				= $rowTrunks['noProvider'];
+					$this->namaPaket 		= $rowTrunks['namaPaket'];
+					$this->hargaPaket 		= $rowTrunks['hargaPaket'];
+					$this->caraCekPulsa 	= $rowTrunks['caraCekPulsa'];
+					$this->caraAktivasi 	= $rowTrunks['caraAktivasi'];
+					$this->caraCekKuota 	= $rowTrunks['caraCekKuota'];
+					$this->caraStopPaket 	= $rowTrunks['caraStopPaket'];
+					$this->expPaket 		= $rowTrunks['expDatePaket'];
+					$this->host 			= $rowTrunks['host'];
+					$this->span 			= $rowTrunks['span'];
 			    }
 			}
 		}
@@ -68,11 +95,13 @@
 							";
 
 			if(mysql_query($updateQry)){
-				logging($this->today, $this->user, "Update Trunks", $loggingText, $postId);
+				logging($today, $user, "Update Trunks", $loggingText, $postId);
 		        header('Location: ./index.php?menu=setting');
 		    }else{
-		    	echo "ERROR: Could not able to execute ".$updateQry.". " . mysql_error($this->conn);
+		    	echo "ERROR: Could not able to execute ".$updateQry.". " . mysql_error($conn);
 		    }
 		}
+
+
 	}
 ?>

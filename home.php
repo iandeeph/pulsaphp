@@ -44,6 +44,9 @@
 					        	$sisaPulsa		= $rowPulsaToday['sisaPulsa'];
 					        	$tanggal		= $rowPulsaToday['tanggal'];
 
+					        	$trunk = new trunks;
+					        	$trunk = $trunk->getTrunksByName($namaProvider);
+
 					        	$LatestPaketQry = "";
 								$LatestPaketQry = "SELECT sisaPaket FROM paket WHERE namaProvider = '".$namaProvider."' AND tanggal >= '".$lastDatePaket."' LIMIT 1";
 								if($resultLatestPaket = mysql_query($LatestPaketQry)){
@@ -54,20 +57,6 @@
 										$sisaPaket = "-";
 									}
 								}
-
-					        	$pulsaKurang = ($sisaPulsa <= $hargaPaket[$namaProvider])?"red-text":"";
-					        	// $paketKurang = ($sisaPaket <= 60 || $sisaPaket = "-")?"red-text":"";
-					        	if ($sisaPaket <= 60 || $sisaPaket == "-") {
-					        		$paketKurang = "red-text";
-					        	}else{
-					        		$paketKurang = "";
-					        	}
-
-					        	if ($sisaPaket != "-" && $sisaPaket != "" && $sisaPaket != NULL) {
-					        		$sisaPaket = number_format($sisaPaket, 0, ',', '.')." Menit";
-					        	}else{
-					        		$sisaPaket = "gagal cek";
-					        	}
 
 					        	?>
 									<tr>
@@ -86,11 +75,11 @@
 												}
 											;?>
 										</td>
-										<td class="<?php echo $pulsaKurang;?>">
-											<?php echo number_format($sisaPulsa, 0, ',', '.'); ?>
+										<td>
+											<?php echo parsePulsa($sisaPulsa, $trunk->hargaPaket); ?>
 										</td>
-										<td class="<?php echo $paketKurang;?>">
-											<?php echo $sisaPaket; ?>
+										<td>
+											<?php echo parsePulsa($sisaPaket, 30); ?>
 										</td>
 									</tr>
 								<?php
