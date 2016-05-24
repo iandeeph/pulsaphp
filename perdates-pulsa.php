@@ -87,7 +87,9 @@
 								while($rowCurBall = mysql_fetch_array($resultCurBal)){
 									if (isset($listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]])) {
 										$listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]] = $rowCurBall["sisaPulsa"];
-										$ussd[$rowCurBall["sisaPulsa"]] = $rowCurBall["ussdReply"];
+										if ($rowCurBall["sisaPulsa"] != '' || $rowCurBall["sisaPulsa"] != '-' || $rowCurBall["sisaPulsa"] = NULL) {
+											$ussd[$rowCurBall["sisaPulsa"]] = $rowCurBall["ussdReply"];
+										}
 									}
 								}
 							}

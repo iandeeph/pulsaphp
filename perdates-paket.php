@@ -90,7 +90,9 @@
 								while($rowCurBall = mysql_fetch_array($resultCurBal)){
 									if (isset($listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]])) {
 										$listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]] = $rowCurBall["sisaPaket"];
-										$ussd[$rowCurBall["sisaPaket"]] = $rowCurBall["ussdReply"];
+										if ($rowCurBall["sisaPaket"] != '' || $rowCurBall["sisaPaket"] != '-' || $rowCurBall["sisaPaket"] = NULL) {
+											$ussd[$rowCurBall["sisaPaket"]] = $rowCurBall["ussdReply"];
+										}
 									}
 								}
 							}
