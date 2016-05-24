@@ -89,10 +89,10 @@
 							if ($resultCount > 0) {
 								while($rowCurBall = mysql_fetch_array($resultCurBal)){
 									if (isset($listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]])) {
-										$listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]] = $rowCurBall["sisaPaket"];
-										if ($rowCurBall["sisaPaket"] = NULL) {
-											$ussd[$rowCurBall["sisaPaket"]] = $rowCurBall["ussdReply"];
-										}
+										$listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]] = array(
+											"sisaPaket" => $rowCurBall["sisaPaket"],
+											"ussdReply" => $rowCurBall["ussdReply"]
+										);
 									}
 								}
 							}
@@ -102,8 +102,8 @@
 							echo "<tr>";
 							echo "<td>".$provider."</td>";
 							foreach ($days as $day => $times) {
-								foreach ($times as $time => $paket) {
-									echo "<td class='fixed' title='".($paket != "-") ? $ussd[$paket] : '';."'>".parsePulsa(intval($paket), 30)."</td>";
+								foreach ($times as $time => $data) {
+									echo "<td class='fixed' title='".$data["ussdReply"]."'>".parsePulsa(intval($data["sisaPaket"]), 30)."</td>";
 								}
 							}
 							echo "</tr>";
