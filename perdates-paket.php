@@ -61,7 +61,10 @@
 							for ($i=1; $i <= $daycount ; $i++) {
 								$listProvider[$provider][$i] = array();
 								for ($j=0; $j < count($jamCekPaket); $j++) {
-									$listProvider[$provider][$i][$jamCekPaket[$j]] = "-";
+									$listProvider[$provider][$i][$jamCekPaket[$j]] = array(
+										"sisaPaket" => '-',
+										"ussdReply" => ''
+									);
 								}
 							}
 						}

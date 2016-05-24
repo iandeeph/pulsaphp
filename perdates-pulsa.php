@@ -61,7 +61,10 @@
 							for ($i=1; $i <= $daycount ; $i++) {
 								$listProvider[$provider][$i] = array();
 								for ($j=0; $j < count(getJamPaket($postDate."-".sprintf("%02d", $i))); $j++) {
-									$listProvider[$provider][$i][getJamPaket($postDate."-".sprintf("%02d", $i), $j)] = "-";
+									$listProvider[$provider][$i][getJamPaket($postDate."-".sprintf("%02d", $i), $j)] = array(
+										"sisaPulsa" => '-',
+										"ussdReply" => ''
+									);
 								}
 							}
 						}
@@ -100,7 +103,7 @@
 							echo "<td>".$provider."</td>";
 							foreach ($days as $day => $times) {
 								foreach ($times as $time => $data) {
-									echo "<td class='fixed' title='".$data['ussdReply']."'>".parsePulsa(intval($data['sisaPulsa']), $hargaPaket[$provider])."</td>";
+									echo "<td class='fixed' title='".$data['ussdReply']."'>".parsePulsa(intval($data["sisaPulsa"]), $hargaPaket[$provider])."</td>";
 								}
 							}
 							echo "</tr>";
