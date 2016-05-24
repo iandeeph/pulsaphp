@@ -440,12 +440,13 @@ do
 	cekString2=${telkomselPaket:49:4}
 	cekString3=${telkomselPaket:48:4}
 
-	echo "$currentTime - USSD REPLY : ${yellow}${telkomselPaket}${reset}"
+	echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
 
 	if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
 		if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
 			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+			USSDReplyTelkomsel[$numSimpati]="${telkomselPaket}"
 			telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
 			telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
 			telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
@@ -470,7 +471,8 @@ do
 				cekString2=${telkomselPaket:49:4}
 				cekString3=${telkomselPaket:48:4}
 
-				echo "$currentTime - USSD REPLY : ${yellow}${telkomselPaket}${reset}"
+				echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
+				USSDReplyTelkomsel[$numSimpati]="$telkomselPaket"
 
 				if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
 					if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
@@ -520,7 +522,8 @@ do
 			cekString2=${telkomselPaket:49:4}
 			cekString3=${telkomselPaket:48:4}
 
-			echo "$currentTime - USSD REPLY : ${yellow}${telkomselPaket}${reset}"
+			echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
+			USSDReplyTelkomsel[$numSimpati]="$telkomselPaket"
 
 			if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
 				if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
@@ -562,7 +565,7 @@ do
 	#===============================================================================
 	#memasukan nilai cek paket kedalam database
 	#===============================================================================
-	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal) VALUES ('${telkomselNama[$numSimpati]}', '${sisaPaketTelkomsel[$numSimpati]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal, ussdReply) VALUES ('${telkomselNama[$numSimpati]}', '${sisaPaketTelkomsel[$numSimpati]}', '$mysqlDateNow', '${USSDReplyTelkomsel[$numSimpati]}');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numSimpati=$((numSimpati + 1))
 done
@@ -586,6 +589,7 @@ do
 		echo "$currentTime - ${green}Sisa Paket : $sisaPaket${reset}"
 
 		sisaPaketXL[$numXL]=$sisaPaket
+		USSDReplyXL[$numXL]=$xlPaket
 	else
 		attempt=1
 		attempt=$((attempt + 0))
@@ -598,6 +602,7 @@ do
 			cekString=${xlPaket:2:6} # mengecek respon dari openvox
 			cekString2=${xlPaket:49:4} # mengecek respon dari openvox
 			echo "$currentTime - USSD REPLY : ${yellow}$xlPaket${reset}"
+			USSDReplyXL[$numXL]=$xlPaket
 
 			if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Sisa" ]; then
 				echo "$currentTime - ${green}${XLNama[$numXL]} Cek Pulsa Berhasil...${reset}"
@@ -847,7 +852,7 @@ do
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
 	#===============================================================================
-	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal) VALUES ('${XLNama[$numXL]}', '${sisaPaketXL[$numXL]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal, ussdReply) VALUES ('${XLNama[$numXL]}', '${sisaPaketXL[$numXL]}', '$mysqlDateNow', '${USSDReplyXL[$numXL]}');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numXL=$((numXL + 1))
 done

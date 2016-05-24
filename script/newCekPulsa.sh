@@ -382,6 +382,7 @@ do
 		if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
 			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Berhasil...${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+			USSDReplyTelkomsel[$numSimpati]="${telkomsel[$numSimpati]}"
 			telkomsel[$numSimpati]=${telkomsel[$numSimpati]:62:6} #mengambil character yang bernilai jumlah pulsa
 			telkomsel[$numSimpati]=${telkomsel[$numSimpati]//[.Aktif]/} #mengabaikan character lain selain angka
 			telkomsel[$numSimpati]=$((telkomsel[$numSimpati] + 0)) #merubah variable yang semula string menjadi integer
@@ -410,6 +411,7 @@ do
 				cekString2=${telkomsel:49:4}
 				cekString3=${telkomsel:49:4}
 				echo "$currentTime - USSD REPLY : ${yellow}$telkomsel${reset}"
+				USSDReplyTelkomsel[$numSimpati]="$telkomsel"
 
 				if [ "$cekString" = "Recive"  ]; then
 					if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
@@ -472,6 +474,7 @@ do
 			cekString2=${telkomsel:49:4}
 			cekString3=${telkomsel:49:4}
 			echo "$currentTime - USSD REPLY : ${yellow}$telkomsel${reset}"
+			USSDReplyTelkomsel[$numSimpati]="$telkomsel"
 
 			if [ "$cekString" = "Recive"  ]; then
 				if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
@@ -604,7 +607,7 @@ do
 	#===============================================================================
 	#memasukan nilai cek pulsa kedalam database
 	#===============================================================================
-	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${telkomselNama[$numSimpati]}', '${sisaPulsaTelkomsel[$numSimpati]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal, ussdReply) VALUES ('${telkomselNama[$numSimpati]}', '${sisaPulsaTelkomsel[$numSimpati]}', '$mysqlDateNow', '${USSDReplyTelkomsel[$numSimpati]}');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numSimpati=$((numSimpati + 1))
 done
@@ -719,6 +722,7 @@ do
 	if [ "$cekString" = "Recive" ]; then #bila respon open = Recive
 		echo "$currentTime - ${green}${XLNama[$numXl]} Cek Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+		USSDReplyXL[$numXl]="${XL[$numXl]}"
 		XL[$numXl]=${XL[$numXl]:55:6} #mengambil character yang bernilai jumlah pulsa
 		XL[$numXl]=${XL[$numXl]//[ . sd\/ ]/} #mengabaikan character lain selain angka
 		XL[$numXl]=$((XL[$numXl] + 0)) #merubah variable yang semula string menjadi integer
@@ -746,6 +750,7 @@ do
 			xlFx$numXl
 			cekString=${xl:2:6}
 			echo "$currentTime - USSD REPLY : ${yellow}$xl${reset}"
+			USSDReplyXL[$numXl]="$xl"
 
 			if [ "$cekString" = "Recive" ]; then
 				echo "$currentTime - ${green}${XLNama[$numXl]} Cek Berhasil...${reset}"
@@ -788,7 +793,7 @@ do
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
 	#===============================================================================
-	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${XLNama[$numXl]}', '${sisaPulsaXL[$numXl]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal,ussdReply) VALUES ('${XLNama[$numXl]}', '${sisaPulsaXL[$numXl]}', '$mysqlDateNow', '${USSDReplyXL[$numXl]}');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numXl=$((numXl + 1))
 done
@@ -891,6 +896,7 @@ do
 	if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Pul" ]; then #bila respon open = Recive
 		echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+		USSDReplyThree[$numThree]="${three[$numThree]}"
 		three[$numThree]=${three[$numThree]:82:6} #mengambil character yang bernilai jumlah pulsa
 		three[$numThree]=${three[$numThree]//[,Bonus]/} #mengabaikan character lain selain angka
 		three[$numThree]=$((three[$numThree] + 0)) #merubah variable yang semula string menjadi integer
@@ -915,6 +921,7 @@ do
 			cekString=${three:2:6}
 			cekString2=${three:74:3}
 			echo "$currentTime - USSD REPLY : ${yellow}$three${reset}"
+			USSDReplyThree[$numThree]="$three"
 
 			if [ "$cekString" = "Recive"  ] && [ "$cekString2" = "Pul"  ]; then
 				echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
@@ -950,7 +957,7 @@ do
 	#===============================================================================
 	#memasukan nilai cek pulsa dan paket kedalam database
 	#===============================================================================
-	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal) VALUES ('${threeNama[$numThree]}', '${sisaPulsaThree[$numThree]}', '$mysqlDateNow');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+	echo "INSERT INTO pulsa (namaProvider, sisaPulsa, tanggal, ussdReply) VALUES ('${threeNama[$numThree]}', '${sisaPulsaThree[$numThree]}', '$mysqlDateNow', '${USSDReplyThree[$numThree]}');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
 	numThree=$((numThree + 1))
 done
