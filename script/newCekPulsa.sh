@@ -396,7 +396,8 @@ do
 				echo "$currentTime - Kirim Slack ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 				#insert ke database sms untuk mengirim pulsa ke tukang pulsa
 				# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: (${telkomsel[$numSimpati]}), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-				textMintaPulsaTelkomsel[$numSimpati]="Simpati No : $i, Sisa Pulsa: ${telkomsel[$numSimpati]}, Harga Paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
+				slackText="Simpati No : $i,\nSisa Pulsa: ${telkomsel[$numSimpati]},\nHarga Paket: ${telkomselHargaPaket[$numSimpati]},\nExp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
+				curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
 			fi
 		else
 			attempt=1
@@ -433,7 +434,8 @@ do
 							echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 							#insert ke database sms untuk mengirim pulsa ke tukang pulsa
 							# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-							textMintaPulsaTelkomsel[$numSimpati]="Simpati No : $i, Sisa Pulsa: $telkomsel, Harga Paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
+							slackText="Simpati No : $i,\nSisa Pulsa: Sisa Pulsa: $telkomsel,\nHarga Paket: ${telkomselHargaPaket[$numSimpati]},\nExp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
+							curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
 						fi
 					else
 						cekBerhasil="gagal"
@@ -496,7 +498,8 @@ do
 						echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 						#insert ke database sms untuk mengirim pulsa ke tukang pulsa
 						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-						textMintaPulsaTelkomsel[$numSimpati]="Simpati No : $i, Sisa Pulsa: $telkomsel, Harga Paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
+						slackText="Simpati No : $i,\nSisa Pulsa: Sisa Pulsa: $telkomsel,\nHarga Paket: ${telkomselHargaPaket[$numSimpati]},\nExp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
 					fi
 				else
 					cekBerhasil="gagal"
@@ -575,12 +578,12 @@ do
 					echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
 					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 					textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. \nUSSD REPLY : $perpanjangTelkomsel"
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiTelkomsel[$numSimpati]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 
 					# ===============================================================================
 					# jika berhasil maka tanggal exp date akan diupdate
 					# ===============================================================================
 					mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
-					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiTelkomsel[$numSimpati]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 					cekBerhasil="berhasil"
 					attempt=$((attempt + 3))
 				else
@@ -737,7 +740,9 @@ do
 			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXl]}"
 			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
 			# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: (${XL[$numXl]}), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-			textMintaPulsaXL[$numXl]="XL No : $i, Sisa Pulsa: ${XL[$numXl]}, Harga Paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}"
+			# textMintaPulsaXL[$numXl]="XL No : $i, Sisa Pulsa: ${XL[$numXl]}, Harga Paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}"
+			slackText="XL No : $i,\nSisa Pulsa: ${XL[$numXl]},\nHarga Paket: ${XLHargaPaket[$numXl]},\nExp Date Paket: ${XLExpDatePaket[$numXl]}"
+			curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
 		fi
 	else
 		attempt=1
@@ -771,7 +776,8 @@ do
 					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXl]}"
 					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
 					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: ($xl), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-					textMintaPulsaXL[$numXl]="XL No : $i, Sisa Pulsa: $xl, Harga Paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}"
+					slackText="XL No : $i,\nSisa Pulsa: $xl,\nHarga Paket: ${XLHargaPaket[$numXl]},\nExp Date Paket: ${XLExpDatePaket[$numXl]}"
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
 				fi
 			else
 				cekBerhasil="gagal"
@@ -908,7 +914,8 @@ do
 			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
 			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
 			# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: (${three[$numThree]}), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-			textMintaPulsaThree[$numThree]="Three No : $i, Sisa Pulsa: ${three[$numThree]}, Harga Paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59"
+			slackText="Three No : $i,\nSisa Pulsa: ${three[$numThree]},\nHarga Paket: ${threeHargaPaket[$numThree]},\nExp Date Paket: Hari ini Jam 23:59"
+			curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
 		fi
 	else
 		attempt=1
@@ -939,7 +946,8 @@ do
 					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
 					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
 					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: ($three), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-					textMintaPulsaThree[$numThree]="Three No : $i, Sisa Pulsa: ${three[$numThree]}, Harga Paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59"
+					slackText="Three No : $i,\nSisa Pulsa: $three,\nHarga Paket: ${threeHargaPaket[$numThree]},\nExp Date Paket: Hari ini Jam 23:59"
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
 				fi
 			else
 				cekBerhasil="gagal"
@@ -961,31 +969,3 @@ do
 
 	numThree=$((numThree + 1))
 done
-
-for i in ${textMintaPulsaTelkomsel[@]}; do
-	if [[ $joinTextTelkomsel == '' ]]; then
-		joinTextTelkomsel="$i"
-	else
-		joinTextTelkomsel="$joinTextTelkomsel \n$i"
-	fi
-done
-
-for i in ${textMintaPulsaXL[@]}; do
-	if [[ $joinTextXL == '' ]]; then
-		joinTextXL="$i"
-	else
-		joinTextXL="$joinTextXL \n$i"
-	fi
-done
-
-for i in ${textMintaPulsaThree[@]}; do
-	if [[ $joinTextThree == '' ]]; then
-		joinTextThree="$i"
-	else
-		joinTextThree="$joinTextThree \n$i"
-	fi
-done
-
-slackText="$joinTextTelkomsel \n$joinTextXL \n$joinTextThree"
-
-curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
