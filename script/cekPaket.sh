@@ -8,6 +8,14 @@ USER='root'
 PASSWORD='c3rmat'
 
 #===============================================================================
+#Inisialisasi parameter untuk post to slack
+#===============================================================================
+CHANNEL="#cermati_pulsa"
+USERNAME="Pika Pulsa"
+ICONEMOJI=":pika-shy:"
+ICONEMOJI2=":pikapika:"
+
+#===============================================================================
 #inisialisasi tanggal habis paket untuk provider Simpati/Telkomsel
 #jika tanggal = hari ini, maka paket akan diperpanjang
 #jika paket diperpanjang, maka tanggal akan diupdate / ditambahkan sesuai panjangnya masa berlaku paket
@@ -485,7 +493,7 @@ do
 						echo "----------------------------------------------"
 						attempt=$((attempt + 1))
 						if [[ $attempt == $maxAttempt ]]; then
-							sisaPaketTelkomsel[$numSimpati]=999999
+							sisaPaketTelkomsel[$numSimpati]=0
 						fi
 					fi
 				else
@@ -494,7 +502,7 @@ do
 					echo "----------------------------------------------"
 					attempt=$((attempt + 1))
 					if [[ $attempt == $maxAttempt ]]; then
-						sisaPaketTelkomsel[$numSimpati]=999999
+						sisaPaketTelkomsel[$numSimpati]=0
 					fi
 				fi
 			done
@@ -535,7 +543,7 @@ do
 					echo "----------------------------------------------"
 					attempt=$((attempt + 1))
 					if [[ $attempt == $maxAttempt ]]; then
-						sisaPaketTelkomsel[$numSimpati]=999999
+						sisaPaketTelkomsel[$numSimpati]=0
 					fi
 				fi
 			else
@@ -544,7 +552,7 @@ do
 				echo "----------------------------------------------"
 				attempt=$((attempt + 1))
 				if [[ $attempt == $maxAttempt ]]; then
-					sisaPaketTelkomsel[$numSimpati]=999999
+					sisaPaketTelkomsel[$numSimpati]=0
 				fi
 			fi
 		done
@@ -606,7 +614,7 @@ do
 				
 				attempt=$((attempt + 1))
 				if [[ $attempt == $maxAttempt ]]; then
-					sisaPaketXL[$numXL]=999999
+					sisaPaketXL[$numXL]=0
 				fi
 			fi
 		done
@@ -622,7 +630,7 @@ do
 		echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
 		if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
 			echo "$currentTime - ${green}${XLNama[$numXL]} Stop Paket Berhasil...${reset}"
-					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 			stopPaketStatus[$numXL]="berhasil"
 		else
 			attempt=1
@@ -653,7 +661,9 @@ do
 					attempt=$((attempt + 1))
 					if [[ $attempt == $maxAttempt ]]; then
 						stopPaketStatus[$numXL]="gagal"
-						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						textNotifikasiXL[$numXL]="${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 					fi
 				fi
 			done
@@ -690,7 +700,9 @@ do
 						echo "$currentTime - ${green}${XLNama[$numXL]} Perpanjang Paket Berhasil...${reset}"
 						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 						#insert ke database sms untuk ngirim sms notifikasi
-						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 						# ===============================================================================
 						# jika berhasil maka tanggal exp date akan diupdate
 						# ===============================================================================
@@ -714,7 +726,10 @@ do
 								cekBerhasil="berhasil"
 								attempt=$((attempt + 3))
 								#insert ke database sms untuk ngirim sms notifikasi
-								echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+								# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+								textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+
 								# ===============================================================================
 								# jika berhasil maka tanggal exp date akan diupdate
 								# ===============================================================================
@@ -727,7 +742,9 @@ do
 								attempt=$((attempt + 1))
 								if [[ $attempt == $maxAttempt ]]; then
 									#insert ke database sms untuk ngirim sms notifikasi
-									echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+									# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+									textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 								fi
 							fi
 						done
@@ -736,7 +753,9 @@ do
 					echo "$currentTime - ${green}${XLNama[$numXL]} Validasi Paket Gagal, Paket yang akan dibeli salah...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					#insert ke database sms untuk ngirim sms notifikasi
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					textNotifikasiXL[$numXL]="${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				fi
 			else
 				renewalValidation${XLNama[$numXL]}
@@ -762,7 +781,9 @@ do
 						echo "$currentTime - ${green}${XLNama[$numXL]} Perpanjang Paket Berhasil...${reset}"
 						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 						#insert ke database sms untuk ngirim sms notifikasi
-						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 						# ===============================================================================
 						# jika berhasil maka tanggal exp date akan diupdate
 						# ===============================================================================
@@ -786,7 +807,9 @@ do
 								cekBerhasil="berhasil"
 								attempt=$((attempt + 3))
 								#insert ke database sms untuk ngirim sms notifikasi
-								echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+								# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+								textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket"
+								curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 								# ===============================================================================
 								# jika berhasil maka tanggal exp date akan diupdate
 								# ===============================================================================
@@ -799,7 +822,9 @@ do
 								attempt=$((attempt + 1))
 								if [[ $attempt == $maxAttempt ]]; then
 									#insert ke database sms untuk ngirim sms notifikasi
-									echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+									# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+									textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket"
+									curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 								fi
 							fi
 						done
@@ -808,7 +833,9 @@ do
 					echo "$currentTime - ${green}${XLNama[$numXL]} Validasi Paket Gagal, Paket yang akan dibeli salah...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					#insert ke database sms untuk ngirim sms notifikasi
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					textNotifikasiXL[$numXL]="${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2"
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				fi
 			fi
 		fi

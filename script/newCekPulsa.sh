@@ -15,6 +15,14 @@ HARGA_PAKET_XL=132000
 HARGA_PAKET_THREE=5000
 
 #===============================================================================
+#Inisialisasi parameter untuk post to slack
+#===============================================================================
+CHANNEL="#cermati_pulsa"
+USERNAME="Pika Pulsa"
+ICONEMOJI=":pika-shy:"
+ICONEMOJI2=":pikapika:"
+
+#===============================================================================
 #inisialisasi tanggal habis paket untuk provider Simpati/Telkomsel
 #jika tanggal = hari ini, maka paket akan diperpanjang
 #jika paket diperpanjang, maka tanggal akan diupdate / ditambahkan sesuai panjangnya masa berlaku paket
@@ -384,9 +392,10 @@ do
 			sisaPulsaTelkomsel[$numSimpati]=${telkomsel[$numSimpati]}
 
 			if [[ ${telkomsel[$numSimpati]} -lt ${telkomselHargaPaket[$numSimpati]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
-				echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
+				echo "$currentTime - Kirim Slack ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 				#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: (${telkomsel[$numSimpati]}), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: (${telkomsel[$numSimpati]}), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				textMintaPulsaTelkomsel[$numSimpati]="Simpati No : $i, Sisa Pulsa: ${telkomsel[$numSimpati]}, Harga Paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
 			fi
 		else
 			attempt=1
@@ -421,7 +430,8 @@ do
 						if [[ $telkomsel -lt ${telkomselHargaPaket[$numSimpati]} ]]; then
 							echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 							#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+							# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+							textMintaPulsaTelkomsel[$numSimpati]="Simpati No : $i, Sisa Pulsa: $telkomsel, Harga Paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
 						fi
 					else
 						cekBerhasil="gagal"
@@ -482,7 +492,8 @@ do
 					if [[ $telkomsel -lt ${telkomselHargaPaket[$numSimpati]} ]]; then
 						echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa Telkomsel - ${telkomselNo[$numSimpati]}"
 						#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : ${telkomselNo[$numSimpati]}, sisa pulsa: ($telkomsel), harga paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						textMintaPulsaTelkomsel[$numSimpati]="Simpati No : $i, Sisa Pulsa: $telkomsel, Harga Paket: ${telkomselHargaPaket[$numSimpati]}, Exp Date Paket: ${telkomselExpDatePaket[$numSimpati]}"
 					fi
 				else
 					cekBerhasil="gagal"
@@ -534,7 +545,9 @@ do
 			# mengirim sms ke admin, kalo baru saja paket diperpanjang.. tujuannya agar admin memastikan perpanjangan berjalan sesuai dengan seharusnya
 			# ===============================================================================
 			echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
-			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket berhasil.. \nUSSD REPLY : $perpanjangTelkomsel"
+			curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiTelkomsel[$numSimpati]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 			# ===============================================================================
 			# jika berhasil maka tanggal exp date akan diupdate
 			# ===============================================================================
@@ -557,11 +570,14 @@ do
 					# mengirim sms ke admin
 					# ===============================================================================
 					echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. \nUSSD REPLY : $perpanjangTelkomsel"
+
 					# ===============================================================================
 					# jika berhasil maka tanggal exp date akan diupdate
 					# ===============================================================================
 					mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiTelkomsel[$numSimpati]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 					cekBerhasil="berhasil"
 					attempt=$((attempt + 3))
 				else
@@ -575,7 +591,9 @@ do
 						# mengirim sms ke admin
 						# ===============================================================================
 						echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
-						echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket gagal.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket gagal.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket gagal.. \nUSSD REPLY : $perpanjangTelkomsel"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiTelkomsel[$numSimpati]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 					fi
 				fi
 			done
@@ -714,7 +732,8 @@ do
 		if [[ ${XL[$numXl]} -lt ${XLHargaPaket[$numXl]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
 			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXl]}"
 			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: (${XL[$numXl]}), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: (${XL[$numXl]}), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			textMintaPulsaXL[$numXl]="XL No : $i, Sisa Pulsa: ${XL[$numXl]}, Harga Paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}"
 		fi
 	else
 		attempt=1
@@ -746,7 +765,8 @@ do
 				if [[ $xl -lt ${XLHargaPaket[$numXl]} ]]; then
 					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXl]}"
 					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: ($xl), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: ($xl), harga paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					textMintaPulsaXL[$numXl]="XL No : $i, Sisa Pulsa: $xl, Harga Paket: ${XLHargaPaket[$numXl]}, Exp Date Paket: ${XLExpDatePaket[$numXl]}"
 				fi
 			else
 				cekBerhasil="gagal"
@@ -881,7 +901,8 @@ do
 		if [[ ${three[$numThree]} -lt ${threeHargaPaket[$numThree]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
 			echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
 			#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-			echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: (${three[$numThree]}), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: (${three[$numThree]}), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+			textMintaPulsaThree[$numThree]="Three No : $i, Sisa Pulsa: ${three[$numThree]}, Harga Paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59"
 		fi
 	else
 		attempt=1
@@ -910,7 +931,8 @@ do
 				if [[ $three -lt ${threeHargaPaket[$numThree]} ]]; then
 					echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa THREE - $i"
 					#insert ke database sms untuk mengirim pulsa ke tukang pulsa
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: ($three), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : Three $i, sisa pulsa: ($three), harga paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					textMintaPulsaThree[$numThree]="Three No : $i, Sisa Pulsa: ${three[$numThree]}, Harga Paket: ${threeHargaPaket[$numThree]}, Exp Date Paket: Hari ini Jam 23:59"
 				fi
 			else
 				cekBerhasil="gagal"
@@ -932,3 +954,31 @@ do
 
 	numThree=$((numThree + 1))
 done
+
+for i in ${textMintaPulsaTelkomsel[@]}; do
+	if [[ $joinTextTelkomsel == '' ]]; then
+		joinTextTelkomsel="$i"
+	else
+		joinTextTelkomsel="$joinTextTelkomsel \n$i"
+	fi
+done
+
+for i in ${textMintaPulsaXL[@]}; do
+	if [[ $joinTextXL == '' ]]; then
+		joinTextXL="$i"
+	else
+		joinTextXL="$joinTextXL \n$i"
+	fi
+done
+
+for i in ${textMintaPulsaThree[@]}; do
+	if [[ $joinTextThree == '' ]]; then
+		joinTextThree="$i"
+	else
+		joinTextThree="$joinTextThree \n$i"
+	fi
+done
+
+slackText="$joinTextTelkomsel \n$joinTextXL \n$joinTextThree"
+
+curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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

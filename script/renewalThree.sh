@@ -4,6 +4,14 @@
 currentTime=$(date +"[ %Y-%m-%d %H:%M:%S ]")
 
 #===============================================================================
+#Inisialisasi parameter untuk post to slack
+#===============================================================================
+CHANNEL="#cermati_pulsa"
+USERNAME="Pika Pulsa"
+ICONEMOJI=":pika-shy:"
+ICONEMOJI2=":pikapika:"
+
+#===============================================================================
 #inisialisasi nomor tukang pulsa a.k.a Karin dan tukang ketik a.k.a ian
 #===============================================================================
 TUKANGPULSA=081381171337
@@ -99,7 +107,9 @@ do
 	if [[ "$cekString" == "Terima" ]]; then #bila respon openvox = Terima
 		echo "$currentTime - ${green}${threeNama[$numThree]} Berhasil Perpanjang...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-		echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+		# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+		textNotifikasi[$numThree]="${threeNama[$numThree]} Perpanjang Paket Berhasil.. USSD REPLY :$perpanjangThree"
+		curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasi[$numThree]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 		echo "$currentTime - ${red}${threeNama[$numThree]} Gagal Perpanjang...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		attempt=1
@@ -113,7 +123,9 @@ do
 			if [[ "$cekString" == "Terima" ]]; then
 				echo "$currentTime - ${green}${threeNama[$numThree]} Berhasil Perpanjang...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-				echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil setelah percobaan ke-$attempt.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil setelah percobaan ke-$attempt.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				textNotifikasi[$numThree]="${threeNama[$numThree]} Perpanjang Paket Berhasil setelah percobaan ke-$attempt.. USSD REPLY :$perpanjangThree"
+				curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasi[$numThree]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				attempt=$((attempt + 3))
 			else
 				cekBerhasil="gagal"
@@ -122,7 +134,9 @@ do
 				attempt=$((attempt + 1))
 				sleep 5s
 				if [[ $attempt == $maxAttempt ]]; then
-					echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket gagal.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket gagal.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+					textNotifikasi[$numThree]="${threeNama[$numThree]} Perpanjang Paket gagal.. USSD REPLY :$perpanjangThree"
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasi[$numThree]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				fi
 			fi
 		done
