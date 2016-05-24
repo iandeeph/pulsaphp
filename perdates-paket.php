@@ -72,7 +72,8 @@
 										DAYOFMONTH(tanggal) as tgl,
 										DATE_FORMAT(tanggal, '%H:%i') as waktu,
 										HOUR(tanggal) as jam,
-										MINUTE(tanggal) as menit
+										MINUTE(tanggal) as menit,
+										ussdReply
 										FROM paket 
 										WHERE namaProvider in("."'".implode("','", $namaProvider)."'".") 
 											AND YEAR(tanggal) = '".$postYear."' 
@@ -89,6 +90,7 @@
 								while($rowCurBall = mysql_fetch_array($resultCurBal)){
 									if (isset($listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]])) {
 										$listProvider[$rowCurBall["namaProvider"]][$rowCurBall["tgl"]][$rowCurBall["waktu"]] = $rowCurBall["sisaPaket"];
+										$ussd[$rowCurBall["sisaPaket"]] = $rowCurBall["ussdReply"];
 									}
 								}
 							}
@@ -99,7 +101,7 @@
 							echo "<td>".$provider."</td>";
 							foreach ($days as $day => $times) {
 								foreach ($times as $time => $paket) {
-									echo "<td class='fixed'>".parsePulsa(intval($paket), 30)."</td>";
+									echo "<td class='fixed' title='".$ussd[$paket]."'>".parsePulsa(intval($paket), 30)."</td>";
 								}
 							}
 							echo "</tr>";
