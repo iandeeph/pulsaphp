@@ -668,7 +668,7 @@ do
 						stopPaketStatus[$numXL]="gagal"
 						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 						textNotifikasiXL[$numXL]="${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop"
-						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 					fi
 				fi
 			done
@@ -707,7 +707,7 @@ do
 						#insert ke database sms untuk ngirim sms notifikasi
 						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 						textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal"
-						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 						# ===============================================================================
 						# jika berhasil maka tanggal exp date akan diupdate
 						# ===============================================================================
@@ -733,7 +733,7 @@ do
 								#insert ke database sms untuk ngirim sms notifikasi
 								# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 								textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket"
-						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 
 								# ===============================================================================
 								# jika berhasil maka tanggal exp date akan diupdate
@@ -749,7 +749,7 @@ do
 									#insert ke database sms untuk ngirim sms notifikasi
 									# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 									textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket"
-						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 								fi
 							fi
 						done
@@ -760,7 +760,7 @@ do
 					#insert ke database sms untuk ngirim sms notifikasi
 					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 					textNotifikasiXL[$numXL]="${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2"
-						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				fi
 			else
 				renewalValidation${XLNama[$numXL]}
@@ -788,7 +788,7 @@ do
 						#insert ke database sms untuk ngirim sms notifikasi
 						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 						textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlRenewal"
-						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 						# ===============================================================================
 						# jika berhasil maka tanggal exp date akan diupdate
 						# ===============================================================================
@@ -814,7 +814,7 @@ do
 								#insert ke database sms untuk ngirim sms notifikasi
 								# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 								textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Berhasil.. USSD REPLY : $xlPaket"
-								curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+								curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 								# ===============================================================================
 								# jika berhasil maka tanggal exp date akan diupdate
 								# ===============================================================================
@@ -829,7 +829,7 @@ do
 									#insert ke database sms untuk ngirim sms notifikasi
 									# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 									textNotifikasiXL[$numXL]="${XLNama[$numXL]} Perpanjang Paket Gagal.. USSD REPLY : $xlPaket"
-									curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+									curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 								fi
 							fi
 						done
@@ -840,7 +840,7 @@ do
 					#insert ke database sms untuk ngirim sms notifikasi
 					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 					textNotifikasiXL[$numXL]="${XLNama[$numXL]} Validasi Paket Gagal,.. Paket yang akan dipasang  : $validasiString2"
-					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasiXL[$numXL]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				fi
 			fi
 		fi

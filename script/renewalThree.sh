@@ -109,7 +109,7 @@ do
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 		textNotifikasi[$numThree]="${threeNama[$numThree]} Perpanjang Paket Berhasil.. USSD REPLY :$perpanjangThree"
-		curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasi[$numThree]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+		curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasi[$numThree]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 	else
 		echo "$currentTime - ${red}${threeNama[$numThree]} Gagal Perpanjang...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
@@ -126,7 +126,7 @@ do
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket Berhasil setelah percobaan ke-$attempt.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 				textNotifikasi[$numThree]="${threeNama[$numThree]} Perpanjang Paket Berhasil setelah percobaan ke-$attempt.. USSD REPLY :$perpanjangThree"
-				curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasi[$numThree]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+				curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasi[$numThree]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				attempt=$((attempt + 10))
 			else
 				cekBerhasil="gagal"
@@ -137,7 +137,7 @@ do
 				if [[ $attempt == $maxAttempt ]]; then
 					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${threeNama[$numThree]} Perpanjang Paket gagal.. USSD REPLY :$perpanjangThree', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 					textNotifikasi[$numThree]="${threeNama[$numThree]} Perpanjang Paket gagal.. USSD REPLY :$perpanjangThree"
-					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$textNotifikasi[$numThree]"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasi[$numThree]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 				fi
 			fi
 		done
