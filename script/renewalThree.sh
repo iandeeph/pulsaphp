@@ -37,7 +37,7 @@ threeSet=$(((cntThree+1)/cntThreeElm))
 
 for (( i=1 ; i<=threeSet ; i++ ))
 do
-	X=$((cntThreeElm * (i-1)))
+	x=$((cntThreeElm * (i-1)))
 	threeNama[$i]=${threeResult[$((x + 0 ))]};
 	threeNo[$i]=${threeResult[$((x + 1))]};
 	threeHost[$i]=${threeResult[$((x + 2))]};
@@ -45,9 +45,9 @@ do
 	threeCaraAktivasi[$i]=${threeResult[$((x + 4))]};
 done
 
-# THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))
+THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))
 # THREE=(089629783240 089629779562 089629789574)
-# sleep 3m
+sleep 3m
 
 if [ -t 1 ] ; then #mengecek apakan dijalankan di terminal atau di cronjob, karena cronjob tidak dapat membaca tput
 	#===============================================================================
