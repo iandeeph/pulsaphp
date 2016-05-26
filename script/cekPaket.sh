@@ -684,12 +684,12 @@ do
 			if [[ $numXL -lt 5 ]]; then
 				renewalValidation${XLNama[$numXL]}
 				validasiString=${validasiPaket:2:6}
-				validasiString2=${validasiPaket:75:31}
+				validasiString2=${validasiPaket:71:7}
 				echo "$currentTime - --------------------------------------------------------------"
 				echo "$currentTime - VALIDASI PAKET ${XLNama[$numXL]}"
 				echo "$currentTime - --------------------------------------------------------------"
 				echo "$currentTime - USSD REPLY : ${yellow}$validasiPaket${reset}"
-				if [[ "$validasiString" == "Recive" ]] && [[ "$validasiString2" == "Kapan Aja 1500Mnt, 30hr, Rp68rb" ]]; then
+				if [[ "$validasiString" == "Recive" ]] && [[ "$validasiString2" == "1500Mnt" ]]; then
 					echo "$currentTime - ${green}${XLNama[$numXL]} Validasi Paket Oke...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					echo "$currentTime - ${green}Paket yang akan dipasang  : $validasiString2${reset}"
@@ -765,12 +765,12 @@ do
 			else
 				renewalValidation${XLNama[$numXL]}
 				validasiString=${validasiPaket:2:6}
-				validasiString2=${validasiPaket:64:6}
+				validasiString2=${validasiPaket:71:24}
 				echo "$currentTime - --------------------------------------------------------------"
 				echo "$currentTime - VALIDASI PAKET ${XLNama[$numXL]}"
 				echo "$currentTime - --------------------------------------------------------------"
 				echo "$currentTime - USSD REPLY : ${yellow}$validasiPaket${reset}"
-				if [[ "$validasiString" = "Recive" ]] && [[ "$validasiString2" = "AnyNet" ]]; then
+				if [[ "$validasiString" = "Recive" ]] && [[ "$validasiString2" = "600Mnt ke Semua Operator" ]]; then
 					echo "$currentTime - ${green}${XLNama[$numXL]} Validasi Paket Oke...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					echo "$currentTime - ${green}Paket yang akan dipasang  : $validasiString2${reset}"
