@@ -46,8 +46,8 @@ done
 #XL
 #===============================================================================
 
-XLResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekKuota, caraStopPaket, caraAktivasi from provider where namaProvider like 'XL%' order by namaProvider;"))
-cntXLElm=9
+XLResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, hargaPaket, expDatePaket, caraCekKuota, caraStopPaket, caraAktivasi, caraCekPulsa from provider where namaProvider like 'XL%' order by namaProvider;"))
+cntXLElm=103
 cntXL=${#XLResult[@]}
 XLSet=$(((cntXL+1)/cntXLElm))
 
@@ -63,6 +63,7 @@ do
 	XLCaraCekPaket[$i]=${XLResult[$((x + 6))]};
 	XLCaraStopPaket[$i]=${XLResult[$((x + 7))]};
 	XLCaraAktivasi[$i]=${XLResult[$((x + 8))]};
+	XLCaraCekPulsa[$i]=${XLResult[$((x + 9))]};
 done
 #===============================================================================
 #mencari tanggal hari ini dalam format yyyymmdd
@@ -161,6 +162,49 @@ telkomselPaketFx9()
 	#sleep 1m 
 	echo $(rm -rf ~/.ssh/known_hosts) 
 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraCekPaket[9]}'")
+}
+
+xlFx1()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[1]} ${XLCaraCekPulsa[1]}'")
+}
+xlFx2()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[2]} ${XLCaraCekPulsa[2]}'")
+}
+xlFx3()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[3]} ${XLCaraCekPulsa[3]}'")
+}
+xlFx4()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[4]} ${XLCaraCekPulsa[4]}'")
+}
+xlFx5()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[5]} ${XLCaraCekPulsa[5]}'")
+}
+xlFx6()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[6]} ${XLCaraCekPulsa[6]}'")
+}
+xlFx7()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[7]} ${XLCaraCekPulsa[7]}'")
 }
 
 xlPaketFx1()
@@ -596,7 +640,7 @@ do
 		cekBerhasil=""
 		echo "$currentTime - ${red}${XLNama[$numXL]} Cek Pulsa Gagal...${reset}"
 		echo "$currentTime - ----------------------------------------------"
-		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+		while [[ $attempt -le $maxAttempt ]] && [[ "$cekBerhasil" != "berhasil"  ]]; do
 			echo "$currentTime - ${XLNama[$numXL]} percobaan ke-$attempt"
 			xlPaketFx$numXL
 			cekString=${xlPaket:2:6} # mengecek respon dari openvox
@@ -604,7 +648,7 @@ do
 			echo "$currentTime - USSD REPLY : ${yellow}$xlPaket${reset}"
 			USSDReplyXL[$numXL]=$xlPaket
 
-			if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Sisa" ]; then
+			if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Sisa" ]]; then
 				echo "$currentTime - ${green}${XLNama[$numXL]} Cek Pulsa Berhasil...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				cekBerhasil="berhasil"
@@ -626,56 +670,147 @@ do
 	fi
 
 	if [[ "${sisaPaketXL[$numXL]}" -le 30 ]] && [[ "${sisaPaketXL[$numXL]}" -gt 0 ]]; then #jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
-		stop${XLNama[$numXL]} #function untuk stop paket
-		cekString=${xlStop:2:6} # mengecek respon dari openvox
-		cekString2=${xlStop:73:8} # mengecek respon dari openvox
-		echo "$currentTime - --------------------------------------------------------------"
-		echo "$currentTime - STOP PAKET ${XLNama[$numXL]}"
-		echo "$currentTime - --------------------------------------------------------------"
-		echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
-		if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
-			echo "$currentTime - ${green}${XLNama[$numXL]} Stop Paket Berhasil...${reset}"
+
+		echo "$currentTime - ===================================================================================================="
+		echo "$currentTime - Checking Pulsa ${XLNama[$numXL]}..."
+		echo "$currentTime - ===================================================================================================="
+		xlFx$numXL
+		cekString=${xl:2:6}
+		echo "$currentTime - USSD REPLY : ${yellow}$xl${reset}"
+
+		if [[ "$cekString" = "Recive" ]]; then #bila respon open = Recive
+			echo "$currentTime - ${green}${XLNama[$numXL]} Cek Berhasil...${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-			stopPaketStatus[$numXL]="berhasil"
+			xl=${xl:55:6}
+			xl=${xl//[ . sd\/ ]/}
+			xl=$((xl + 0))
+			echo "$currentTime - ${green}Sisa Pulsa : $xl${reset}"
+
+			#===============================================================================
+			#memasukan nilai cek pulsa (pulsa) kedalam database
+			#===============================================================================
+			sisaPulsaXL[$numXL]=$xl
+			
+			if [[ ${sisaPulsaXL[$numXL]} -lt ${XLHargaPaket[$numXL]} ]]; then #mengecek jika pulsa kurang dari harga paket masing-masing provider
+				echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXL]}"
+				#insert ke database sms untuk mengirim pulsa ke tukang pulsa
+				# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: (${XL[$numXL]}), harga paket: ${XLHargaPaket[$numXL]}, Exp Date Paket: ${XLExpDatePaket[$numXL]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				# textMintaPulsaXL[$numXL]="XL No : $i, Sisa Pulsa: ${XL[$numXL]}, Harga Paket: ${XLHargaPaket[$numXL]}, Exp Date Paket: ${XLExpDatePaket[$numXL]}"
+				slackText="XL No : $i,\nSisa Pulsa: ${sisaPulsaXL[$numXL]},\nHarga Paket: ${XLHargaPaket[$numXL]},\nExp Date Paket: ${XLExpDatePaket[$numXL]}"
+				curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
+			fi
 		else
 			attempt=1
 			attempt=$((attempt + 0))
 			cekBerhasil=""
-			echo "$currentTime - ${red}${XLNama[$numXL]} Stop Paket Gagal...${reset}"
+			echo "$currentTime - ${red}${XLNama[$numXL]} Cek Gagal...${reset}"
 			echo "$currentTime - ----------------------------------------------"
-			while [[ $attempt -le $maxAttempt ]] && [[ "$cekBerhasil" != "berhasil" ]]; do
-				echo "$currentTime - ${XLNama[$numXL]} percobaan stop ke-$attempt"
-				stop${XLNama[$numXL]} #function untuk stop paket
-				cekString=${xlStop:2:6} # mengecek respon dari openvox
-				cekString2=${xlStop:73:8} # mengecek respon dari openvox
-				echo "$currentTime - --------------------------------------------------------------"
-				echo "$currentTime - STOP PAKET"
-				echo "$currentTime - --------------------------------------------------------------"
-				echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
-				if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
-					echo "$currentTime - ${green}${XLNama[$numXL]} Stop Paket Berhasil...${reset}"
+			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+				echo "$currentTime - ${XLNama[$numXL]} percobaan ke-$attempt"
+				xlFx$numXL
+				cekString=${xl:2:6}
+				echo "$currentTime - USSD REPLY : ${yellow}$xl${reset}"
+				USSDReplyXL[$numXL]="$xl"
+
+				if [ "$cekString" = "Recive" ]; then
+					echo "$currentTime - ${green}${XLNama[$numXL]} Cek Berhasil...${reset}"
 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 					cekBerhasil="berhasil"
-					stopPaketStatus[$numXL]="berhasil"
 					attempt=$((attempt + 3))
+					xl=${xl:55:6}
+					xl=${xl//[ . sd\/ ]/}
+					xl=$((xl + 0))
+					echo "$currentTime - ${green}Sisa Pulsa : $xl${reset}"
+					
+					#===============================================================================
+					#memasukan nilai cek pulsa (pulsa) kedalam database
+					#===============================================================================
+					sisaPulsaXL[$numXL]=$xl
+
+					if [[ ${sisaPulsaXL[$numXL]} -lt ${XLHargaPaket[$numXL]} ]]; then
+						echo "$currentTime - Kirim SMS ke PIKArin, minta isi pulsa XL - ${XLNo[$numXL]}"
+						#insert ke database sms untuk mengirim pulsa ke tukang pulsa
+						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGPULSA', 'Pikaa ~~ Minta pulsa : XL $i, sisa pulsa: ($xl), harga paket: ${XLHargaPaket[$numXL]}, Exp Date Paket: ${XLExpDatePaket[$numXL]}', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						slackText="XL No : $i,\nSisa Pulsa: $xl,\nHarga Paket: ${XLHargaPaket[$numXL]},\nExp Date Paket: ${XLExpDatePaket[$numXL]}"
+						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"$slackText"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI"'"}' https://hooks.slack.com/services/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
+					fi
 				else
 					cekBerhasil="gagal"
-					echo "$currentTime - ${red}${XLNama[$numXL]} Stop Paket Gagal...${reset}"
+					echo "$currentTime - ${red}${XLNama[$numXL]} Cek Gagal...${reset}"
 					echo "$currentTime - ----------------------------------------------"
 					
 					attempt=$((attempt + 1))
 					if [[ $attempt == $maxAttempt ]]; then
-						stopPaketStatus[$numXL]="gagal"
-						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-						textNotifikasiXL[$numXL]="${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop"
-						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						#===============================================================================
+						#jika cek gagal,, tetap diinsert dengan nilai "-"
+						#===============================================================================
+						sisaPulsaXL[$numXL]=0
 					fi
 				fi
 			done
 		fi
+		echo "$currentTime - ${yellow}+++++++++++++++++++++++ CHECKING ${XLNama[$numXL]} FINISHED+++++++++++++++++++++${reset}"
+
+		if [[ ${sisaPulsaXL[$numXL]} -lt ${XLHargaPaket[$numXL]} ]]; then
+			echo "$currentTime - ===================================================================================================="
+			echo "$currentTime - Perpanjang Paket ${XLNama[$numXL]}..."
+			echo "$currentTime - ===================================================================================================="
+			echo "$currentTime - ${red}${XLNama[$numXL]} Paket kurang dari 30 menit, tapi gagal diperpanjang... Pulsa tidak cukup..${reset}"
+			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+
+			textNotifikasiXL[$numXL]="${XLNama[$numXL]} Paket kurang dari 30 menit, tapi gagal diperpanjang... Pulsa tidak cukup untuk melakukan perpanjang paket.. \nSisa Pulsa : ${sisaPulsaXL[$numXL]}"
+			curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+		else
+			stop${XLNama[$numXL]} #function untuk stop paket
+			cekString=${xlStop:2:6} # mengecek respon dari openvox
+			cekString2=${xlStop:73:8} # mengecek respon dari openvox
+			echo "$currentTime - --------------------------------------------------------------"
+			echo "$currentTime - STOP PAKET ${XLNama[$numXL]}"
+			echo "$currentTime - --------------------------------------------------------------"
+			echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
+			if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
+				echo "$currentTime - ${green}${XLNama[$numXL]} Stop Paket Berhasil...${reset}"
+				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+				stopPaketStatus[$numXL]="berhasil"
+			else
+				attempt=1
+				attempt=$((attempt + 0))
+				cekBerhasil=""
+				echo "$currentTime - ${red}${XLNama[$numXL]} Stop Paket Gagal...${reset}"
+				echo "$currentTime - ----------------------------------------------"
+				while [[ $attempt -le $maxAttempt ]] && [[ "$cekBerhasil" != "berhasil" ]]; do
+					echo "$currentTime - ${XLNama[$numXL]} percobaan stop ke-$attempt"
+					stop${XLNama[$numXL]} #function untuk stop paket
+					cekString=${xlStop:2:6} # mengecek respon dari openvox
+					cekString2=${xlStop:73:8} # mengecek respon dari openvox
+					echo "$currentTime - --------------------------------------------------------------"
+					echo "$currentTime - STOP PAKET"
+					echo "$currentTime - --------------------------------------------------------------"
+					echo "$currentTime - USSD REPLY : ${yellow}$xlStop${reset}"
+					if [[ "$cekString" = "Recive" ]] && [[ "$cekString2" = "Diproses" ]]; then #bila respon open = Recive
+						echo "$currentTime - ${green}${XLNama[$numXL]} Stop Paket Berhasil...${reset}"
+						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+						cekBerhasil="berhasil"
+						stopPaketStatus[$numXL]="berhasil"
+						attempt=$((attempt + 3))
+					else
+						cekBerhasil="gagal"
+						echo "$currentTime - ${red}${XLNama[$numXL]} Stop Paket Gagal...${reset}"
+						echo "$currentTime - ----------------------------------------------"
+						
+						attempt=$((attempt + 1))
+						if [[ $attempt == $maxAttempt ]]; then
+							stopPaketStatus[$numXL]="gagal"
+							# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+							textNotifikasiXL[$numXL]="${XLNama[$numXL]} Stop Paket Gagal.. USSD REPLY :$xlStop"
+							curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						fi
+					fi
+				done
+			fi
+		fi
 
 		if [[ ${stopPaketStatus[$numXL]} == "berhasil" ]]; then
-			
 			# ===============================================================================
 			# menentukan tanggal baru untuk tanggal habis paket selanjutnya
 			# ===============================================================================

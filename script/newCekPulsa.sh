@@ -530,79 +530,91 @@ do
 	echo "$currentTime - ${green}+++++++++++++++++++++++ CHECKING ${telkomselNama[$numSimpati]} FINISHED+++++++++++++++++++++${reset}"
 
 	if [[ $NOW -ge ${telkomselExpDatePaket[$numSimpati]} ]]; then
-		echo "$currentTime - ===================================================================================================="
-		echo "$currentTime - Perpanjang Paket ${telkomselNama[$numSimpati]}..."
-		echo "$currentTime - ===================================================================================================="
-		# ===============================================================================
-		# menentukan tanggal baru untuk tanggal habis paket selanjutnya
-		# ===============================================================================
-		newDate=$(date -d "6 days" +%Y-%m-%d)
-		# ===============================================================================
-		# Memanggil funtion
-		# ===============================================================================
-		renewalTelkomselFx$numSimpati
-		cekString=${perpanjangTelkomsel:2:6} # mengecek respon dari openvox
-		echo "$currentTime - USSD REPLY${yellow}$perpanjangTelkomsel${reset}"
-
-		if [ "$cekString" = "Recive" ]; then #bila respon openvox = Recive
-			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Berhasil Perpanjang...${reset}"
+		if [[ ${sisaPulsaTelkomsel[$numSimpati]} -lt ${telkomselHargaPaket[$numSimpati]} ]]; then
+			echo "$currentTime - ===================================================================================================="
+			echo "$currentTime - Perpanjang Paket ${telkomselNama[$numSimpati]}..."
+			echo "$currentTime - ===================================================================================================="
+			echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Gagal Perpanjang... Pulsa tidak cukup..${reset}"
 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-			# ===============================================================================
-			# mengirim sms ke admin, kalo baru saja paket diperpanjang.. tujuannya agar admin memastikan perpanjangan berjalan sesuai dengan seharusnya
-			# ===============================================================================
-			echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
-			# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-			textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket berhasil.. \nUSSD REPLY : $perpanjangTelkomsel"
+
+			textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket gagal, pulsa tidak cukup untuk perpanjang paket.. \nSisa Pulsa : ${sisaPulsaTelkomsel[$numSimpati]}"
 			curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiTelkomsel[$numSimpati]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
-			# ===============================================================================
-			# jika berhasil maka tanggal exp date akan diupdate
-			# ===============================================================================
-			mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
 		else
-			echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Gagal Perpanjang...${reset}"
-			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-			attempt=1
-			attempt=$((attempt + 0))
-			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-				echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
-				renewalTelkomselFx$numSimpati
-				cekString=${perpanjangTelkomsel:2:6}
-				echo "$currentTime - USSD REPLY : ${yellow}$perpanjangTelkomsel${reset}"
+			echo "$currentTime - ===================================================================================================="
+			echo "$currentTime - Perpanjang Paket ${telkomselNama[$numSimpati]}..."
+			echo "$currentTime - ===================================================================================================="
+			# ===============================================================================
+			# menentukan tanggal baru untuk tanggal habis paket selanjutnya
+			# ===============================================================================
+			newDate=$(date -d "6 days" +%Y-%m-%d)
+			# ===============================================================================
+			# Memanggil funtion
+			# ===============================================================================
+			renewalTelkomselFx$numSimpati
+			cekString=${perpanjangTelkomsel:2:6} # mengecek respon dari openvox
+			cekString2=${perpanjangTelkomsel:48:4} # mengecek respon dari openvox
+			echo "$currentTime - USSD REPLY${yellow}$perpanjangTelkomsel${reset}"
 
-				if [ "$cekString" = "Recive" ]; then
-					echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Berhasil Perpanjang...${reset}"
-					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-					# ===============================================================================
-					# mengirim sms ke admin
-					# ===============================================================================
-					echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
-					# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-					textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. \nUSSD REPLY : $perpanjangTelkomsel"
-					curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiTelkomsel[$numSimpati]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+			if [[ "$cekString" == "Recive" ]] && [[ "$cekString2" != "maaf" ]]; then #bila respon openvox = Recive
+				echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Berhasil Perpanjang...${reset}"
+				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+				# ===============================================================================
+				# mengirim sms ke admin, kalo baru saja paket diperpanjang.. tujuannya agar admin memastikan perpanjangan berjalan sesuai dengan seharusnya
+				# ===============================================================================
+				echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
+				# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+				textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket berhasil.. \nUSSD REPLY : $perpanjangTelkomsel"
+				curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiTelkomsel[$numSimpati]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+				# ===============================================================================
+				# jika berhasil maka tanggal exp date akan diupdate
+				# ===============================================================================
+				mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
+			else
+				echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Gagal Perpanjang...${reset}"
+				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+				attempt=1
+				attempt=$((attempt + 0))
+				while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+					echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
+					renewalTelkomselFx$numSimpati
+					cekString=${perpanjangTelkomsel:2:6}
+					echo "$currentTime - USSD REPLY : ${yellow}$perpanjangTelkomsel${reset}"
 
-					# ===============================================================================
-					# jika berhasil maka tanggal exp date akan diupdate
-					# ===============================================================================
-					mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
-					cekBerhasil="berhasil"
-					attempt=$((attempt + 3))
-				else
-					cekBerhasil="gagal"
-					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Gagal Perpanjang...${reset}"
-					echo "$currentTime - ----------------------------------------------"
-					attempt=$((attempt + 1))
-					sleep 5s
-					if [[ $attempt == $maxAttempt ]]; then
+					if [ "$cekString" = "Recive" ]; then
+						echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Berhasil Perpanjang...${reset}"
+						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 						# ===============================================================================
 						# mengirim sms ke admin
 						# ===============================================================================
 						echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
-						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket gagal.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
-						textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket gagal.. \nUSSD REPLY : $perpanjangTelkomsel"
+						# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+						textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket berhasil setelah percobaan ke-$attempt.. \nUSSD REPLY : $perpanjangTelkomsel"
 						curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiTelkomsel[$numSimpati]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+
+						# ===============================================================================
+						# jika berhasil maka tanggal exp date akan diupdate
+						# ===============================================================================
+						mysql -h1.1.1.200 -uroot -pc3rmat dbpulsa -e "update provider set expDatePaket = '$newDate' where namaProvider = '${telkomselNama[$numSimpati]}';"
+						cekBerhasil="berhasil"
+						attempt=$((attempt + 3))
+					else
+						cekBerhasil="gagal"
+						echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Gagal Perpanjang...${reset}"
+						echo "$currentTime - ----------------------------------------------"
+						attempt=$((attempt + 1))
+						sleep 5s
+						if [[ $attempt == $maxAttempt ]]; then
+							# ===============================================================================
+							# mengirim sms ke admin
+							# ===============================================================================
+							echo "$currentTime - ${green}Kirim SMS ke Admin, ngasih tau kalo ${telkomselNama[$numSimpati]} baru aja perpanjang paket.. ${reset}"
+							# echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('$TUKANGKETIK', '${telkomselNama[$numSimpati]} perpanjang paket gagal.. USSD REPLY : $perpanjangTelkomsel', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+							textNotifikasiTelkomsel[$numSimpati]="${telkomselNama[$numSimpati]} perpanjang paket gagal.. \nUSSD REPLY : $perpanjangTelkomsel"
+							curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiTelkomsel[$numSimpati]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
+						fi
 					fi
-				fi
-			done
+				done
+			fi
 		fi
 		echo "$currentTime - ${green}+++++++++++++++++++++++ RENEWAL ${telkomselNama[$numSimpati]} FINISHED+++++++++++++++++++++${reset}"
 	fi
@@ -757,7 +769,7 @@ do
 			echo "$currentTime - USSD REPLY : ${yellow}$xl${reset}"
 			USSDReplyXL[$numXl]="$xl"
 
-			if [ "$cekString" = "Recive" ]; then
+			if [[ "$cekString" = "Recive" ]]; then
 				echo "$currentTime - ${green}${XLNama[$numXl]} Cek Berhasil...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				cekBerhasil="berhasil"
