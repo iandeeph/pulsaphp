@@ -761,6 +761,7 @@ do
 			textNotifikasiXL[$numXL]="${XLNama[$numXL]} Paket kurang dari 30 menit, tapi gagal diperpanjang... Pulsa tidak cukup untuk melakukan perpanjang paket.. \nSisa Pulsa : ${sisaPulsaXL[$numXL]}"
 			curl -X POST -H 'Content-type: application/json' --data '{"text": "```'"${textNotifikasiXL[$numXL]}"'```", "channel": "'"$CHANNEL"'", "username": "'"$USERNAME"'", "icon_emoji": "'"$ICONEMOJI2"'"}' https://hooks.slack.com/services/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
 		else
+			sleep 3m
 			stop${XLNama[$numXL]} #function untuk stop paket
 			cekString=${xlStop:2:6} # mengecek respon dari openvox
 			cekString2=${xlStop:73:8} # mengecek respon dari openvox
