@@ -94,6 +94,7 @@ $postMonth  = date("m", strtotime($postDate));
 $postYear   = date("Y", strtotime($postDate));
 
 $daycount=cal_days_in_month(CAL_GREGORIAN,$postMonth,$postYear);
+echo $daycount;
 
 
 $lastUpdateQry = "";
