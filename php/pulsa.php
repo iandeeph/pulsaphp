@@ -90,11 +90,10 @@ $currentMonthYear   = date("Y-m");
 $postDate = (isset($_POST['bulanTahun']))?strval($_POST['bulanTahun']):$currentMonthYear;
 
 
-$postMonth  = date("m", strtotime($postDate));
-$postYear   = date("Y", strtotime($postDate));
+$postMonth  = date("m", strtotime($postDate."-01"));
+$postYear   = date("Y", strtotime($postDate."-01"));
 
 $daycount=cal_days_in_month(CAL_GREGORIAN,$postMonth,$postYear);
-echo $daycount;
 
 
 $lastUpdateQry = "";

@@ -2,6 +2,7 @@
 ob_start();
 ini_set("display_errors", "1");
 error_reporting(E_ALL ^ E_DEPRECATED);
+date_default_timezone_set('Asia/Jakarta');
 session_start();
 
 require "sql/connect.php";
