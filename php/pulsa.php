@@ -117,7 +117,7 @@ if($resultLastUpdatePaket = mysql_query($lastUpdatePaketQry)){
 }
 
 $monthQry = "";
-$monthQry = "SELECT DATE_FORMAT(tanggal, '%b %y') as monthYear, DATE_FORMAT(tanggal, '%Y-%m') as allDate FROM pulsa WHERE (tanggal IS NOT NULL OR tanggal != '') GROUP BY monthYear";
+$monthQry = "SELECT DATE_FORMAT(tanggal, '%b %y') as monthYear, DATE_FORMAT(tanggal, '%Y-%m') as allDate FROM pulsa WHERE (tanggal IS NOT NULL OR tanggal != '') GROUP BY monthYear ORDER BY allDate";
 if($resultMonth = mysql_query($monthQry)){
     if (mysql_num_rows($resultMonth) > 0) {
         while($rowMonth  = mysql_fetch_array($resultMonth)){
@@ -128,7 +128,7 @@ if($resultMonth = mysql_query($monthQry)){
 }
 
 $monthPaketQry = "";
-$monthPaketQry = "SELECT DATE_FORMAT(tanggal, '%b %y') as monthYear, DATE_FORMAT(tanggal, '%Y-%m') as allDate FROM paket WHERE (tanggal IS NOT NULL OR tanggal != '') GROUP BY monthYear";
+$monthPaketQry = "SELECT DATE_FORMAT(tanggal, '%b %y') as monthYear, DATE_FORMAT(tanggal, '%Y-%m') as allDate FROM paket WHERE (tanggal IS NOT NULL OR tanggal != '') GROUP BY monthYear ORDER BY allDate";
 if($resultMonthPaket = mysql_query($monthPaketQry)){
     if (mysql_num_rows($resultMonthPaket) > 0) {
         while($rowMonthPaket  = mysql_fetch_array($resultMonthPaket)){
