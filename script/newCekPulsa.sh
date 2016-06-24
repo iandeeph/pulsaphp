@@ -245,6 +245,12 @@ xlFx7()
 	echo $(rm -rf ~/.ssh/known_hosts)
 	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[7]} ${XLCaraCekPulsa[7]}'")
 }
+xlFx8()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[8]} ${XLCaraCekPulsa[8]}'")
+}
 
 # indosatFx1()
 # {
@@ -335,7 +341,7 @@ for (( i = 1; i <= 9; i++ )); do
 	sleep 5s
 done
 
-for (( i = 1; i <= 7; i++ )); do
+for (( i = 1; i <= 8; i++ )); do
 	XL[$i]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[$i]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[$i]} ${XLCaraCekPulsa[$i]}'")
 	sleep 5s
 done
