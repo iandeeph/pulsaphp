@@ -65,6 +65,12 @@ do
 	XLCaraAktivasi[$i]=${XLResult[$((x + 8))]};
 	XLCaraCekPulsa[$i]=${XLResult[$((x + 9))]};
 done
+
+cnt=${#XLExpDatePaket[@]} #menghitung total row
+for (( i=1 ; i<=${cnt} ; i++ )) #loooping sebanyak total row
+do
+    XLExpDatePaketFormated[$i]=${XLExpDatePaket[$i]//[-]/} #merubah dateformat menjadi yyyymmdd yang sebelumnya yyy-dd-mm dengan menghilangkan "-"
+done
 #===============================================================================
 #mencari tanggal hari ini dalam format yyyymmdd
 #===============================================================================
@@ -712,7 +718,7 @@ do
 	fi
 
 	#jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
-	if [[ "${sisaPaketXL[$numXL]}" -le 30 && "${sisaPaketXL[$numXL]}" -gt 0 ]] || [[ $NOW -ge ${XLExpDatePaket[$numXL]} ]]; then 
+	if [[ "${sisaPaketXL[$numXL]}" -le 30 && "${sisaPaketXL[$numXL]}" -gt 0 ]] || [[ $NOW -ge ${XLExpDatePaketFormated[$numXL]} ]]; then 
 
 		echo "$currentTime - ===================================================================================================="
 		echo "$currentTime - Checking Pulsa ${XLNama[$numXL]}..."
