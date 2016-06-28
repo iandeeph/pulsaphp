@@ -711,7 +711,8 @@ do
 		done
 	fi
 
-	if [[ "${sisaPaketXL[$numXL]}" -le 30 ]] && [[ "${sisaPaketXL[$numXL]}" -gt 0 ]]; then #jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
+	#jika sisa paket kurang dari 30 menit maka paket harus di stop dulu, lalu setelah itu dipasang paket yang baru
+	if [[ "${sisaPaketXL[$numXL]}" -le 30 && "${sisaPaketXL[$numXL]}" -gt 0 ]] || [[ $NOW -ge ${XLExpDatePaket[$numXL]} ]]; then 
 
 		echo "$currentTime - ===================================================================================================="
 		echo "$currentTime - Checking Pulsa ${XLNama[$numXL]}..."
