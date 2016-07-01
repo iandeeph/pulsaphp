@@ -69,12 +69,14 @@
 							}
 						}
 						$currBalQry = "";
-						$currBalQry = "SELECT DISTINCT(tanggal),
-						namaProvider, sisaPulsa, DAYOFMONTH(tanggal) as tgl,
-						DATE_FORMAT(tanggal, '%H:%i') as waktu,
-						HOUR(tanggal) as jam,
-						MINUTE(tanggal) as menit,
-						ussdReply
+						$currBalQry = "SELECT 
+							idProvider,
+							DISTINCT(tanggal),
+							namaProvider, sisaPulsa, DAYOFMONTH(tanggal) as tgl,
+							DATE_FORMAT(tanggal, '%H:%i') as waktu,
+							HOUR(tanggal) as jam,
+							MINUTE(tanggal) as menit,
+							ussdReply
 						FROM pulsa 
 						WHERE namaProvider in("."'".implode("','", $namaProvider)."'".") 
 							AND YEAR(tanggal) = '".$postYear."' 
