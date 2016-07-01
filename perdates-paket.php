@@ -70,7 +70,6 @@
 						}
 						$currBalQry = "";
 						$currBalQry = "SELECT DISTINCT(tanggal),
-										idProvider,
 										namaProvider,
 										sisaPaket,
 										DAYOFMONTH(tanggal) as tgl,
@@ -83,7 +82,6 @@
 											AND YEAR(tanggal) = '".$postYear."' 
 											AND MONTH(tanggal) = '".$postMonth."'
 										ORDER BY 
-											idProvider,
 											namaProvider,
 											tgl,
 											jam + 0,
