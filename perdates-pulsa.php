@@ -69,9 +69,8 @@
 							}
 						}
 						$currBalQry = "";
-						$currBalQry = "SELECT 
+						$currBalQry = "SELECT DISTINCT(tanggal),
 							idProvider,
-							DISTINCT(tanggal),
 							namaProvider, sisaPulsa, DAYOFMONTH(tanggal) as tgl,
 							DATE_FORMAT(tanggal, '%H:%i') as waktu,
 							HOUR(tanggal) as jam,

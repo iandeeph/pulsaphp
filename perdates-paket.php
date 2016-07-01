@@ -69,8 +69,8 @@
 							}
 						}
 						$currBalQry = "";
-						$currBalQry = "SELECT idProvider,
-										DISTINCT(tanggal),
+						$currBalQry = "SELECT DISTINCT(tanggal),
+										idProvider,
 										namaProvider,
 										sisaPaket,
 										DAYOFMONTH(tanggal) as tgl,
