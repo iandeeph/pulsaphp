@@ -79,7 +79,9 @@
 						WHERE namaProvider in("."'".implode("','", $namaProvider)."'".") 
 							AND YEAR(tanggal) = '".$postYear."' 
 							AND MONTH(tanggal) = '".$postMonth."' 
-							ORDER BY namaProvider, 
+						ORDER BY 
+							idProvider,
+							namaProvider, 
 							tgl, 
 							jam + 0, 
 							menit + 0";
