@@ -282,7 +282,7 @@ xlPaketFx7()
 	sisaPaket=${sisaPaket//[lah Mnt,]/}
 	sisaPaket=$((sisaPaket + 0))
 }
-xlPaketFx7()
+xlPaketFx8()
 {
 	#sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
@@ -394,7 +394,7 @@ renewalValidationXL8()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
 	#validasi apakah paket yang akan dipasang sudah sesuai atau belum
-	validasiPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[8]} ${XLCaraAktivasi[7]:0:$((${#XLCaraAktivasi[8]} - 3))}"#"'")
+	validasiPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[8]} ${XLCaraAktivasi[8]:0:$((${#XLCaraAktivasi[8]} - 3))}"#"'")
 	#validasiString2=${validasiPaket:49:6}
 }
 
@@ -451,7 +451,7 @@ renewalExecXL8()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
 	#perpanjang paket
-	xlRenewal=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[8]} ${XLCaraAktivasi[7]:$((${#XLCaraAktivasi[8]} - 3)):3}'")
+	xlRenewal=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[8]} ${XLCaraAktivasi[8]:$((${#XLCaraAktivasi[8]} - 3)):3}'")
 	#renewalString2=${xlRenewal:73:8}
 }
 
