@@ -917,7 +917,7 @@ do
 	cekString2=${three[$numThree]:74:3}
 	echo "$currentTime - USSD REPLY : ${yellow}${three[$numThree]}${reset}"
 
-	if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Pul" ]; then #bila respon open = Recive
+	if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Bal" ]; then #bila respon open = Recive
 		echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		USSDReplyThree[$numThree]="${three[$numThree]}"
@@ -948,7 +948,7 @@ do
 			echo "$currentTime - USSD REPLY : ${yellow}$three${reset}"
 			USSDReplyThree[$numThree]="$three"
 
-			if [ "$cekString" = "Recive"  ] && [ "$cekString2" = "Pul"  ]; then
+			if [ "$cekString" = "Recive"  ] && [ "$cekString2" = "Bal"  ]; then
 				echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				cekBerhasil="berhasil"
