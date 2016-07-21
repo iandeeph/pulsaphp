@@ -140,6 +140,8 @@ fi
 echo "$currentTime - Restarting openvox..."
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${telkomselNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${telkomselNo[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${telkomselNo[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${telkomselNo[17]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XLNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XLNo[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${threeNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
