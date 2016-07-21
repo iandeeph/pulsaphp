@@ -202,6 +202,46 @@ telkomselFx9()
 	echo $(rm -rf ~/.ssh/known_hosts)
 	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraCekPulsa[9]}'")
 }
+telkomselFx10()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[10]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[10]} ${telkomselCaraCekPulsa[10]}'")
+}
+telkomselFx11()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[11]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[11]} ${telkomselCaraCekPulsa[11]}'")
+}
+telkomselFx12()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[12]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[12]} ${telkomselCaraCekPulsa[12]}'")
+}
+telkomselFx13()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[13]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[13]} ${telkomselCaraCekPulsa[13]}'")
+}
+telkomselFx14()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[14]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[14]} ${telkomselCaraCekPulsa[14]}'")
+}
+telkomselFx15()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[15]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[15]} ${telkomselCaraCekPulsa[15]}'")
+}
+telkomselFx16()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[16]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[16]} ${telkomselCaraCekPulsa[16]}'")
+}
+telkomselFx17()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	telkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[17]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[17]} ${telkomselCaraCekPulsa[17]}'")
+}
 
 xlFx1()
 {
@@ -335,8 +375,48 @@ renewalTelkomselFx9()
 	echo $(rm -rf ~/.ssh/known_hosts)
 	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraAktivasi[9]}'")
 }
+renewalTelkomselFx10()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[10]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[10]} ${telkomselCaraAktivasi[10]}'")
+}
+renewalTelkomselFx11()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[11]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[11]} ${telkomselCaraAktivasi[11]}'")
+}
+renewalTelkomselFx12()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[12]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[12]} ${telkomselCaraAktivasi[12]}'")
+}
+renewalTelkomselFx13()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[13]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[13]} ${telkomselCaraAktivasi[13]}'")
+}
+renewalTelkomselFx14()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[14]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[14]} ${telkomselCaraAktivasi[14]}'")
+}
+renewalTelkomselFx15()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[15]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[15]} ${telkomselCaraAktivasi[15]}'")
+}
+renewalTelkomselFx16()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[16]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[16]} ${telkomselCaraAktivasi[16]}'")
+}
+renewalTelkomselFx17()
+{
+	echo $(rm -rf ~/.ssh/known_hosts)
+	perpanjangTelkomsel=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[17]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[17]} ${telkomselCaraAktivasi[17]}'")
+}
 
-for (( i = 1; i <= 9; i++ )); do
+for (( i = 1; i <= 17; i++ )); do
 	telkomsel[$i]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[$i]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[$i]} ${telkomselCaraCekPulsa[$i]}'")
 	sleep 5s
 done
@@ -353,7 +433,7 @@ done
 # indosat[3]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@3.3.3.4 -p12345 "asterisk -rx 'gsm send ussd 4 *555#'")
 # sleep 5s
 
-for (( i = 1; i <= 4; i++ )); do
+for (( i = 1; i <= 3; i++ )); do
 	three[$i]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[$i]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[$i]} ${threeCaraCekPulsa[$i]}'")
 	sleep 5s
 done
@@ -917,7 +997,7 @@ do
 	cekString2=${three[$numThree]:74:3}
 	echo "$currentTime - USSD REPLY : ${yellow}${three[$numThree]}${reset}"
 
-	if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Bal" ]; then #bila respon open = Recive
+	if [ "$cekString" = "Recive" ] && [ "$cekString2" = "Pul" ]; then #bila respon open = Recive
 		echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
 		echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 		USSDReplyThree[$numThree]="${three[$numThree]}"
@@ -948,7 +1028,7 @@ do
 			echo "$currentTime - USSD REPLY : ${yellow}$three${reset}"
 			USSDReplyThree[$numThree]="$three"
 
-			if [ "$cekString" = "Recive"  ] && [ "$cekString2" = "Bal"  ]; then
+			if [ "$cekString" = "Recive"  ] && [ "$cekString2" = "Pul"  ]; then
 				echo "$currentTime - ${green}${threeNama[$numThree]} Cek Berhasil...${reset}"
 				echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
 				cekBerhasil="berhasil"

@@ -115,60 +115,108 @@ echo $(rm -rf ~/.ssh/known_hosts)
 #===============================================================================
 #inisialisasi function command script cek paket
 #===============================================================================
-telkomselPaketFx1()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[1]} ${telkomselCaraCekPaket[1]}'")
-}
-telkomselPaketFx2()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[2]} ${telkomselCaraCekPaket[2]}'")
-}
-telkomselPaketFx3()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[3]} ${telkomselCaraCekPaket[3]}'")
-}
-telkomselPaketFx4()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[4]} ${telkomselCaraCekPaket[4]}'")
-}
-telkomselPaketFx5()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[5]} ${telkomselCaraCekPaket[5]}'")
-}
-telkomselPaketFx6()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[6]} ${telkomselCaraCekPaket[6]}'")
-}
-telkomselPaketFx7()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[7]} ${telkomselCaraCekPaket[7]}'")
-}
-telkomselPaketFx8()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[8]} ${telkomselCaraCekPaket[8]}'")
-}
-telkomselPaketFx9()
-{
-	#sleep 1m 
-	echo $(rm -rf ~/.ssh/known_hosts) 
-	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraCekPaket[9]}'")
-}
+# telkomselPaketFx1()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[1]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[1]} ${telkomselCaraCekPaket[1]}'")
+# }
+# telkomselPaketFx2()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[2]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[2]} ${telkomselCaraCekPaket[2]}'")
+# }
+# telkomselPaketFx3()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[3]} ${telkomselCaraCekPaket[3]}'")
+# }
+# telkomselPaketFx4()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[4]} ${telkomselCaraCekPaket[4]}'")
+# }
+# telkomselPaketFx5()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[5]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[5]} ${telkomselCaraCekPaket[5]}'")
+# }
+# telkomselPaketFx6()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[6]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[6]} ${telkomselCaraCekPaket[6]}'")
+# }
+# telkomselPaketFx7()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[7]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[7]} ${telkomselCaraCekPaket[7]}'")
+# }
+# telkomselPaketFx8()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[8]} ${telkomselCaraCekPaket[8]}'")
+# }
+# telkomselPaketFx9()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[9]} ${telkomselCaraCekPaket[9]}'")
+# }
+# telkomselPaketFx10()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[10]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[10]} ${telkomselCaraCekPaket[10]}'")
+# }
+# telkomselPaketFx11()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[11]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[11]} ${telkomselCaraCekPaket[11]}'")
+# }
+# telkomselPaketFx12()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[12]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[12]} ${telkomselCaraCekPaket[12]}'")
+# }
+# telkomselPaketFx13()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[13]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[13]} ${telkomselCaraCekPaket[13]}'")
+# }
+# telkomselPaketFx14()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[14]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[14]} ${telkomselCaraCekPaket[14]}'")
+# }
+# telkomselPaketFx15()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[15]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[15]} ${telkomselCaraCekPaket[15]}'")
+# }
+# telkomselPaketFx16()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[16]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[16]} ${telkomselCaraCekPaket[16]}'")
+# }
+# telkomselPaketFx17()
+# {
+# 	#sleep 1m 
+# 	echo $(rm -rf ~/.ssh/known_hosts) 
+# 	telkomselPaket=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${telkomselHost[17]} -p12345 "asterisk -rx 'gsm send ussd ${telkomselSpan[17]} ${telkomselCaraCekPaket[17]}'")
+# }
 
 xlFx1()
 {
@@ -519,148 +567,148 @@ numThree=1
 maxAttempt=5
 maxAttempt=$((maxAttempt+0))
 
-# ==================================================================================================
-# Simpati
-# ==================================================================================================
-for i in "${telkomselNo[@]}" #looping sebanyak jumlah variable array
-do
-	echo "$currentTime - ===================================================================================================="
-	echo "$currentTime - Checking PAKET ${telkomselNama[$numSimpati]}..."
-	echo "$currentTime - ===================================================================================================="
-	telkomselPaketFx$numSimpati
-	cekString=${telkomselPaket:2:6}
-	cekString2=${telkomselPaket:49:4}
-	cekString3=${telkomselPaket:48:4}
+# # ==================================================================================================
+# # Simpati
+# # ==================================================================================================
+# for i in "${telkomselNo[@]}" #looping sebanyak jumlah variable array
+# do
+# 	echo "$currentTime - ===================================================================================================="
+# 	echo "$currentTime - Checking PAKET ${telkomselNama[$numSimpati]}..."
+# 	echo "$currentTime - ===================================================================================================="
+# 	telkomselPaketFx$numSimpati
+# 	cekString=${telkomselPaket:2:6}
+# 	cekString2=${telkomselPaket:49:4}
+# 	cekString3=${telkomselPaket:48:4}
 
-	echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
+# 	echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
 
-	if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
-		if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
-			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
-			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-			USSDReplyTelkomsel[$numSimpati]="${telkomselPaket}"
-			telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
-			telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
-			telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
-			echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
+# 	if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
+# 		if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
+# 			echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
+# 			echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+# 			USSDReplyTelkomsel[$numSimpati]="${telkomselPaket}"
+# 			telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
+# 			telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
+# 			telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
+# 			echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
 
-			if [[ $telkomselPaket -gt 150 ]]; then
-				telkomselPaket=0
-				telkomselPaket=$((telkomselPaket + 0))
-			fi
+# 			if [[ $telkomselPaket -gt 150 ]]; then
+# 				telkomselPaket=0
+# 				telkomselPaket=$((telkomselPaket + 0))
+# 			fi
 
-			sisaPaketTelkomsel[$numSimpati]=${telkomselPaket}
-		else
-			attempt=1
-			attempt=$((attempt + 0))
-			cekBerhasil=""
-			echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Paket Gagal...${reset}"
-			echo "----------------------------------------------"
-			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-				echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
-				telkomselPaketFx$numSimpati
-				cekString=${telkomselPaket:2:6}
-				cekString2=${telkomselPaket:49:4}
-				cekString3=${telkomselPaket:48:4}
+# 			sisaPaketTelkomsel[$numSimpati]=${telkomselPaket}
+# 		else
+# 			attempt=1
+# 			attempt=$((attempt + 0))
+# 			cekBerhasil=""
+# 			echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Paket Gagal...${reset}"
+# 			echo "----------------------------------------------"
+# 			while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+# 				echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
+# 				telkomselPaketFx$numSimpati
+# 				cekString=${telkomselPaket:2:6}
+# 				cekString2=${telkomselPaket:49:4}
+# 				cekString3=${telkomselPaket:48:4}
 
-				echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
-				USSDReplyTelkomsel[$numSimpati]="$telkomselPaket"
+# 				echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
+# 				USSDReplyTelkomsel[$numSimpati]="$telkomselPaket"
 
-				if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
-					if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
-						echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
-						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-						telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
-						telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
-						telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
-						echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
+# 				if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
+# 					if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
+# 						echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
+# 						echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+# 						telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
+# 						telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
+# 						telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
+# 						echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
 
-						if [[ $telkomselPaket -gt 150 ]]; then
-							telkomselPaket=0
-							telkomselPaket=$((telkomselPaket + 0))
-						fi
+# 						if [[ $telkomselPaket -gt 150 ]]; then
+# 							telkomselPaket=0
+# 							telkomselPaket=$((telkomselPaket + 0))
+# 						fi
 
-						sisaPaketTelkomsel[$numSimpati]=${telkomselPaket}
-					else
-						cekBerhasil="gagal"
-						echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
-						echo "----------------------------------------------"
-						attempt=$((attempt + 1))
-						if [[ $attempt == $maxAttempt ]]; then
-							sisaPaketTelkomsel[$numSimpati]=0
-						fi
-					fi
-				else
-					cekBerhasil="gagal"
-					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
-					echo "----------------------------------------------"
-					attempt=$((attempt + 1))
-					if [[ $attempt == $maxAttempt ]]; then
-						sisaPaketTelkomsel[$numSimpati]=0
-					fi
-				fi
-			done
-		fi
-	else
-		attempt=1
-		attempt=$((attempt + 0))
-		cekBerhasil=""
-		echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Paket Gagal...${reset}"
-		echo "----------------------------------------------"
-		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
-			echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
-			telkomselPaketFx$numSimpati
-			cekString=${telkomselPaket:2:6}
-			cekString2=${telkomselPaket:49:4}
-			cekString3=${telkomselPaket:48:4}
+# 						sisaPaketTelkomsel[$numSimpati]=${telkomselPaket}
+# 					else
+# 						cekBerhasil="gagal"
+# 						echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+# 						echo "----------------------------------------------"
+# 						attempt=$((attempt + 1))
+# 						if [[ $attempt == $maxAttempt ]]; then
+# 							sisaPaketTelkomsel[$numSimpati]=0
+# 						fi
+# 					fi
+# 				else
+# 					cekBerhasil="gagal"
+# 					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+# 					echo "----------------------------------------------"
+# 					attempt=$((attempt + 1))
+# 					if [[ $attempt == $maxAttempt ]]; then
+# 						sisaPaketTelkomsel[$numSimpati]=0
+# 					fi
+# 				fi
+# 			done
+# 		fi
+# 	else
+# 		attempt=1
+# 		attempt=$((attempt + 0))
+# 		cekBerhasil=""
+# 		echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Paket Gagal...${reset}"
+# 		echo "----------------------------------------------"
+# 		while [[ $attempt -le $maxAttempt && "$cekBerhasil" != "berhasil"  ]]; do
+# 			echo "$currentTime - ${telkomselNama[$numSimpati]} percobaan ke-$attempt"
+# 			telkomselPaketFx$numSimpati
+# 			cekString=${telkomselPaket:2:6}
+# 			cekString2=${telkomselPaket:49:4}
+# 			cekString3=${telkomselPaket:48:4}
 
-			echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
-			USSDReplyTelkomsel[$numSimpati]="$telkomselPaket"
+# 			echo "$currentTime - USSD REPLY : ${yellow}$telkomselPaket${reset}"
+# 			USSDReplyTelkomsel[$numSimpati]="$telkomselPaket"
 
-			if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
-				if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
-					echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
-					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
-					telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
-					telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
-					telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
-					echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
+# 			if [[ "$cekString" = "Recive"  ]]; then #bila respon open = Recive
+# 				if [[ "$cekString2" != "Maaf" ]] || [[ "$cekString3" != "Maaf" ]]; then
+# 					echo "$currentTime - ${green}${telkomselNama[$numSimpati]} Cek Paket Berhasil...${reset}"
+# 					echo "$currentTime - -------------------------------------------------------------------------------------------------------------"
+# 					telkomselPaket=${telkomselPaket:62:6} #mengambil character yang bernilai jumlah paket
+# 					telkomselPaket=${telkomselPaket//[i: Men dtk]/} #mengabaikan character lain selain angka
+# 					telkomselPaket=$((telkomselPaket + 0)) #merubah variable yang semula string menjadi integer
+# 					echo "$currentTime - ${green}Sisa paket ${telkomselNama[$numSimpati]} : ${telkomselPaket}${reset}"
 
-					if [[ $telkomselPaket -gt 150 ]]; then
-						telkomselPaket=0
-						telkomselPaket=$((telkomselPaket + 0))
-					fi
+# 					if [[ $telkomselPaket -gt 150 ]]; then
+# 						telkomselPaket=0
+# 						telkomselPaket=$((telkomselPaket + 0))
+# 					fi
 
-					sisaPaketTelkomsel[$numSimpati]=${telkomselPaket}
-				else
-					cekBerhasil="gagal"
-					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
-					echo "----------------------------------------------"
-					attempt=$((attempt + 1))
-					if [[ $attempt == $maxAttempt ]]; then
-						sisaPaketTelkomsel[$numSimpati]=0
-					fi
-				fi
-			else
-				cekBerhasil="gagal"
-				echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
-				echo "----------------------------------------------"
-				attempt=$((attempt + 1))
-				if [[ $attempt == $maxAttempt ]]; then
-					sisaPaketTelkomsel[$numSimpati]=0
-				fi
-			fi
-		done
-	fi
-	echo "$currentTime - ${green}+++++++++++++++++++++++ CHECKING PAKET ${telkomselNama[$numSimpati]} FINISHED+++++++++++++++++++++${reset}"
+# 					sisaPaketTelkomsel[$numSimpati]=${telkomselPaket}
+# 				else
+# 					cekBerhasil="gagal"
+# 					echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+# 					echo "----------------------------------------------"
+# 					attempt=$((attempt + 1))
+# 					if [[ $attempt == $maxAttempt ]]; then
+# 						sisaPaketTelkomsel[$numSimpati]=0
+# 					fi
+# 				fi
+# 			else
+# 				cekBerhasil="gagal"
+# 				echo "$currentTime - ${red}${telkomselNama[$numSimpati]} Cek Gagal...${reset}"
+# 				echo "----------------------------------------------"
+# 				attempt=$((attempt + 1))
+# 				if [[ $attempt == $maxAttempt ]]; then
+# 					sisaPaketTelkomsel[$numSimpati]=0
+# 				fi
+# 			fi
+# 		done
+# 	fi
+# 	echo "$currentTime - ${green}+++++++++++++++++++++++ CHECKING PAKET ${telkomselNama[$numSimpati]} FINISHED+++++++++++++++++++++${reset}"
 
-	#===============================================================================
-	#memasukan nilai cek paket kedalam database
-	#===============================================================================
-	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal, ussdReply) VALUES ('${telkomselNama[$numSimpati]}', '${sisaPaketTelkomsel[$numSimpati]}', '$mysqlDateNow', '${USSDReplyTelkomsel[$numSimpati]}');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
+# 	#===============================================================================
+# 	#memasukan nilai cek paket kedalam database
+# 	#===============================================================================
+# 	echo "INSERT INTO paket (namaProvider, sisaPaket, tanggal, ussdReply) VALUES ('${telkomselNama[$numSimpati]}', '${sisaPaketTelkomsel[$numSimpati]}', '$mysqlDateNow', '${USSDReplyTelkomsel[$numSimpati]}');"| mysql -h$HOST -u$USER -p$PASSWORD dbpulsa
 
-	numSimpati=$((numSimpati + 1))
-done
+# 	numSimpati=$((numSimpati + 1))
+# done
 
 # ==================================================================================================
 # XL
