@@ -144,6 +144,7 @@ echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${telkomselNo[17]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XLNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XLNo[5]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
+echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${XLNo[9]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 echo "INSERT INTO outbox (DestinationNumber, TextDecoded, CreatorID) VALUES ('${threeNo[1]}', 'reboot system c3rmat', 'BashAdmin');"| mysql -h$HOST -u$USER -p$PASSWORD sms
 
 #===============================================================================
@@ -293,6 +294,30 @@ xlFx8()
 	echo $(rm -rf ~/.ssh/known_hosts)
 	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[8]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[8]} ${XLCaraCekPulsa[8]}'")
 }
+xlFx9()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[9]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[9]} ${XLCaraCekPulsa[9]}'")
+}
+xlFx10()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[10]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[10]} ${XLCaraCekPulsa[10]}'")
+}
+xlFx11()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[11]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[11]} ${XLCaraCekPulsa[11]}'")
+}
+xlFx12()
+{
+	sleep 1m
+	echo $(rm -rf ~/.ssh/known_hosts)
+	xl=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[12]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[12]} ${XLCaraCekPulsa[12]}'")
+}
 
 # indosatFx1()
 # {
@@ -324,11 +349,6 @@ threeFx3()
 {
 	echo $(rm -rf ~/.ssh/known_hosts)
 	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[3]} ${threeCaraCekPulsa[3]}'")
-}
-threeFx4()
-{
-	echo $(rm -rf ~/.ssh/known_hosts)
-	three=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[4]} ${threeCaraCekPulsa[4]}'")
 }
 
 
@@ -423,7 +443,7 @@ for (( i = 1; i <= 17; i++ )); do
 	sleep 5s
 done
 
-for (( i = 1; i <= 8; i++ )); do
+for (( i = 1; i <= 14; i++ )); do
 	XL[$i]=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${XLHost[$i]} -p12345 "asterisk -rx 'gsm send ussd ${XLSpan[$i]} ${XLCaraCekPulsa[$i]}'")
 	sleep 5s
 done
