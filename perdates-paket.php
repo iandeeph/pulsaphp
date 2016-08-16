@@ -82,6 +82,7 @@
 											AND YEAR(tanggal) = '".$postYear."' 
 											AND MONTH(tanggal) = '".$postMonth."'
 										ORDER BY 
+											length(namaProvider),
 											namaProvider,
 											tgl,
 											jam + 0,

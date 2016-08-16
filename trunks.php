@@ -70,7 +70,7 @@
 
 			if(mysql_query($updateQry)){
 				logging($today, $user, "Update Trunks", $loggingText, $postId);
-		        header('Location: ./index.php?menu=setting');
+		        // header('Location: ./index.php?menu=setting');
 		    }else{
 		    	echo "ERROR: Could not able to execute ".$updateQry.". " . mysql_error($conn);
 		    }
