@@ -54,8 +54,6 @@ $time_now_end = date("Y/m/d%20H:i:s");
 
 $itemPerPages = 1;
 
-$namaProvider = array("ThreeAll1","ThreeAll2","ThreeAll3","ThreeAll4","ThreeAll5","ThreeAll6","ThreeAll7","ThreeAll8","ThreeAll9","ThreeAll10","ThreeAll11","ThreeAll12","ThreeAll13","ThreeAll14","ThreeAll15","ThreeAll16","ThreeAll17","ThreeAll18","ThreeAll19","ThreeAll20","ThreeAll21","ThreeAll22","ThreeAll23","ThreeAll24","ThreeAll25","ThreeAll26","ThreeAll27","ThreeAll28","ThreeAll29","ThreeAll30","ThreeAll31","ThreeAll32","ThreeAll33","ThreeAll34","ThreeAll35","ThreeAll36","ThreeAll37","ThreeAll38","ThreeAll39","ThreeAll40");
-
 $data = array();
 
 $inserts = array();
@@ -64,63 +62,64 @@ $numNamaProvider = 0;
 
 $providerQry = "";
 $providerQry = "SELECT * FROM provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";
-if($resultProvider = mysqli_query($conn, $providerQry)){
-    if (mysqli_num_rows($resultProvider) > 0) {
-        $rowProvider = mysqli_fetch_array($resultProvider);
-        $namaProvider   = $rowProvider['namaProvider'];
-        $noProvider     = $rowProvider['noProvider'];
-        $host           = $rowProvider['host'];
-        $span           = $rowProvider['span'];
-        
-        //set url untuk inbox pada openvox
-        $url = "http://".$host."/cgi-bin/php/sms-inbox.php?current_page=1&port_filter=gsm-".$port."&phone_number_filter=3&start_datetime_filter=".$time_now_start."&end_datetime_filter=".$time_now_end."&message_filter=Sisa&";
-        echo $url."\n";
-        $output = curl_get_contents($url);
+if($resultProvider = mysql_query($providerQry)){
+    if (mysql_num_rows($resultProvider) > 0) {
+        while($rowProvider = mysql_fetch_array($resultProvider)){
+            $namaProvider   = $rowProvider['namaProvider'];
+            $noProvider     = $rowProvider['noProvider'];
+            $host           = $rowProvider['host'];
+            $span           = $rowProvider['span'];
+            
+            //set url untuk inbox pada openvox
+            $url = "http://".$host."/cgi-bin/php/sms-inbox.php?current_page=1&port_filter=gsm-".$span."&phone_number_filter=3&start_datetime_filter=".$time_now_start."&end_datetime_filter=".$time_now_end."&message_filter=Sisa&";
+            echo $url."\n";
+            $output = curl_get_contents($url);
 
-        $dom = new DOMDocument();
-        $dom->preserveWhiteSpace = false;
-        $dom->formatOutput       = true;
-        $dom->loadHTML($output);
-        $body = $dom->getElementById("mainform");
-        $tr = $body->getElementsByTagName('tr');
-        if($tr->length > 0){
-            $row = 0;
-            $data[$row] = array();
-            //menentukan selector untuk data yang akan diambil
+            $dom = new DOMDocument();
+            $dom->preserveWhiteSpace = false;
+            $dom->formatOutput       = true;
+            $dom->loadHTML($output);
+            $body = $dom->getElementById("mainform");
+            $tr = $body->getElementsByTagName('tr');
+            if($tr->length > 0){
+                $row = 0;
+                $data[$row] = array();
+                //menentukan selector untuk data yang akan diambil
 
-            foreach ($body->getElementsByTagName('tr') as $tr) {
-                $col = 0;
-                foreach ($tr->getElementsByTagName('td') as $td) {
-                    $data[$row][$col] = $td;
+                foreach ($body->getElementsByTagName('tr') as $tr) {
+                    $col = 0;
+                    foreach ($tr->getElementsByTagName('td') as $td) {
+                        $data[$row][$col] = $td;
 
-                    $col++;
+                        $col++;
+                    }
+                    $row++;
                 }
-                $row++;
-            }
-            //looping sebanyak jumlah item perhalaman
-            for($item = 1; $item <= $itemPerPages; $item++){
-                $packetRest     = preg_replace("/[A-Za-z]/", "", substr($msg, 24, 3));
-                $phone          = trim($data[$item][2]->nodeValue);
-                $date           = trim($data[$item][3]->nodeValue);
-                $msg            = trim($data[$item][4]->nodeValue);
+                //looping sebanyak jumlah item perhalaman
+                for($item = 1; $item <= $itemPerPages; $item++){
+                    $phone          = trim($data[$item][2]->nodeValue);
+                    $date           = trim($data[$item][3]->nodeValue);
+                    $msg            = trim($data[$item][4]->nodeValue);
+                    $packetRest     = preg_replace("/[A-Za-z]/", "", substr($msg, 24, 3));
 
-                echo "iserting\n";
-                $inserts[] = "(
-                    '".$namaProvider."',
-                    '".$packetRest."',
-                    '".str_replace('/', '-', $date)."',
-                    '".mysql_real_escape_string($msg)."'
-                    )";
-                if (intval($packetRest) <= 20) {
-                    $message = "$namaProvider sisa paket kurang dari 20 menit.. @ian tolong diisi paket..!!! code : `AN30.".$noProvider.".0312` terima kasihh...."
-                    sendToSlack($message);
+                    echo "iserting\n";
+                    $inserts[] = "(
+                        '".$namaProvider."',
+                        '".$packetRest."',
+                        '".str_replace('/', '-', $date)."',
+                        '".mysql_real_escape_string($msg)."'
+                        )";
+                    if (intval($packetRest) <= 20) {
+                        $message = "$namaProvider sisa paket kurang dari 20 menit.. Sisa Paket : ".$packetRest." @ian tolong diisi paket..!!! code : `AN30.".$noProvider.".0312` terima kasihh....";
+                        sendToSlack($message);
+                    }
+                    
                 }
-                
+            }else{
+                echo "kosong\n";
             }
-        }else{
-            echo "kosong\n";
+            $numNamaProvider++;
         }
-        $numNamaProvider++;
     }
 }
 
