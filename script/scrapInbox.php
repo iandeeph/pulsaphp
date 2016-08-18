@@ -29,12 +29,14 @@ function curl_get_contents($url){
 }
 
 function sendToSlack($message){
-    $room = "cermati_pulsa"; 
-    $icon = ":pikapika:"; 
-    $data = "payload=" . json_encode(array(         
-            "channel"       =>  "#{$room}",
-            "text"          =>  $message,
-            "icon_emoji"    =>  $icon
+    $room       = "cermati_pulsa";
+    $username   = "Three Officer";
+    $icon       = ":pikapika:"; 
+    $data       = "payload=" . json_encode(array(         
+                  "username"      =>  $username,
+                  "channel"       =>  "#{$room}",
+                  "text"          =>  $message,
+                  "icon_emoji"    =>  $icon
         ));
     $slackHook = "https://hooks.slack.com/services/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";
              
