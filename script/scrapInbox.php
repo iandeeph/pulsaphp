@@ -28,38 +28,52 @@ function curl_get_contents($url){
     return $output;
 }
 
+function sendToSlack($message){
+    $room = "cermati_pulsa"; 
+    $icon = ":pikapika:"; 
+    $data = "payload=" . json_encode(array(         
+            "channel"       =>  "#{$room}",
+            "text"          =>  $message,
+            "icon_emoji"    =>  $icon
+        ));
+    $slackHook = "https://hooks.slack.com/services/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";
+             
+    $c = curl_init();
+    curl_setopt($c, CURLOPT_URL, $slackHook);
+    curl_setopt($c, CURLOPT_CUSTOMREQUEST, "POST");
+    curl_setopt($c, CURLOPT_POSTFIELDS, $data);
+    curl_setopt($c, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($c, CURLOPT_SSL_VERIFYPEER, false);
+    $result = curl_exec($c);
+
+    return $result;
+}
+
 $time_now_start = date("Y/m/d%20H:i:s", strtotime("-15 minutes"));
 $time_now_end = date("Y/m/d%20H:i:s");
 
 $itemPerPages = 1;
-$ipOpenVox = array(
-    "3.3.3.4", 
-    "3.3.3.5", 
-    "3.3.3.6",
-    "3.3.3.7", 
-    "3.3.3.8", 
-    "3.3.3.9", 
-    "3.3.3.10", 
-    "3.3.3.11"
-    );
-$portOpenVox = array(
-    "gsm-1",
-    "gsm-2",
-    "gsm-3",
-    "gsm-4"
-    );
 
-$namaProvider = array("ThreeAll1","ThreeAll2","ThreeAll3","ThreeAll4","ThreeAll5","ThreeAll6","ThreeAll7","ThreeAll8","ThreeAll9","ThreeAll10","ThreeAll11","ThreeAll12","ThreeAll13","ThreeAll14","ThreeAll15","ThreeAll16","ThreeAll17","ThreeAll18","ThreeAll19","ThreeAll20","ThreeAll21","ThreeAll22","ThreeAll23","ThreeAll24","ThreeAll25","ThreeAll26","ThreeAll27","ThreeAll28","ThreeAll29","ThreeAll30","ThreeAll31","ThreeAll32");
+$namaProvider = array("ThreeAll1","ThreeAll2","ThreeAll3","ThreeAll4","ThreeAll5","ThreeAll6","ThreeAll7","ThreeAll8","ThreeAll9","ThreeAll10","ThreeAll11","ThreeAll12","ThreeAll13","ThreeAll14","ThreeAll15","ThreeAll16","ThreeAll17","ThreeAll18","ThreeAll19","ThreeAll20","ThreeAll21","ThreeAll22","ThreeAll23","ThreeAll24","ThreeAll25","ThreeAll26","ThreeAll27","ThreeAll28","ThreeAll29","ThreeAll30","ThreeAll31","ThreeAll32","ThreeAll33","ThreeAll34","ThreeAll35","ThreeAll36","ThreeAll37","ThreeAll38","ThreeAll39","ThreeAll40");
 
 $data = array();
 
 $inserts = array();
 // looping untuk setiap IP openvox
 $numNamaProvider = 0;
-foreach ($ipOpenVox as $ip) {
-    foreach ($portOpenVox as $port) {
+
+$providerQry = "";
+$providerQry = "SELECT * FROM provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";
+if($resultProvider = mysqli_query($conn, $providerQry)){
+    if (mysqli_num_rows($resultProvider) > 0) {
+        $rowProvider = mysqli_fetch_array($resultProvider);
+        $namaProvider   = $rowProvider['namaProvider'];
+        $noProvider     = $rowProvider['noProvider'];
+        $host           = $rowProvider['host'];
+        $span           = $rowProvider['span'];
+        
         //set url untuk inbox pada openvox
-        $url = "http://".$ip."/cgi-bin/php/sms-inbox.php?current_page=1&port_filter=".$port."&phone_number_filter=3&start_datetime_filter=".$time_now_start."&end_datetime_filter=".$time_now_end."&message_filter=Sisa&";
+        $url = "http://".$host."/cgi-bin/php/sms-inbox.php?current_page=1&port_filter=gsm-".$port."&phone_number_filter=3&start_datetime_filter=".$time_now_start."&end_datetime_filter=".$time_now_end."&message_filter=Sisa&";
         echo $url."\n";
         $output = curl_get_contents($url);
 
@@ -85,17 +99,23 @@ foreach ($ipOpenVox as $ip) {
             }
             //looping sebanyak jumlah item perhalaman
             for($item = 1; $item <= $itemPerPages; $item++){
-                $phone  = trim($data[$item][2]->nodeValue);
-                $date   = trim($data[$item][3]->nodeValue);
-                $msg    = trim($data[$item][4]->nodeValue);
+                $packetRest     = preg_replace("/[A-Za-z]/", "", substr($msg, 24, 3));
+                $phone          = trim($data[$item][2]->nodeValue);
+                $date           = trim($data[$item][3]->nodeValue);
+                $msg            = trim($data[$item][4]->nodeValue);
 
                 echo "iserting\n";
                 $inserts[] = "(
-                    '".$namaProvider[$numNamaProvider]."',
-                    '".preg_replace("/[A-Za-z]/", "", substr($msg, 24, 3))."',
+                    '".$namaProvider."',
+                    '".$packetRest."',
                     '".str_replace('/', '-', $date)."',
                     '".mysql_real_escape_string($msg)."'
                     )";
+                if (intval($packetRest) <= 20) {
+                    $message = "$namaProvider sisa paket kurang dari 20 menit.. @ian tolong diisi paket..!!! code : `AN30.".$noProvider.".0312` terima kasihh...."
+                    sendToSlack($message);
+                }
+                
             }
         }else{
             echo "kosong\n";
