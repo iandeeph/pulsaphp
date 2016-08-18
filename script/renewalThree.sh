@@ -30,7 +30,7 @@ PASSWORD="c3rmat"
 #===============================================================================
 #THREE
 #===============================================================================
-threeResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, caraAktivasi from provider where namaProvider like 'Three%' order by namaProvider;"))
+threeResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span, caraAktivasi from provider where namaProvider like 'Three%' and namaProvider not like 'ThreeAll%' order by namaProvider;"))
 cntThreeElm=5
 cntThree=${#threeResult[@]}
 threeSet=$(((cntThree+1)/cntThreeElm))
@@ -45,7 +45,7 @@ do
 	threeCaraAktivasi[$i]=${threeResult[$((x + 4))]};
 done
 
-THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%';"))
+THREE=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select noProvider from provider where namaProvider like 'Three%' and namaProvider not like 'ThreeAll%';"))
 # THREE=(089629783240 089629779562 089629789574)
 sleep 3m
 
@@ -84,12 +84,6 @@ renewalThreeFx3()
 	sleep 1m
 	echo $(rm -rf ~/.ssh/known_hosts)
 	perpanjangThree=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[3]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[3]} ${threeCaraAktivasi[3]}'")
-}
-renewalThreeFx4()
-{
-	sleep 1m
-	echo $(rm -rf ~/.ssh/known_hosts)
-	perpanjangThree=$(sshpass -padmin ssh -o StrictHostKeyChecking=no admin@${threeHost[4]} -p12345 "asterisk -rx 'gsm send ussd ${threeSpan[4]} ${threeCaraAktivasi[4]}'")
 }
 
 numThree=1
