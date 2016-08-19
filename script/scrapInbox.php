@@ -51,7 +51,7 @@ function sendToSlack($message){
     return $result;
 }
 
-$time_now_start = date("Y/m/d%20H:i:s", strtotime("-10 minutes"));
+$time_now_start = date("Y/m/d%20H:i:s", strtotime("-5 minutes"));
 $time_now_end = date("Y/m/d%20H:i:s");
 
 $itemPerPages = 1;
