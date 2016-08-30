@@ -25,7 +25,7 @@ function sendSms($phoneNumber, $message, $user, $conn){
         if (mysqli_query($conn, $inserttooutbox1)) {
             echo "Message sent to ".$phoneNumber." - ".$message."";
         } else {
-            echo "Error: ".$inserttooutbox1. " ".mysql_error($conn);
+            echo "Error: ".$inserttooutbox1. " ".mysqli_error($conn);
         }
     }else{
         $hitsplit = ceil(strlen($message)/153);
@@ -50,7 +50,7 @@ function sendSms($phoneNumber, $message, $user, $conn){
             if (mysqli_query($conn, $inserttooutbox)) {
                 echo "Message sent to ".$phoneNumber." - ".$message."";
             } else {
-                echo "Error: ".$inserttooutbox. " ".mysql_error($conn);
+                echo "Error: ".$inserttooutbox. " ".mysqli_error($conn);
             }
         } 
     }
@@ -157,7 +157,7 @@ if (mysqli_num_rows($resultProvider) > 0) {
                     '".$namaProvider."',
                     '".$packetRest."',
                     '".str_replace('/', '-', $date)."',
-                    '".mysql_real_escape_string($msg)."'
+                    '".mysqli_real_escape_string($conn, $msg)."'
                     )";
                 if (intval($packetRest) <= 20) {
                     $message = "".$namaProvider." sisa paket kurang dari 20 menit.. Sisa Paket : ".$packetRest." No :".$noProvider."";
