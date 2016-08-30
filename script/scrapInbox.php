@@ -9,6 +9,53 @@ require "connconf.php";
 
 date_default_timezone_set("Asia/Jakarta");
 
+function sendSms($phoneNumber, $message, $user, $conn){
+    $msg = array();
+    $totSmsPage = ceil(strlen($message)/160);
+
+    $query = "SHOW TABLE STATUS LIKE 'db_agen_pulsa.outbox'";
+    $result = mysqli_query($conn, $query);
+    $data  = mysqli_fetch_array($result);
+    $newID = $data['Auto_increment'];
+
+    if($totSmsPage == 1){
+        $inserttooutbox1 = "INSERT INTO db_agen_pulsa.outbox (DestinationNumber, TextDecoded, SenderID, CreatorID, Coding) 
+                            VALUES ('".$phoneNumber."', '".$message."', '".$user."', '".$user."', 'Default_No_Compression');";
+
+        if (mysqli_query($conn, $inserttooutbox1)) {
+            echo "Message sent to ".$phoneNumber." - ".$message."";
+        } else {
+            echo "Error: ".$inserttooutbox1. " ".mysql_error($conn);
+        }
+    }else{
+        $hitsplit = ceil(strlen($message)/153);
+        $split  = str_split($message, 153);
+
+        $query = "SHOW TABLE STATUS LIKE 'db_agen_pulsa.outbox'";
+        $result = mysqli_query($conn, $query);
+        $data  = mysqli_fetch_array($result);
+        $newID = $data['Auto_increment'];
+
+        for ($i=1; $i<=$totSmsPage; $i++){
+            $udh = "050003A7".sprintf("%02s", $hitsplit).sprintf("%02s", $i);
+            $msg = $split[$i-1];
+
+            if ($i == 1){
+                $inserttooutbox = "INSERT INTO db_agen_pulsa.outbox (DestinationNumber, UDH, TextDecoded, ID, MultiPart, CreatorID, Class)
+                VALUES ('".$phoneNumber."', '".$udh."', '".$msg."', '".$newID."', 'true', '".$user."', '-1')";
+            }else{
+                $inserttooutbox = "INSERT INTO db_agen_pulsa.outbox_multipart(UDH, TextDecoded, ID, SequencePosition)
+                VALUES ('".$udh."', '".$msg."', '".$newID."', '".$i."')";
+            }
+            if (mysqli_query($conn, $inserttooutbox)) {
+                echo "Message sent to ".$phoneNumber." - ".$message."";
+            } else {
+                echo "Error: ".$inserttooutbox. " ".mysql_error($conn);
+            }
+        } 
+    }
+}
+
 //the name of the curl function
 function curl_get_contents($url){
 
@@ -28,9 +75,7 @@ function curl_get_contents($url){
     return $output;
 }
 
-function sendToSlack($message){
-    $room       = "cermati_pulsa";
-    $username   = "Three Officer";
+function sendToSlack($room, $username, $message){
     $icon       = ":pikapika:"; 
     $data       = "payload=" . json_encode(array(         
                   "username"      =>  $username,
@@ -51,6 +96,8 @@ function sendToSlack($message){
     return $result;
 }
 
+$nomorAgenPulsa = "083812175472";
+
 $time_now_start = date("Y/m/d%20H:i:s", strtotime("-5 minutes"));
 $time_now_end = date("Y/m/d%20H:i:s");
 
@@ -62,74 +109,89 @@ $inserts = array();
 // looping untuk setiap IP openvox
 $numNamaProvider = 0;
 
+
 $providerQry = "";
-$providerQry = "SELECT * FROM provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";
-if($resultProvider = mysql_query($providerQry)){
-    if (mysql_num_rows($resultProvider) > 0) {
-        while($rowProvider = mysql_fetch_array($resultProvider)){
-            $namaProvider   = $rowProvider['namaProvider'];
-            $noProvider     = $rowProvider['noProvider'];
-            $host           = $rowProvider['host'];
-            $span           = $rowProvider['span'];
-            
-            //set url untuk inbox pada openvox
-            $url = "http://".$host."/cgi-bin/php/sms-inbox.php?current_page=1&port_filter=gsm-".$span."&phone_number_filter=3&start_datetime_filter=".$time_now_start."&end_datetime_filter=".$time_now_end."&message_filter=Sisa&";
-            echo $url."\n";
-            $output = curl_get_contents($url);
+$providerQry = "SELECT * FROM dbpulsa.provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";
+$resultProvider = mysqli_query($conn, $providerQry);
+if (mysqli_num_rows($resultProvider) > 0) {
+    while($rowProvider = mysqli_fetch_array($resultProvider)){
+        $namaProvider   = $rowProvider['namaProvider'];
+        $noProvider     = $rowProvider['noProvider'];
+        $host           = $rowProvider['host'];
+        $span           = $rowProvider['span'];
+        
+        //set url untuk inbox pada openvox
+        $url = "http://".$host."/cgi-bin/php/sms-inbox.php?current_page=1&port_filter=gsm-".$span."&phone_number_filter=3&start_datetime_filter=".$time_now_start."&end_datetime_filter=".$time_now_end."&message_filter=Sisa&";
+        echo $url."\n";
+        $output = curl_get_contents($url);
 
-            $dom = new DOMDocument();
-            $dom->preserveWhiteSpace = false;
-            $dom->formatOutput       = true;
-            $dom->loadHTML($output);
-            $body = $dom->getElementById("mainform");
-            $tr = $body->getElementsByTagName('tr');
-            if($tr->length > 0){
-                $row = 0;
-                $data[$row] = array();
-                //menentukan selector untuk data yang akan diambil
+        $dom = new DOMDocument();
+        $dom->preserveWhiteSpace = false;
+        $dom->formatOutput       = true;
+        $dom->loadHTML($output);
+        $body = $dom->getElementById("mainform");
+        $tr = $body->getElementsByTagName('tr');
+        if($tr->length > 0){
+            $row = 0;
+            $data[$row] = array();
+            //menentukan selector untuk data yang akan diambil
 
-                foreach ($body->getElementsByTagName('tr') as $tr) {
-                    $col = 0;
-                    foreach ($tr->getElementsByTagName('td') as $td) {
-                        $data[$row][$col] = $td;
+            foreach ($body->getElementsByTagName('tr') as $tr) {
+                $col = 0;
+                foreach ($tr->getElementsByTagName('td') as $td) {
+                    $data[$row][$col] = $td;
 
-                        $col++;
-                    }
-                    $row++;
+                    $col++;
                 }
-                //looping sebanyak jumlah item perhalaman
-                for($item = 1; $item <= $itemPerPages; $item++){
-                    $phone          = trim($data[$item][2]->nodeValue);
-                    $date           = trim($data[$item][3]->nodeValue);
-                    $msg            = trim($data[$item][4]->nodeValue);
-                    $packetRest     = preg_replace("/[A-Za-z]/", "", substr($msg, 24, 3));
-
-                    echo "iserting\n";
-                    $inserts[] = "(
-                        '".$namaProvider."',
-                        '".$packetRest."',
-                        '".str_replace('/', '-', $date)."',
-                        '".mysql_real_escape_string($msg)."'
-                        )";
-                    if (intval($packetRest) <= 20) {
-                        $message = "$namaProvider sisa paket kurang dari 20 menit.. Sisa Paket : ".$packetRest." @ian tolong diisi paket..!!! code : `AN30.".$noProvider.".0312` terima kasihh....";
-                        sendToSlack($message);
-                    }
-                    
-                }
-            }else{
-                echo "kosong\n";
+                $row++;
             }
-            $numNamaProvider++;
+            //looping sebanyak jumlah item perhalaman
+            for($item = 1; $item <= $itemPerPages; $item++){
+                $phone          = trim($data[$item][2]->nodeValue);
+                $date           = trim($data[$item][3]->nodeValue);
+                $msg            = trim($data[$item][4]->nodeValue);
+                $packetRest     = preg_replace("/[A-Za-z]/", "", substr($msg, 24, 3));
+
+                echo "iserting\n";
+                $inserts[] = "(
+                    '".$namaProvider."',
+                    '".$packetRest."',
+                    '".str_replace('/', '-', $date)."',
+                    '".mysql_real_escape_string($msg)."'
+                    )";
+                if (intval($packetRest) <= 20) {
+                    $message = "".$namaProvider." sisa paket kurang dari 20 menit.. Sisa Paket : ".$packetRest." No :".$noProvider."";
+                    sendToSlack("cermati_pulsa", "Three Officer", $message);
+
+                    $totalSendTodayQry = "";
+                    $totalSendTodayQry = "SELECT SUM(*) as total FROM db_agen_pulsa.report WHERE DATE(tanggal) = DATE(NOW()) AND no = '".$noProvider."'";
+                    $resultToday = mysqli_query($conn, $totalSendTodayQry);
+                    if (mysqli_num_rows($resultToday) > 0) {
+                        $rowTotal = mysqli_fetch_array($resultToday);
+                        if ($rowTotal['total'] < 1) {
+                            sendSms($agenpulsa, "AN30.".$noProvider.".0312", "agenpulsa", $conn);
+                            sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.".$noProvider.".0312");
+                        } else {
+                            sendSms($agenpulsa, "AN30.2.".$noProvider.".0312", "agenpulsa", $conn);
+                            sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.2.".$noProvider.".0312");
+                        }
+                        
+                    }
+                }
+                
+            }
+        }else{
+            echo "kosong\n";
         }
+        $numNamaProvider++;
     }
 }
 
 if (count($inserts) > 0) {
     echo "inserting to db..";
-    $insertToDB = "INSERT INTO paket (namaProvider, sisaPaket, tanggal, ussdReply) VALUES ".implode($inserts, ',');
-    if (!mysql_query($insertToDB)) {
-        echo "Error: ".mysql_error($conn);
+    $insertToDB = "INSERT INTO dbpulsa.paket (namaProvider, sisaPaket, tanggal, ussdReply) VALUES ".implode($inserts, ',');
+    if (!mysqli_query($conn, $insertToDB)) {
+        echo "Error: ".mysqli_error($conn);
     }
 } else {
     echo 'Nothing';
