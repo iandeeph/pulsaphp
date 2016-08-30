@@ -44,5 +44,8 @@ if (mysqli_num_rows($resultInbox) > 0) {
         
         $message = "Tanggal : ".$tanggal." \r\n No Pengirim : ".$noPengirim." \r\n Isi Pesan : \r\n ".$isiPesan."";
         sendToSlack("agenpulsa", "Agen Pulsa Inbox", $message);
+        echo "sending";
     }
+}else{
+    echo "kosong";
 }
