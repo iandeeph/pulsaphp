@@ -10,7 +10,7 @@ require "connconf.php";
 date_default_timezone_set("Asia/Jakarta");
 
 function sendToSlack($room, $username, $message){
-    $icon       = ":incoming_envelope: "; 
+    $icon       = ":incoming_envelope:"; 
     $data       = "payload=" . json_encode(array(         
                   "username"      =>  $username,
                   "channel"       =>  "#{$room}",
@@ -30,11 +30,12 @@ function sendToSlack($room, $username, $message){
     return $result;
 }
 
-$time_now_start = date("Y/m/d%20H:i:s", strtotime("-1 minutes"));
-$time_now_end = date("Y/m/d%20H:i:s");
+$time_now_start = date("Y-m-d H:i:s", strtotime("-1 minutes"));
+$time_now_end = date("Y-m-d H:i:s");
 
 $inboxAgenPulsaQry = "";
-$inboxAgenPulsaQry = "SELECT * FROM db_agen_pulsa.inbox WHERE ReceivingDateTime BETWEEN ".$time_now_start." AND ".$time_now_end."";
+$inboxAgenPulsaQry = "SELECT * FROM db_agen_pulsa.inbox WHERE ReceivingDateTime BETWEEN '".$time_now_start."' AND '".$time_now_end."'";
+echo $inboxAgenPulsaQry;
 $resultInbox = mysqli_query($conn, $inboxAgenPulsaQry);
 if (mysqli_num_rows($resultInbox) > 0) {
     while($rowInbox = mysqli_fetch_array($resultInbox)){

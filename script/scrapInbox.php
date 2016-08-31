@@ -19,8 +19,8 @@ function sendSms($phoneNumber, $message, $user, $conn){
     $newID = $data['Auto_increment'];
 
     if($totSmsPage == 1){
-        $inserttooutbox1 = "INSERT INTO db_agen_pulsa.outbox (DestinationNumber, TextDecoded, SenderID, CreatorID, Coding) 
-                            VALUES ('".$phoneNumber."', '".$message."', '".$user."', '".$user."', 'Default_No_Compression');";
+        $inserttooutbox1 = "INSERT INTO db_agen_pulsa.outbox (DestinationNumber, TextDecoded, CreatorID, Coding) 
+                            VALUES ('".$phoneNumber."', '".$message."', '".$user."', 'Default_No_Compression');";
 
         if (mysqli_query($conn, $inserttooutbox1)) {
             echo "Message sent to ".$phoneNumber." - ".$message."";
@@ -164,15 +164,15 @@ if (mysqli_num_rows($resultProvider) > 0) {
                     sendToSlack("cermati_pulsa", "Three Officer", $message);
 
                     $totalSendTodayQry = "";
-                    $totalSendTodayQry = "SELECT SUM(*) as total FROM db_agen_pulsa.report WHERE DATE(tanggal) = DATE(NOW()) AND no = '".$noProvider."'";
+                    $totalSendTodayQry = "SELECT count(*) as total FROM db_agen_pulsa.report WHERE DATE(tanggal) = DATE(NOW()) AND no = '".$noProvider."'";
                     $resultToday = mysqli_query($conn, $totalSendTodayQry);
                     if (mysqli_num_rows($resultToday) > 0) {
                         $rowTotal = mysqli_fetch_array($resultToday);
                         if ($rowTotal['total'] < 1) {
-                            sendSms($agenpulsa, "AN30.".$noProvider.".0312", "agenpulsa", $conn);
+                            sendSms($nomorAgenPulsa, "AN30.".$noProvider.".0312", "agenpulsa", $conn);
                             sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.".$noProvider.".0312");
                         } else {
-                            sendSms($agenpulsa, "AN30.2.".$noProvider.".0312", "agenpulsa", $conn);
+                            sendSms($nomorAgenPulsa, "AN30.2.".$noProvider.".0312", "agenpulsa", $conn);
                             sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.2.".$noProvider.".0312");
                         }
                         
