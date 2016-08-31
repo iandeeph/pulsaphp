@@ -9,7 +9,8 @@ require "connconf.php";
 
 date_default_timezone_set("Asia/Jakarta");
 
-function sendSms($phoneNumber, $message, $conn){
+function sendSms($phoneNumber, $message, $conn, $trunk, $no, $trx){
+    $now = date("Y-m-d H:i:s");
     $msg = array();
     $totSmsPage = ceil(strlen($message)/160);
 
@@ -24,6 +25,8 @@ function sendSms($phoneNumber, $message, $conn){
 
         if (mysqli_query($conn, $inserttooutbox1)) {
             echo "Message sent to ".$phoneNumber." - ".$message."";
+            $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status) 
+                        VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'sending');";
         } else {
             echo "Error: ".$inserttooutbox1. " ".mysqli_error($conn);
         }
@@ -49,6 +52,8 @@ function sendSms($phoneNumber, $message, $conn){
             }
             if (mysqli_query($conn, $inserttooutbox)) {
                 echo "Message sent to ".$phoneNumber." - ".$message."";
+                $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status) 
+                        VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'sending');";
             } else {
                 echo "Error: ".$inserttooutbox. " ".mysqli_error($conn);
             }
@@ -170,12 +175,26 @@ if (mysqli_num_rows($resultProvider) > 0) {
                         $rowTotal = mysqli_fetch_array($resultToday);
                         if ($rowTotal['total'] < 1) {
                             $text = "AN30.".$noProvider.".0312";
-                            sendSms($nomorAgenPulsa, $text, $conn);
+                            sendSms($nomorAgenPulsa, $text, $conn, $namaProvider, $noProvider, "AN30");
                             sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.".$noProvider.".0312");
                         } else {
-                            $text = "AN30.2.".$noProvider.".0312";
-                            sendSms($nomorAgenPulsa, $text, $conn);
-                            sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.2.".$noProvider.".0312");
+
+                            $startTime  = date("Y-m-d H:i:s", strtotime("-250 minutes"));
+                            $endTime    = date("Y-m-d H:i:s");
+
+                            $checkQry = "";
+                            $checkQry = "SELECT count(*) as total FROM db_agen_pulsa.report WHERE tanggal BETWEEN '".$startTime."' AND '".$endTime."' AND no = '".$noProvider."'";
+                            $resultCheck = mysqli_query($conn, $checkQry);
+                            if (mysqli_num_rows($resultCheck) > 0) {
+                                $rowCheck = mysqli_fetch_array($resultCheck);
+                                if ($rowCheck['total'] < 1) {
+                                    $text = "AN30.2.".$noProvider.".0312";
+                                    sendSms($nomorAgenPulsa, $text, $conn, $namaProvider, $noProvider, "AN30.2");
+                                    sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.2.".$noProvider.".0312");
+                                }else{
+                                    echo "Double request,, ignoring..";
+                                }
+                            }
                         }
                         
                     }
