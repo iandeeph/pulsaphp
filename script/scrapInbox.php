@@ -27,6 +27,11 @@ function sendSms($phoneNumber, $message, $conn, $trunk, $no, $trx){
             echo "Message sent to ".$phoneNumber." - ".$message."";
             $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status) 
                         VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'sending');";
+            if (mysqli_query($conn, $reporting)) {
+                echo "reporting success..";
+            }else{
+                echo "reporting fail..";
+            }
         } else {
             echo "Error: ".$inserttooutbox1. " ".mysqli_error($conn);
         }
@@ -54,6 +59,11 @@ function sendSms($phoneNumber, $message, $conn, $trunk, $no, $trx){
                 echo "Message sent to ".$phoneNumber." - ".$message."";
                 $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status) 
                         VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'sending');";
+                if (mysqli_query($conn, $reporting)) {
+                    echo "reporting success..";
+                }else{
+                    echo "reporting fail..";
+                }
             } else {
                 echo "Error: ".$inserttooutbox. " ".mysqli_error($conn);
             }
