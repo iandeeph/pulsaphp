@@ -9,7 +9,7 @@ require "connconf.php";
 
 date_default_timezone_set("Asia/Jakarta");
 
-function sendSms($phoneNumber, $message, $user, $conn){
+function sendSms($phoneNumber, $message, $conn){
     $msg = array();
     $totSmsPage = ceil(strlen($message)/160);
 
@@ -20,7 +20,7 @@ function sendSms($phoneNumber, $message, $user, $conn){
 
     if($totSmsPage == 1){
         $inserttooutbox1 = "INSERT INTO db_agen_pulsa.outbox (DestinationNumber, TextDecoded, CreatorID, Coding) 
-                            VALUES ('".$phoneNumber."', '".$message."', '".$user."', 'Default_No_Compression');";
+                            VALUES ('".$phoneNumber."', '".$message."', 'agenpulsa', 'Default_No_Compression');";
 
         if (mysqli_query($conn, $inserttooutbox1)) {
             echo "Message sent to ".$phoneNumber." - ".$message."";
@@ -42,7 +42,7 @@ function sendSms($phoneNumber, $message, $user, $conn){
 
             if ($i == 1){
                 $inserttooutbox = "INSERT INTO db_agen_pulsa.outbox (DestinationNumber, UDH, TextDecoded, ID, MultiPart, CreatorID, Class)
-                VALUES ('".$phoneNumber."', '".$udh."', '".$msg."', '".$newID."', 'true', '".$user."', '-1')";
+                VALUES ('".$phoneNumber."', '".$udh."', '".$msg."', '".$newID."', 'true', 'agenpulsa', '-1')";
             }else{
                 $inserttooutbox = "INSERT INTO db_agen_pulsa.outbox_multipart(UDH, TextDecoded, ID, SequencePosition)
                 VALUES ('".$udh."', '".$msg."', '".$newID."', '".$i."')";
@@ -169,10 +169,12 @@ if (mysqli_num_rows($resultProvider) > 0) {
                     if (mysqli_num_rows($resultToday) > 0) {
                         $rowTotal = mysqli_fetch_array($resultToday);
                         if ($rowTotal['total'] < 1) {
-                            sendSms($nomorAgenPulsa, "AN30.".$noProvider.".0312", "agenpulsa", $conn);
+                            $text = "AN30.".$noProvider.".0312";
+                            sendSms($nomorAgenPulsa, $text, $conn);
                             sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.".$noProvider.".0312");
                         } else {
-                            sendSms($nomorAgenPulsa, "AN30.2.".$noProvider.".0312", "agenpulsa", $conn);
+                            $text = "AN30.2.".$noProvider.".0312";
+                            sendSms($nomorAgenPulsa, $text, $conn);
                             sendToSlack("agenpulsa", "Agenpulsa Officer", "SMS Dikirim, isi pulsa untuk ".$namaProvider.".. Isi pesan : AN30.2.".$noProvider.".0312");
                         }
                         
