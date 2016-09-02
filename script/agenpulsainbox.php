@@ -9,8 +9,7 @@ require "connconf.php";
 
 date_default_timezone_set("Asia/Jakarta");
 
-function sendToSlack($room, $username, $message){
-    $icon       = ":incoming_envelope:"; 
+function sendToSlack($room, ,$icon, $username, $message){
     $data       = "payload=" . json_encode(array(         
                   "username"      =>  $username,
                   "channel"       =>  "#{$room}",
@@ -38,14 +37,44 @@ $inboxAgenPulsaQry = "SELECT * FROM db_agen_pulsa.inbox WHERE ReceivingDateTime 
 $resultInbox = mysqli_query($conn, $inboxAgenPulsaQry);
 if (mysqli_num_rows($resultInbox) > 0) {
     while($rowInbox = mysqli_fetch_array($resultInbox)){
-        $isiPesan   = $rowInbox['TextDecoded'];
+        $inboxTxt   = $rowInbox['TextDecoded'];
         $tanggal    = $rowInbox['ReceivingDateTime'];
         $noPengirim = $rowInbox['SenderNumber'];
         
-        $message = "Tanggal : ".$tanggal." \r\n No Pengirim : ".$noPengirim." \r\n Isi Pesan : \r\n ".$isiPesan."";
-        sendToSlack("agenpulsa", "Agen Pulsa Inbox", $message);
-        echo "sending";
+        $message = "Tanggal : ".$tanggal." \r\n No Pengirim : ".$noPengirim." \r\n Isi Pesan : \r\n ".$inboxTxt."";
+        sendToSlack("agenpulsa", ":incoming_envelope:", "Agen Pulsa Inbox", $message);
+        echo "scrap inbox";
     }
 }else{
-    echo "kosong";
-}
+    echo "inbox kosong";
+};
+
+$sentitemsAgenPulsaQry = "";
+$sentitemsAgenPulsaQry = "SELECT * FROM db_agen_pulsa.sentitems WHERE ReceivingDateTime BETWEEN '".$time_now_start."' AND '".$time_now_end."'";
+$resultSentitems = mysqli_query($conn, $sentitemsAgenPulsaQry);
+if (mysqli_num_rows($resultSentitems) > 0) {
+    while($rowSentitems = mysqli_fetch_array($resultSentitems)){
+        $sentTxt        = $rowSentitems['TextDecoded'];
+        $tanggalKirim   = $rowSentitems['SendingDateTime'];
+        $noPenerima     = $rowSentitems['DestinationNumber'];
+        $status         = $rowSentitems['Status'];
+
+        switch ($status){
+            case 'SendingOK'        : $status='Sent'    ; $icon=':fire:'; break;
+            case 'SendingOKNoReport': $status='Sent'    ; $icon=':fire:'; break;
+            case 'SendingError'     : $status='Failed'  ; $icon=':+1:'  ; break;
+            case 'DeliveryOK'       : $status='Sent'    ; $icon=':fire:'; break;
+            case 'DeliveryFailed'   : $status='Failed'  ; $icon=':+1:'  ; break;
+            case 'DeliveryPending'  : $status='Pending' ; $icon=':thinking_face: '; break;
+            case 'DeliveryUnknown'  : $status='Failed'  ; $icon=':+1:'  ; break;
+            case 'Error'            : $status='Failed'  ; $icon=':+1:'  ; break;
+            default                 : $status='Failed'  ; $icon=':+1:'  ; break;
+        }
+        
+        $message = "Tanggal : ".$tanggal." \r\n No Penerima : ".$noPenerima." \r\n Status : ".$status." \r\n Isi Pesan : \r\n ".$sentTxt."";
+        sendToSlack("agenpulsa",$icon, "Agen Pulsa Inbox", $message);
+        echo "scrap sentitems";
+    }
+}else{
+    echo "sentitems kosong";
+};

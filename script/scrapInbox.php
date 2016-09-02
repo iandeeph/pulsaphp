@@ -205,11 +205,9 @@ if (mysqli_num_rows($resultProvider) > 0) {
                                     echo "Double request,, ignoring..";
                                 }
                             }
-                        }
-                        
+                        } 
                     }
                 }
-                
             }
         }else{
             echo "kosong\n";
