@@ -9,7 +9,7 @@ require "connconf.php";
 
 date_default_timezone_set("Asia/Jakarta");
 
-function sendToSlack($room, ,$icon, $username, $message){
+function sendToSlack($room, $icon, $username, $message){
     $data       = "payload=" . json_encode(array(         
                   "username"      =>  $username,
                   "channel"       =>  "#{$room}",
