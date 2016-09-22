@@ -62,7 +62,7 @@ $inserts = array();
 // looping untuk setiap IP openvox
 
 $providerQry = "";
-$providerQry = "SELECT * FROM provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";
+$providerQry = "SELECT * FROM provider WHERE namaProvider LIKE 'Three%' ORDER BY length(namaProvider), namaProvider";
 if($resultProvider = mysql_query($providerQry)){
     if (mysql_num_rows($resultProvider) > 0) {
         while($rowProvider = mysql_fetch_array($resultProvider)){

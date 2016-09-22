@@ -124,6 +124,9 @@ $inserts = array();
 // looping untuk setiap IP openvox
 $numNamaProvider = 0;
 
+// ==============================================================================================
+// THREE
+// ==============================================================================================
 
 $providerQry = "";
 $providerQry = "SELECT * FROM dbpulsa.provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";

@@ -50,7 +50,7 @@ if (mysqli_num_rows($resultInbox) > 0) {
 };
 
 $sentitemsAgenPulsaQry = "";
-$sentitemsAgenPulsaQry = "SELECT * FROM db_agen_pulsa.sentitems WHERE ReceivingDateTime BETWEEN '".$time_now_start."' AND '".$time_now_end."'";
+$sentitemsAgenPulsaQry = "SELECT * FROM db_agen_pulsa.sentitems WHERE SendingDateTime BETWEEN '".$time_now_start."' AND '".$time_now_end."'";
 $resultSentitems = mysqli_query($conn, $sentitemsAgenPulsaQry);
 if (mysqli_num_rows($resultSentitems) > 0) {
     while($rowSentitems = mysqli_fetch_array($resultSentitems)){
@@ -72,7 +72,7 @@ if (mysqli_num_rows($resultSentitems) > 0) {
         }
         
         $message = "Tanggal : ".$tanggal." \r\n No Penerima : ".$noPenerima." \r\n Status : ".$status." \r\n Isi Pesan : \r\n ".$sentTxt."";
-        sendToSlack("agenpulsa",$icon, "Agen Pulsa Inbox", $message);
+        sendToSlack("agenpulsa",$icon, "Agen Pulsa Sentitems", $message);
         echo "scrap sentitems";
     }
 }else{
