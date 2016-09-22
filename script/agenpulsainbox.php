@@ -60,18 +60,18 @@ if (mysqli_num_rows($resultSentitems) > 0) {
         $status         = $rowSentitems['Status'];
 
         switch ($status){
-            case 'SendingOK'        : $status='Sent'    ; $icon=':fire:'; break;
-            case 'SendingOKNoReport': $status='Sent'    ; $icon=':fire:'; break;
-            case 'SendingError'     : $status='Failed'  ; $icon=':+1:'  ; break;
-            case 'DeliveryOK'       : $status='Sent'    ; $icon=':fire:'; break;
-            case 'DeliveryFailed'   : $status='Failed'  ; $icon=':+1:'  ; break;
+            case 'SendingOK'        : $status='Sent'    ; $icon=':+1:'; break;
+            case 'SendingOKNoReport': $status='Sent'    ; $icon=':+1:'; break;
+            case 'SendingError'     : $status='Failed'  ; $icon=':fire:'  ; break;
+            case 'DeliveryOK'       : $status='Sent'    ; $icon=':+1:'; break;
+            case 'DeliveryFailed'   : $status='Failed'  ; $icon=':fire:'  ; break;
             case 'DeliveryPending'  : $status='Pending' ; $icon=':thinking_face: '; break;
-            case 'DeliveryUnknown'  : $status='Failed'  ; $icon=':+1:'  ; break;
-            case 'Error'            : $status='Failed'  ; $icon=':+1:'  ; break;
-            default                 : $status='Failed'  ; $icon=':+1:'  ; break;
+            case 'DeliveryUnknown'  : $status='Failed'  ; $icon=':fire:'  ; break;
+            case 'Error'            : $status='Failed'  ; $icon=':fire:'  ; break;
+            default                 : $status='Failed'  ; $icon=':fire:'  ; break;
         }
         
-        $message = "Tanggal : ".$tanggal." \r\n No Penerima : ".$noPenerima." \r\n Status : ".$status." \r\n Isi Pesan : \r\n ".$sentTxt."";
+        $message = "Tanggal : ".$tanggalKirim." \r\n No Penerima : ".$noPenerima." \r\n Status : ".$status." \r\n Isi Pesan : \r\n ".$sentTxt."";
         sendToSlack("agenpulsa",$icon, "Agen Pulsa Sentitems", $message);
         echo "scrap sentitems";
     }
