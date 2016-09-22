@@ -25,8 +25,8 @@ function sendSms($phoneNumber, $message, $conn, $trunk, $no, $trx){
 
         if (mysqli_query($conn, $inserttooutbox1)) {
             echo "Message sent to ".$phoneNumber." - ".$message."";
-            $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status) 
-                        VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'sending');";
+            $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status, proses) 
+                        VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'pending', 'Via System');";
             if (mysqli_query($conn, $reporting)) {
                 echo "reporting success..";
             }else{
@@ -57,8 +57,8 @@ function sendSms($phoneNumber, $message, $conn, $trunk, $no, $trx){
             }
             if (mysqli_query($conn, $inserttooutbox)) {
                 echo "Message sent to ".$phoneNumber." - ".$message."";
-                $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status) 
-                        VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'sending');";
+                $reporting = "INSERT INTO db_agen_pulsa.report (tanggal, trunk, no, trx, status, proses) 
+                        VALUES ('".$now."', '".$trunk."', '".$no."','".$trx."', 'sending', 'Via System');";
                 if (mysqli_query($conn, $reporting)) {
                     echo "reporting success..";
                 }else{
