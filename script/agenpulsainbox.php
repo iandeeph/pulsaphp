@@ -60,10 +60,10 @@ if (mysqli_num_rows($resultSentitems) > 0) {
         $status         = $rowSentitems['Status'];
 
         switch ($status){
-            case 'SendingOK'        : $status='Sent'    ; $icon=':+1:'; break;
-            case 'SendingOKNoReport': $status='Sent'    ; $icon=':+1:'; break;
+            case 'SendingOK'        : $status='Sent'    ; $icon=':thumbsup:'; break;
+            case 'SendingOKNoReport': $status='Sent'    ; $icon=':thumbsup:'; break;
             case 'SendingError'     : $status='Failed'  ; $icon=':fire:'  ; break;
-            case 'DeliveryOK'       : $status='Sent'    ; $icon=':+1:'; break;
+            case 'DeliveryOK'       : $status='Sent'    ; $icon=':thumbsup:'; break;
             case 'DeliveryFailed'   : $status='Failed'  ; $icon=':fire:'  ; break;
             case 'DeliveryPending'  : $status='Pending' ; $icon=':thinking_face: '; break;
             case 'DeliveryUnknown'  : $status='Failed'  ; $icon=':fire:'  ; break;
