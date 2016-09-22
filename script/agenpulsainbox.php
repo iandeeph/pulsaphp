@@ -43,10 +43,10 @@ if (mysqli_num_rows($resultInbox) > 0) {
         
         $message = "Tanggal : ".$tanggal." \r\n No Pengirim : ".$noPengirim." \r\n Isi Pesan : \r\n ".$inboxTxt."";
         sendToSlack("agenpulsa", ":incoming_envelope:", "Agen Pulsa Inbox", $message);
-        echo "scrap inbox";
+        echo "[".$time_now_end."] scrap inbox\r\n";
     }
 }else{
-    echo "inbox kosong";
+    echo "[".$time_now_end."] inbox kosong\r\n";
 };
 
 $sentitemsAgenPulsaQry = "";
@@ -73,8 +73,8 @@ if (mysqli_num_rows($resultSentitems) > 0) {
         
         $message = "Tanggal : ".$tanggalKirim." \r\n No Penerima : ".$noPenerima." \r\n Status : ".$status." \r\n Isi Pesan : \r\n ".$sentTxt."";
         sendToSlack("agenpulsa",$icon, "Agen Pulsa Sentitems", $message);
-        echo "scrap sentitems";
+        echo "[".$time_now_end."] scrap sentitems\r\n";
     }
 }else{
-    echo "sentitems kosong";
+    echo "[".$time_now_end."] sentitems kosong\r\n";
 };
