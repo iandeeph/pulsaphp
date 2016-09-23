@@ -106,7 +106,7 @@ if (mysqli_num_rows($resultInbox) > 0) {
             }
 
         } else{
-            if (($lastSaldo - $hargaTrx) = $inboxSaldo) {
+            if (($lastSaldo - $hargaTrx) == $inboxSaldo) {
                 //update saldos
                 $updateSaldoByInbox = "UPDATE db_agen_pulsa.saldos 
                                         SET saldo = '".$inboxSaldo."', lastTrx = '".$TRX."', lastDebet = '".$hargaTrx."'"
@@ -130,7 +130,7 @@ if (mysqli_num_rows($resultInbox) > 0) {
                     echo "[".$time_now_end."] report by inbox update failed.. Error : " . mysqli_error($conn) . "\r\n";
                 }
             } else {
-                if (($inboxSaldo - $hargaTrx) = $pendingSaldo) {
+                if (($inboxSaldo - $hargaTrx) == $pendingSaldo) {
                     //update saldos
                     $updateSaldoByInbox = "UPDATE db_agen_pulsa.saldos 
                                             SET saldo = '".$pendingSaldo."', lastTrx = '".$pendingLastTrx."', lastDebet = '".$pendingLastDebet."'"
