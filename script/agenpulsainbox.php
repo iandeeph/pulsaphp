@@ -53,6 +53,9 @@ if (mysqli_num_rows($resultInbox) > 0) {
         $message = "Tanggal : ".$tanggal." \r\n No Pengirim : ".$noPengirim." \r\n Isi Pesan : \r\n ".$inboxTxt."";
         sendToSlack("agenpulsa", ":incoming_envelope:", "Agen Pulsa Inbox", $message);
 
+        // ===================================================================
+        // INBOX STRING PARSING
+        // ===================================================================
         //saldo
         $firsPinSaldo = strpos($inboxTxt,"Rp.") + 3;
         $lastPinSaldo = strpos(substr($inboxTxt,$firsPinSaldo)," ");
@@ -82,7 +85,7 @@ if (mysqli_num_rows($resultInbox) > 0) {
         $inboxStatus = substr($inboxTxt, $firstPinStatus, $lastPinStatus);
         $inboxSaldo = substr($inboxTxt,$firsPinSaldo);
 
-        if (!empty($hargaTrx) OR !empty($hargaTrx) OR !empty($hargaTrx) OR !empty($hargaTrx) OR !empty($hargaTrx)){
+        if ($hargaTrx != "" || $hargaTrx != "" || $hargaTrx != "" || $hargaTrx != "" || $hargaTrx != ""){
             $saldoQry = "";
             $saldoQry = "SELECT * FROM db_agen_pulsa.saldos";
             $resultSaldo = mysqli_query($conn, $saldoQry);
@@ -127,7 +130,7 @@ if (mysqli_num_rows($resultInbox) > 0) {
 
                     //update report
                     $updateReportByInbox = "UPDATE db_agen_pulsa.report 
-                                            SET trunk = '".$rowTrunk[$phone]."', harga = '".$hargaTrx."', status = '".$inboxStatus."' 
+                                            SET trunk = '".$rowTrunk[$phone]."', harga = '".$hargaTrx."', status = '".$inboxStatus."', saldo_akhir = '".$inboxSaldo."'
                                             WHERE (status = 'pending' OR status = 'Sent') AND no = '".$phone."' AND trx = '".$TRX."' LIMIT 1";
 
                     echo "[".$time_now_end."] ".$updateReportByInbox."\r\n";
@@ -162,7 +165,7 @@ if (mysqli_num_rows($resultInbox) > 0) {
 
                         //update report
                         $updateReportByInbox = "UPDATE db_agen_pulsa.report 
-                                                SET trunk = '".$rowTrunk[$phone]."', harga = '".$hargaTrx."', status = '".$inboxStatus."' 
+                                                SET trunk = '".$rowTrunk[$phone]."', harga = '".$hargaTrx."', status = '".$inboxStatus."', saldo_akhir = '".$pendingSaldo."' 
                                                 WHERE (status = 'pending' OR status = 'Sent') AND no = '".$phone."' AND trx = '".$TRX."' LIMIT 1";
 
                         echo "[".$time_now_end."] ".$updateReportByInbox."\r\n";
