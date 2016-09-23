@@ -226,7 +226,7 @@ if (mysqli_num_rows($resultSentitems) > 0) {
 
         $sliceSentTxt = explode('.', $sentTxt);
         $trx = $sliceSentTxt[0];
-        $phone = $sliceSentTxt[2];
+        $phone = $sliceSentTxt[1];
 
         $updateReportQry = "";
         $updateReportQry = "UPDATE db_agen_pulsa.report SET status = '".$status."' WHERE trx = '".$trx."' AND no = '".$phone."' AND status = 'pending' LIMIT 1";
