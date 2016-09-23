@@ -60,8 +60,14 @@ if (mysqli_num_rows($resultInbox) > 0) {
         $firstPinHrg = strpos($inboxTxt,"Hrg=") + 4;
         $lastPinHrg = strpos(substr($inboxTxt,$firstPinHrg)," ");
         //TRX
-        $firstPinTRX = (strpos($inboxTxt,"ke") - 1) - (strrpos(substr($inboxTxt,0,strpos($inboxTxt,"ke") - 1)," "));
-        $lastPinTRX = strpos(substr($inboxTxt, $firstPinTRX)," ");
+        if(strpos($inboxTxt, "\n") !== FALSE) {
+            $firstPinTRX = strrpos(substr($inboxTxt,0,strpos($inboxTxt,"ke") - 1),"\n") + 1;
+            $lastPinTRX = strpos(substr($inboxTxt, $firstPinTRX)," ");
+        }
+        else {
+            $firstPinTRX = strrpos(substr($inboxTxt,0,strpos($inboxTxt,"ke") - 1),"\n");
+            $lastPinTRX = strpos(substr($inboxTxt, $firstPinTRX)," ");
+        }
         //Nomor
         $firstPinPhone = strpos($inboxTxt,"ke") + 3;
         $lastPinPhone = strpos(substr($inboxTxt, $firstPinPhone)," ");
