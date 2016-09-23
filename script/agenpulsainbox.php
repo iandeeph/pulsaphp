@@ -109,7 +109,7 @@ if (mysqli_num_rows($resultInbox) > 0) {
             if (($lastSaldo - $hargaTrx) == $inboxSaldo) {
                 //update saldos
                 $updateSaldoByInbox = "UPDATE db_agen_pulsa.saldos 
-                                        SET saldo = '".$inboxSaldo."', lastTrx = '".$TRX."', lastDebet = '".$hargaTrx."'"
+                                        SET saldo = '".$inboxSaldo."', lastTrx = '".$TRX."', lastDebet = '".$hargaTrx."'";
 
                 echo "[".$time_now_end."] ".$updateSaldoByInbox."\r\n";
                 if (mysqli_query($conn, $updateSaldoByInbox)) {
