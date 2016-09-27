@@ -129,7 +129,7 @@ $numNamaProvider = 0;
 // ==============================================================================================
 
 $providerQry = "";
-$providerQry = "SELECT * FROM dbpulsa.provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";
+$providerQry = "SELECT * FROM db_agen_pulsa.provider WHERE namaProvider LIKE 'ThreeAll%' ORDER BY length(namaProvider), namaProvider";
 $resultProvider = mysqli_query($conn, $providerQry);
 if (mysqli_num_rows($resultProvider) > 0) {
     while($rowProvider = mysqli_fetch_array($resultProvider)){
