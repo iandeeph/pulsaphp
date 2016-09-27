@@ -2,7 +2,7 @@
 $servername = "1.1.1.200";
 $username = "root";
 $password = "c3rmat";
-$dbname = "dbpulsa";
+$dbname = "db_agen_pulsa";
 
 // Create connection
 $conn = mysql_connect($servername, $username, $password, $dbname);

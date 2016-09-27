@@ -22,7 +22,7 @@ PASSWORD="c3rmat"
 #===============================================================================
 #THREE
 #===============================================================================
-threeResult=($(mysql dbpulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span from provider where namaProvider like 'ThreeAll%' order by length(namaProvider), namaProvider;"))
+threeResult=($(mysql db_agen_pulsa -h$HOST -u$USER -p$PASSWORD -Bse "select namaProvider, noProvider, host, span from provider where namaProvider like 'ThreeAll%' order by length(namaProvider), namaProvider;"))
 cntThreeElm=4
 cntThree=${#threeResult[@]}
 threeSet=$(((cntThree+1)/cntThreeElm))
